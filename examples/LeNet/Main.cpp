@@ -116,10 +116,6 @@ int main(int argc, const char* argv[]) {
         dawn::ErrorLog() << "Failed to load LeNet.";
         return -1;
     }
-    if (!lenet.Compile()) {
-        dawn::ErrorLog() << "Failed to compile LeNet.";
-        return -1;
-    }
     std::vector<float> input(reader.GetData().get(), reader.GetData().get() + reader.Size());
     webnn::Result result = lenet.Compute(input.data(), input.size() * sizeof(float));
     if (!result) {

@@ -22,7 +22,7 @@
 const size_t WEIGHTS_LENGTH = 1724336;
 
 LeNet::LeNet() {
-    mContext = CreateCppNeuralNetworkContext();
+    mContext = CreateCppContext();
     mContext.SetUncapturedErrorCallback(
         [](WebnnErrorType type, char const* message, void* userData) {
             if (type != WebnnErrorType_NoError) {
@@ -48,7 +48,7 @@ bool LeNet::Load(const std::string& weigthsPath) {
         return false;
     }
 
-    const webnn::ModelBuilder builder = mContext.CreateModelBuilder();
+    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(mContext);
 
     uint32_t byteOffset = 0;
     const webnn::Operand input = utils::BuildInput(builder, "input", {1, 1, 28, 28});
@@ -141,19 +141,10 @@ bool LeNet::Load(const std::string& weigthsPath) {
 
     const webnn::Operand softmax = builder.Softmax(add4);
 
-    mModel = utils::CreateModel(builder, {{"output", softmax}});
-    return true;
-}
-
-bool LeNet::Compile(webnn::CompilationOptions const* options) {
-    if (!mModel) {
-        dawn::ErrorLog() << "Model is not ready.";
-        return false;
-    }
     const std::chrono::time_point<std::chrono::high_resolution_clock> startTime =
         std::chrono::high_resolution_clock::now();
-    mCompilation = utils::AwaitCompile(mModel, options);
-    if (!mCompilation) {
+    mGraph = utils::AwaitBuild(builder, {{"output", softmax}});
+    if (!mGraph) {
         return false;
     }
     const std::chrono::duration<double, std::milli> elapsedTime =
@@ -163,13 +154,13 @@ bool LeNet::Compile(webnn::CompilationOptions const* options) {
 }
 
 webnn::Result LeNet::Compute(const void* inputData, size_t inputLength) {
-    if (!mCompilation) {
-        dawn::ErrorLog() << "Compilation is not ready.";
+    if (!mGraph) {
+        dawn::ErrorLog() << "Graph is not ready.";
         return webnn::Result();
     }
     const std::chrono::time_point<std::chrono::high_resolution_clock> startTime =
         std::chrono::high_resolution_clock::now();
-    mResults = utils::AwaitCompute(mCompilation, {{"input", {inputData, inputLength}}});
+    mResults = utils::AwaitCompute(mGraph, {{"input", {inputData, inputLength}}});
     if (!mResults) {
         return webnn::Result();
     }

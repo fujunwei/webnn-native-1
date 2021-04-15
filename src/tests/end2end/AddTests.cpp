@@ -17,7 +17,7 @@
 class AddTests : public WebnnTest {};
 
 TEST_F(AddTests, AddConstantAndInput) {
-    const webnn::ModelBuilder builder = GetContext().CreateModelBuilder();
+    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
     const webnn::Operand a = utils::BuildInput(builder, "a", {3, 4, 5});
     const std::vector<float> bData = {
         -0.5781865,  -0.49248728, -0.2162451,  -0.13176449, -0.52118045, 1.9125274,   0.6508799,
@@ -32,8 +32,7 @@ TEST_F(AddTests, AddConstantAndInput) {
     const webnn::Operand b =
         utils::BuildConstant(builder, {3, 4, 5}, bData.data(), bData.size() * sizeof(float));
     const webnn::Operand c = builder.Add(a, b);
-    const webnn::Model model = utils::CreateModel(builder, {{"c", c}});
-    const webnn::Compilation compiledModel = utils::AwaitCompile(model);
+    const webnn::Graph graph = utils::AwaitBuild(builder, {{"c", c}});
     const std::vector<float> dataA = {
         0.08939514,  -1.5887482,  0.8545348,   0.20523034, -0.41728342, 1.01752,     0.19677015,
         0.5398451,   0.56893295,  1.2511084,   2.0092728,  1.0606714,   0.4893267,   0.09536829,
@@ -45,7 +44,7 @@ TEST_F(AddTests, AddConstantAndInput) {
         -0.55656946, -0.735903,   0.22050636,  -0.5008282, -1.3132697,  1.6642882,   -0.48397836,
         0.20099205,  -0.28786168, 1.3315053,   -0.41619393};
     const webnn::Input input = {dataA.data(), dataA.size() * sizeof(float)};
-    const webnn::Result result = utils::AwaitCompute(compiledModel, {{"a", input}}).Get("c");
+    const webnn::Result result = utils::AwaitCompute(graph, {{"a", input}}).Get("c");
     EXPECT_TRUE(utils::CheckShape(result, {3, 4, 5}));
     const std::vector<float> expectedValue(
         {-0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387, 2.9300475,   0.84765005,
@@ -61,12 +60,11 @@ TEST_F(AddTests, AddConstantAndInput) {
 }
 
 TEST_F(AddTests, AddTwoInputs) {
-    const webnn::ModelBuilder builder = GetContext().CreateModelBuilder();
+    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
     const webnn::Operand a = utils::BuildInput(builder, "a", {3, 4, 5});
     const webnn::Operand b = utils::BuildInput(builder, "b", {3, 4, 5});
     const webnn::Operand c = builder.Add(a, b);
-    const webnn::Model model = utils::CreateModel(builder, {{"c", c}});
-    const webnn::Compilation compiledModel = utils::AwaitCompile(model);
+    const webnn::Graph graph = utils::AwaitBuild(builder, {{"c", c}});
     const std::vector<float> dataA = {
         0.08939514,  -1.5887482,  0.8545348,   0.20523034, -0.41728342, 1.01752,     0.19677015,
         0.5398451,   0.56893295,  1.2511084,   2.0092728,  1.0606714,   0.4893267,   0.09536829,
@@ -90,7 +88,7 @@ TEST_F(AddTests, AddTwoInputs) {
         -0.5464537,  1.4351872,   0.5705938,   -0.30327085};
     const webnn::Input inputB = {dataB.data(), dataB.size() * sizeof(float)};
     const webnn::Result result =
-        utils::AwaitCompute(compiledModel, {{"a", inputA}, {"b", inputB}}).Get("c");
+        utils::AwaitCompute(graph, {{"a", inputA}, {"b", inputB}}).Get("c");
     EXPECT_TRUE(utils::CheckShape(result, {3, 4, 5}));
     const std::vector<float> expectedValue(
         {-0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387, 2.9300475,   0.84765005,
@@ -106,12 +104,11 @@ TEST_F(AddTests, AddTwoInputs) {
 }
 
 TEST_F(AddTests, AddBroadcast) {
-    const webnn::ModelBuilder builder = GetContext().CreateModelBuilder();
+    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
     const webnn::Operand a = utils::BuildInput(builder, "a", {3, 4, 5});
     const webnn::Operand b = utils::BuildInput(builder, "b", {5});
     const webnn::Operand c = builder.Add(a, b);
-    const webnn::Model model = utils::CreateModel(builder, {{"c", c}});
-    const webnn::Compilation compiledModel = utils::AwaitCompile(model);
+    const webnn::Graph graph = utils::AwaitBuild(builder, {{"c", c}});
     const std::vector<float> dataA = {
         -0.08539673, 0.11800674,  -1.2358714,  0.30089188,  -0.73443925, 1.4894297,   0.16823359,
         -2.2034893,  1.0740992,   -0.35457978, 0.61524934,  0.462153,    0.5992003,   -0.81047946,
@@ -128,7 +125,7 @@ TEST_F(AddTests, AddBroadcast) {
     };
     const webnn::Input inputB = {dataB.data(), dataB.size() * sizeof(float)};
     const webnn::Result result =
-        utils::AwaitCompute(compiledModel, {{"a", inputA}, {"b", inputB}}).Get("c");
+        utils::AwaitCompute(graph, {{"a", inputA}, {"b", inputB}}).Get("c");
     EXPECT_TRUE(utils::CheckShape(result, {3, 4, 5}));
     const std::vector<float> expectedValue(
         {0.5484205,   1.7485408,   -2.6178582,  -0.7418642,  0.32369673,  2.123247,    1.7987677,

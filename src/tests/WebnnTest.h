@@ -25,7 +25,7 @@ class WebnnTest : public testing::Test {
     void SetUp() override;
     void TearDown() override;
 
-    const webnn::NeuralNetworkContext& GetContext();
+    const webnn::Context& GetContext();
     void StartExpectContextError();
     bool EndExpectContextError();
     std::string GetLastErrorMessage() const;
@@ -43,10 +43,10 @@ class WebnnTestEnvironment : public testing::Environment {
   public:
     void SetUp() override;
 
-    const webnn::NeuralNetworkContext& GetContext();
+    const webnn::Context& GetContext();
 
   protected:
-    webnn::NeuralNetworkContext mContext;
+    webnn::Context mContext;
 };
 
 #endif  // TESTS_WEBNN_TEST_H_

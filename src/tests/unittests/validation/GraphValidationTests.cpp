@@ -19,27 +19,26 @@
 
 using namespace testing;
 
-class MockModelCompileCallback {
+class MockGraphBuildCallback {
   public:
-    MOCK_METHOD(
-        void,
-        Call,
-        (WebnnCompileStatus status, WebnnCompilation impl, const char* message, void* userdata));
+    MOCK_METHOD(void,
+                Call,
+                (WebnnBuildStatus status, WebnnGraph impl, const char* message, void* userdata));
 };
 
-static std::unique_ptr<MockModelCompileCallback> mockModelCompileCallback;
-static void ToMockModelCompileCallback(WebnnCompileStatus status,
-                                       WebnnCompilation impl,
-                                       const char* message,
-                                       void* userdata) {
-    mockModelCompileCallback->Call(status, impl, message, userdata);
+static std::unique_ptr<MockGraphBuildCallback> mockGraphBuildCallback;
+static void ToMockGraphBuildCallback(WebnnBuildStatus status,
+                                     WebnnGraph impl,
+                                     const char* message,
+                                     void* userdata) {
+    mockGraphBuildCallback->Call(status, impl, message, userdata);
 }
 
-class ModelValidationTest : public ValidationTest {
+class GraphValidationTest : public ValidationTest {
   protected:
     void SetUp() override {
         ValidationTest::SetUp();
-        mockModelCompileCallback = std::make_unique<MockModelCompileCallback>();
+        mockGraphBuildCallback = std::make_unique<MockGraphBuildCallback>();
         std::vector<int32_t> shape = {2, 2};
         webnn::OperandDescriptor inputDesc = {webnn::OperandType::Float32, shape.data(),
                                               (uint32_t)shape.size()};
@@ -53,26 +52,23 @@ class ModelValidationTest : public ValidationTest {
         ValidationTest::TearDown();
 
         // Delete mocks so that expectations are checked
-        mockModelCompileCallback = nullptr;
+        mockGraphBuildCallback = nullptr;
     }
 
     webnn::Operand mOutput;
 };
 
 // Test the simple success case.
-TEST_F(ModelValidationTest, CompileCallBackSuccess) {
+TEST_F(GraphValidationTest, BuildCallBackSuccess) {
     webnn::NamedOperands namedOperands = webnn::CreateNamedOperands();
     namedOperands.Set("output", mOutput);
-    webnn::Model model = mBuilder.CreateModel(namedOperands);
-    EXPECT_CALL(*mockModelCompileCallback, Call(WebnnCompileStatus_Success, _, nullptr, this))
-        .Times(1);
-    model.Compile(ToMockModelCompileCallback, this);
+    mBuilder.Build(namedOperands, ToMockGraphBuildCallback, this);
+    EXPECT_CALL(*mockGraphBuildCallback, Call(WebnnBuildStatus_Success, _, nullptr, this)).Times(1);
 }
 
 // Create model with null nameOperands
-TEST_F(ModelValidationTest, CompileCallBackError) {
+TEST_F(GraphValidationTest, BuildCallBackError) {
     webnn::NamedOperands namedOperands = webnn::CreateNamedOperands();
-    webnn::Model model = mBuilder.CreateModel(namedOperands);
-    EXPECT_CALL(*mockModelCompileCallback, Call(WebnnCompileStatus_Error, _, _, this)).Times(1);
-    model.Compile(ToMockModelCompileCallback, this);
+    mBuilder.Build(namedOperands, ToMockGraphBuildCallback, this);
+    EXPECT_CALL(*mockGraphBuildCallback, Call(WebnnBuildStatus_Error, _, _, this)).Times(1);
 }

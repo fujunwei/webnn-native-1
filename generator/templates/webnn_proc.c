@@ -27,6 +27,10 @@ void webnnProcSetProcs(const WebnnProcTable* procs_) {
     }
 }
 
+WebnnGraphBuilder webnnCreateGraphBuilder(WebnnContext context) {
+    return procs.createGraphBuilder(context);
+}
+
 WebnnNamedInputs webnnCreateNamedInputs() {
     return procs.createNamedInputs();
 }

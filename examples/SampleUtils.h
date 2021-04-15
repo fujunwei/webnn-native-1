@@ -26,7 +26,7 @@
 
 uint32_t product(const std::vector<int32_t>& dims);
 
-webnn::NeuralNetworkContext CreateCppNeuralNetworkContext();
+webnn::Context CreateCppContext();
 
 void DumpMemoryLeaks();
 
@@ -34,12 +34,12 @@ bool Expected(float output, float expected);
 
 namespace utils {
 
-    webnn::Operand BuildInput(const webnn::ModelBuilder& builder,
+    webnn::Operand BuildInput(const webnn::GraphBuilder& builder,
                               std::string name,
                               const std::vector<int32_t>& dimensions,
                               webnn::OperandType type = webnn::OperandType::Float32);
 
-    webnn::Operand BuildConstant(const webnn::ModelBuilder& builder,
+    webnn::Operand BuildConstant(const webnn::GraphBuilder& builder,
                                  const std::vector<int32_t>& dimensions,
                                  const void* value,
                                  size_t size,
@@ -51,7 +51,7 @@ namespace utils {
         std::vector<int32_t> strides;
         std::vector<int32_t> dilations;
         int32_t groups = 1;
-        webnn::OperandLayout layout = webnn::OperandLayout::Nchw;
+        webnn::InputOperandLayout layout = webnn::InputOperandLayout::Nchw;
 
         const webnn::Conv2dOptions* AsPtr() {
             if (!padding.empty()) {
@@ -81,7 +81,7 @@ namespace utils {
         std::vector<int32_t> padding;
         std::vector<int32_t> strides;
         std::vector<int32_t> dilations;
-        webnn::OperandLayout layout = webnn::OperandLayout::Nchw;
+        webnn::InputOperandLayout layout = webnn::InputOperandLayout::Nchw;
 
         const webnn::Pool2dOptions* AsPtr() {
             if (!windowDimensions.empty()) {
@@ -113,18 +113,15 @@ namespace utils {
         const webnn::Operand& operand;
     } NamedOutput;
 
-    webnn::Model CreateModel(const webnn::ModelBuilder& builder,
+    webnn::Graph AwaitBuild(const webnn::GraphBuilder& builder,
                              const std::vector<NamedOutput>& outputs);
-
-    webnn::Compilation AwaitCompile(const webnn::Model& model,
-                                    webnn::CompilationOptions const* options = nullptr);
 
     typedef struct {
         const std::string& name;
         const webnn::Input& input;
     } NamedInput;
 
-    webnn::NamedResults AwaitCompute(const webnn::Compilation& compilation,
+    webnn::NamedResults AwaitCompute(const webnn::Graph& compilation,
                                      const std::vector<NamedInput>& inputs);
 
     bool CheckShape(const webnn::Result& result, const std::vector<int32_t>& expectedShape);

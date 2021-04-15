@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WEBNN_NATIVE_DML_MODEL_DML_H_
-#define WEBNN_NATIVE_DML_MODEL_DML_H_
+#ifndef WEBNN_NATIVE_IE_MODEL_IE_H_
+#define WEBNN_NATIVE_IE_MODEL_IE_H_
 
 #include <map>
 #include <set>
 
-#include "webnn_native/Model.h"
+#include "webnn_native/Error.h"
+#include "webnn_native/Graph.h"
 #include "webnn_native/Operand.h"
-#include "webnn_native/dml/ModelBuilderDML.h"
-#include "webnn_native/dml/deps/src/precomp.h"
+#include "webnn_native/openvino/ContextIE.h"
+#include "webnn_native/openvino/ienn/src/ie_nn_c_api.h"
 #include "webnn_native/ops/Binary.h"
 #include "webnn_native/ops/Constant.h"
 #include "webnn_native/ops/Conv2d.h"
@@ -31,19 +32,16 @@
 #include "webnn_native/ops/Transpose.h"
 #include "webnn_native/ops/Unary.h"
 
-namespace webnn_native { namespace dml {
+namespace webnn_native { namespace ie {
 
-    std::string DmlTensorDimensionsToString(const ::dml::TensorDimensions&);
-    std::string DmlTensorDataTypeToString(DML_TENSOR_DATA_TYPE type);
-
-    class Model : public ModelBase {
+    class Graph : public GraphBase {
       public:
-        explicit Model(ModelBuilder* model_builder);
-        ~Model() override = default;
+        explicit Graph(Context* context);
+        ~Graph() override;
 
         virtual MaybeError AddConstant(const op::Constant* constant) override;
         virtual MaybeError AddInput(const op::Input* input) override;
-        virtual MaybeError AddOutput(const std::string& name, const OperandBase* output) override;
+        virtual MaybeError AddOutput(const std::string& name, const OperandBase* ouput) override;
         virtual MaybeError AddBinary(const op::Binary* binary) override;
         virtual MaybeError AddConv2d(const op::Conv2d* conv2d) override;
         virtual MaybeError AddPool2d(const op::Pool2d* pool2d) override;
@@ -52,22 +50,23 @@ namespace webnn_native { namespace dml {
         virtual MaybeError AddUnary(const op::Unary* unary) override;
         virtual MaybeError Finish() override;
 
-        friend class Compilation;
-
       private:
-        void CompileImpl(WebnnCompileCallback callback,
+        void ComputeImpl(NamedInputsBase* inputs,
+                         WebnnComputeCallback callback,
                          void* userdata,
-                         CompilationOptions const* options) override;
+                         NamedOutputsBase* outputs) override;
 
-        std::shared_ptr<::pydml::Device> mDevice;
-        std::unique_ptr<::dml::Graph> mGraph;
-        std::map<const OperandBase*, ::dml::Expression> mExpression;
-        std::vector<std::unique_ptr<::pydml::Binding>> mBindings;
-        std::vector<std::unique_ptr<char>> mConstantBuffers;
-        std::map<std::string, ::pydml::Binding*> mInputs;
-        std::map<std::string, ::dml::Expression> mOutputs;
+        ie_model_t* mIeModel;
+        ie_compilation_t* mIeCompilation;
+
+        // Map the input name to IE internal id
+        std::map<std::string, std::string> mInputIdMap;
+        // Map the IE internal id to output name
+        std::map<std::string, std::string> mOutputNameMap;
+        // Map the operand to IE internal id
+        std::map<const OperandBase*, std::string> mOperandIdMap;
     };
 
-}}  // namespace webnn_native::dml
+}}  // namespace webnn_native::ie
 
-#endif  // WEBNN_NATIVE_DML_MODEL_DML_H_
+#endif  // WEBNN_NATIVE_IE_MODEL_IE_H_

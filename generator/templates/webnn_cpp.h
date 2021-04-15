@@ -216,6 +216,7 @@ namespace webnn {
 
     {% endfor %}
 
+    GraphBuilder CreateGraphBuilder(Context context);
     NamedInputs CreateNamedInputs();
     NamedOperands CreateNamedOperands();
     NamedOutputs CreateNamedOutputs();

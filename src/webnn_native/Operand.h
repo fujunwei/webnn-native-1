@@ -19,7 +19,7 @@
 #include <vector>
 
 #include "webnn_native/Forward.h"
-#include "webnn_native/Model.h"
+#include "webnn_native/Graph.h"
 #include "webnn_native/ObjectBase.h"
 #include "webnn_native/webnn_platform.h"
 
@@ -27,13 +27,13 @@ namespace webnn_native {
 
     class OperandBase : public ObjectBase {
       public:
-        explicit OperandBase(ModelBuilderBase* modelBuilder, std::vector<Ref<OperandBase>> = {});
+        explicit OperandBase(GraphBuilderBase* GraphBuilder, std::vector<Ref<OperandBase>> = {});
         virtual ~OperandBase() = default;
 
         // It's used for getting inputs when traversaling model tree.
         const std::vector<Ref<OperandBase>>& Inputs() const;
         // Add the operand to model for specific backend.
-        virtual MaybeError AddToModel(ModelBase* model) const;
+        virtual MaybeError AddToGraph(GraphBase* model) const;
 
         webnn::OperandType Type() const {
             return mType;
@@ -42,13 +42,13 @@ namespace webnn_native {
             return mRank;
         }
 
-        static OperandBase* MakeError(ModelBuilderBase* modelBuilder);
+        static OperandBase* MakeError(GraphBuilderBase* GraphBuilder);
         virtual MaybeError ValidateAndInferTypes() {
             UNREACHABLE();
         }
 
       private:
-        OperandBase(ModelBuilderBase* modelBuilder, ObjectBase::ErrorTag tag);
+        OperandBase(GraphBuilderBase* GraphBuilder, ObjectBase::ErrorTag tag);
 
       protected:
         // The inputs of operand.

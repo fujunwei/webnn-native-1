@@ -101,6 +101,7 @@ typedef void (*WebnnProc)(void);
 
 #if !defined(WEBNN_SKIP_PROCS)
 
+typedef WebnnGraphBuilder (*WebnnProcCreateGraphBuilder)(WebnnContext context);
 typedef WebnnNamedInputs (*WebnnProcCreateNamedInputs)();
 typedef WebnnNamedOperands (*WebnnProcCreateNamedOperands)();
 typedef WebnnNamedOutputs (*WebnnProcCreateNamedOutputs)();
@@ -121,6 +122,7 @@ typedef WebnnNamedOutputs (*WebnnProcCreateNamedOutputs)();
 
 #if !defined(WEBNN_SKIP_DECLARATIONS)
 
+WEBNN_EXPORT WebnnGraphBuilder webnnCreateGraphBuilder(WebnnContext context);
 WEBNN_EXPORT WebnnNamedInputs webnnCreateNamedInputs();
 WEBNN_EXPORT WebnnNamedOperands webnnCreateNamedOperands();
 WEBNN_EXPORT WebnnNamedOutputs webnnCreateNamedOutputs();

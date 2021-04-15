@@ -18,8 +18,7 @@
 #include <memory>
 
 #include "common/Assert.h"
-#include "webnn_native/Compilation.h"
-#include "webnn_native/ModelBuilder.h"
+#include "webnn_native/GraphBuilder.h"
 
 // Contains the entry-points into webnn_native
 namespace webnn_native {
@@ -30,23 +29,23 @@ namespace webnn_native {
     }
 
     namespace null {
-        NeuralNetworkContextBase* Create();
+        ContextBase* Create(WebnnContextOptions const* options);
     }
     namespace ie {
-        NeuralNetworkContextBase* Create();
+        ContextBase* Create(WebnnContextOptions const* options);
     }
     namespace dml {
-        NeuralNetworkContextBase* Create();
+        ContextBase* Create(WebnnContextOptions const* options);
     }
 
     // Should put the default null backend at the end.
-    WebnnNeuralNetworkContext CreateNeuralNetworkContext() {
+    WebnnContext CreateContext(WebnnContextOptions const* options) {
 #if defined(WEBNN_ENABLE_BACKEND_OPENVINO)
-        return reinterpret_cast<WebnnNeuralNetworkContext>(ie::Create());
+        return reinterpret_cast<WebnnContext>(ie::Create(options));
 #elif defined(WEBNN_ENABLE_BACKEND_DML)
-        return reinterpret_cast<WebnnNeuralNetworkContext>(dml::Create());
+        return reinterpret_cast<WebnnContext>(dml::Create(options));
 #elif defined(WEBNN_ENABLE_BACKEND_NULL)
-        return reinterpret_cast<WebnnNeuralNetworkContext>(null::Create());
+        return reinterpret_cast<WebnnContext>(null::Create(options));
 #else
         return nullptr;
 #endif

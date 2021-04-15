@@ -130,6 +130,10 @@ namespace webnn {
         }
     {% endfor %}
 
+    GraphBuilder CreateGraphBuilder(Context context) {
+        return GraphBuilder::Acquire(webnnCreateGraphBuilder(context.GetHandle()));
+    }
+
     NamedInputs CreateNamedInputs() {
         return NamedInputs::Acquire(webnnCreateNamedInputs());
     }

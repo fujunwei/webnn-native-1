@@ -94,6 +94,10 @@ namespace webnn_native {
         return result;
     }
 
+    WebnnGraphBuilder NativeCreateGraphBuilder(WebnnContext context) {
+        return reinterpret_cast<WebnnGraphBuilder>(new GraphBuilderBase(reinterpret_cast<ContextBase *>(context)));
+    }
+
     WebnnNamedInputs NativeCreateNamedInputs() {
         return reinterpret_cast<WebnnNamedInputs>(new NamedInputsBase());
     }
@@ -107,6 +111,7 @@ namespace webnn_native {
     }
 
     static WebnnProcTable gProcTable = {
+        NativeCreateGraphBuilder,
         NativeCreateNamedInputs,
         NativeCreateNamedOperands,
         NativeCreateNamedOutputs,
