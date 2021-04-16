@@ -19,11 +19,11 @@
 #include "common/Assert.h"
 #include "common/Log.h"
 #include "webnn_native/ErrorData.h"
-#include "webnn_native/NamedInputs.h"
-#include "webnn_native/NamedOperands.h"
-#include "webnn_native/NamedOutputs.h"
-#include "webnn_native/NamedResults.h"
-#include "webnn_native/Result.h"
+#include "webnn_native/MLNamedInputs.h"
+#include "webnn_native/MLNamedOperands.h"
+#include "webnn_native/MLNamedOutputs.h"
+#include "webnn_native/MLNamedResults.h"
+#include "webnn_native/MLResult.h"
 #include "webnn_native/openvino/ErrorIE.h"
 #include "webnn_native/openvino/ienn_symbol_table/ienn_symbol_table.h"
 
@@ -40,9 +40,9 @@
     break
 
 namespace webnn_native { namespace ie {
-    class Result : public ResultBase {
+    class Result : public MLResultBase {
       public:
-        using ResultBase::Reference;
+        using MLResultBase::Reference;
         ~Result() {
             ie_compilation_free_buffer(&mBuffer);
         }
@@ -64,21 +64,21 @@ namespace webnn_native { namespace ie {
             return name;
         }
 
-        ie_operand_descriptor ConvertTo(OperandDescriptor const* desc) {
+        ie_operand_descriptor ConvertTo(MLOperandDescriptor const* desc) {
             ie_operand_descriptor ieDesc;
             ieDesc.dimensions = desc->dimensions;
             ieDesc.dimensionsCount = desc->dimensionsCount;
             switch (desc->type) {
-                case webnn::OperandType::Float32:
+                case webnn::MLOperandType::Float32:
                     ieDesc.type = ie_operand_type::Float32;
                     break;
-                case webnn::OperandType::Int32:
+                case webnn::MLOperandType::Int32:
                     ieDesc.type = ie_operand_type::Int32;
                     break;
-                case webnn::OperandType::Float16:
+                case webnn::MLOperandType::Float16:
                     ieDesc.type = ie_operand_type::Float16;
                     break;
-                case webnn::OperandType::Uint32:
+                case webnn::MLOperandType::Uint32:
                     ieDesc.type = ie_operand_type::Uint32;
                     break;
                 default:
@@ -87,7 +87,7 @@ namespace webnn_native { namespace ie {
             return ieDesc;
         }
 
-        ie_conv2d_options Conv2dOptionsForIE(Conv2dOptions const* options) {
+        ie_conv2d_options Conv2dOptionsForIE(MLConv2dOptions const* options) {
             ie_conv2d_options ieOptions;
             ieOptions.padding = options->padding;
             ieOptions.strides = options->strides;
@@ -97,7 +97,7 @@ namespace webnn_native { namespace ie {
             return ieOptions;
         }
 
-        ie_transpose_options TransposeOptionsForIE(TransposeOptions const* options) {
+        ie_transpose_options TransposeOptionsForIE(MLTransposeOptions const* options) {
             if (options == nullptr)
                 return {};
             ie_transpose_options ieOptions;
@@ -106,7 +106,7 @@ namespace webnn_native { namespace ie {
             return ieOptions;
         }
 
-        ie_pool2d_options Pool2dOptionsForIE(Pool2dOptions const* options) {
+        ie_pool2d_options Pool2dOptionsForIE(MLPool2dOptions const* options) {
             ie_pool2d_options ieOptions;
             ieOptions.windowDimensions = options->windowDimensions;
             ieOptions.padding = options->padding;
@@ -118,7 +118,7 @@ namespace webnn_native { namespace ie {
 
     }  // namespace
 
-    Graph::Graph(Context* context) : GraphBase(context) {
+    MLGraph::MLGraph(MLContext* context) : MLGraphBase(context) {
         // Create model.
         IEStatusCode code = IE(ie_create_model)(&mIeModel);
         if (code != IEStatusCode::OK) {
@@ -127,12 +127,12 @@ namespace webnn_native { namespace ie {
         }
     }
 
-    Graph::~Graph() {
+    MLGraph::~MLGraph() {
         IE(ie_model_free)(mIeModel);
         IE(ie_compilation_free)(mIeCompilation);
     }
 
-    MaybeError Graph::AddConstant(const op::Constant* constant) {
+    MaybeError MLGraph::AddConstant(const op::Constant* constant) {
         ie_operand_descriptor ieDesc = ConvertTo(constant->GetOperandDescriptor());
         ie_operand_t* ieOperand;
         IEStatusCode code = IE(ie_model_add_constant)(mIeModel, &ieDesc, constant->GetValue(),
@@ -143,7 +143,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddInput(const op::Input* input) {
+    MaybeError MLGraph::AddInput(const op::Input* input) {
         ie_operand_descriptor ieDesc = ConvertTo(input->GetOperandDescriptor());
         ie_operand_t* ieOperand;
         IEStatusCode code = IE(ie_model_add_input)(mIeModel, &ieDesc, &ieOperand);
@@ -154,7 +154,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddOutput(const std::string& name, const OperandBase* output) {
+    MaybeError MLGraph::AddOutput(const std::string& name, const MLOperandBase* output) {
         ie_operand_t ieOperand;
         ieOperand.name = const_cast<char*>(mOperandIdMap[output].c_str());
         IEStatusCode code = IE(ie_model_add_output)(mIeModel, &ieOperand);
@@ -164,7 +164,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddBinary(const op::Binary* binary) {
+    MaybeError MLGraph::AddBinary(const op::Binary* binary) {
         auto inputs = binary->Inputs();
         ie_operand_t primary;
         primary.name = const_cast<char*>(mOperandIdMap[inputs[0].Get()].c_str());
@@ -184,7 +184,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddConv2d(const op::Conv2d* conv2d) {
+    MaybeError MLGraph::AddConv2d(const op::Conv2d* conv2d) {
         auto inputs = conv2d->Inputs();
         ie_operand_t input;
         input.name = const_cast<char*>(mOperandIdMap[inputs[0].Get()].c_str());
@@ -200,7 +200,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddPool2d(const op::Pool2d* pool2d) {
+    MaybeError MLGraph::AddPool2d(const op::Pool2d* pool2d) {
         auto inputs = pool2d->Inputs();
         ie_operand_t input;
         input.name = const_cast<char*>(mOperandIdMap[inputs[0].Get()].c_str());
@@ -214,7 +214,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddUnary(const op::Unary* unary) {
+    MaybeError MLGraph::AddUnary(const op::Unary* unary) {
         auto inputs = unary->Inputs();
         ie_operand_t input;
         input.name = const_cast<char*>(mOperandIdMap[inputs[0].Get()].c_str());
@@ -231,7 +231,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddReshape(const op::Reshape* reshape) {
+    MaybeError MLGraph::AddReshape(const op::Reshape* reshape) {
         auto inputs = reshape->Inputs();
         ie_operand_t input;
         input.name = const_cast<char*>(mOperandIdMap[inputs[0].Get()].c_str());
@@ -244,7 +244,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::AddTranspose(const op::Transpose* transpose) {
+    MaybeError MLGraph::AddTranspose(const op::Transpose* transpose) {
         auto inputs = transpose->Inputs();
         ie_operand_t input;
         input.name = const_cast<char*>(mOperandIdMap[inputs[0].Get()].c_str());
@@ -257,7 +257,7 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    MaybeError Graph::Finish() {
+    MaybeError MLGraph::Finish() {
         IEStatusCode code = IE(ie_model_finish)(mIeModel);
         DAWN_TRY(CheckStatusCode(code, "IE finish creating model"));
 
@@ -270,10 +270,10 @@ namespace webnn_native { namespace ie {
         return {};
     }
 
-    void Graph::ComputeImpl(NamedInputsBase* inputs,
-                            WebnnComputeCallback callback,
-                            void* userdata,
-                            NamedOutputsBase* outputs) {
+    void MLGraph::ComputeImpl(MLNamedInputsBase* inputs,
+                              WebnnComputeCallback callback,
+                              void* userdata,
+                              MLNamedOutputsBase* outputs) {
         // Set input data to nGraph.
         for (auto& input : inputs->GetRecords()) {
             ie_operand_t ieOperand;
@@ -287,7 +287,7 @@ namespace webnn_native { namespace ie {
         IEStatusCode code = IE(ie_compilation_compute)(mIeCompilation);
         COMPUTE_CALLBACK_TRY(code, "IE compute model");
         // Get Data from nGraph with output.
-        Ref<NamedResultsBase> results = AcquireRef(new NamedResultsBase());
+        Ref<MLNamedResultsBase> results = AcquireRef(new MLNamedResultsBase());
 
         size_t outputNumber = 0;
         code = IE(ie_model_get_outputs_number)(mIeModel, &outputNumber);
@@ -306,12 +306,12 @@ namespace webnn_native { namespace ie {
             std::vector<int32_t> dimensions(ieDimensions.dims,
                                             ieDimensions.dims + ieDimensions.ranks);
             code = IE(ie_compilation_free_dimensions)(&ieDimensions);
-            Ref<ResultBase> result =
-                AcquireRef(new Result::ResultBase(outputBuffer, bufferLength, dimensions));
+            Ref<MLResultBase> result =
+                AcquireRef(new Result::MLResultBase(outputBuffer, bufferLength, dimensions));
             std::string outputName = mOutputNameMap[outputId];
             results->Set(outputName.c_str(), result.Detach());
             if (outputs != nullptr) {
-                const Output* output = outputs->GetRecords().at(outputName);
+                const MLOutput* output = outputs->GetRecords().at(outputName);
                 ie_operand_t ieOperand;
                 ieOperand.name = const_cast<char*>(outputId.c_str());
                 IEStatusCode code = IE(ie_compilation_get_output)(mIeCompilation, &ieOperand,
@@ -319,8 +319,8 @@ namespace webnn_native { namespace ie {
                 COMPUTE_CALLBACK_TRY(code, "IE get output");
             }
         }
-        callback(WebnnComputeStatus_Success, reinterpret_cast<WebnnNamedResults>(results.Detach()),
-                 nullptr, userdata);
+        callback(WebnnComputeStatus_Success,
+                 reinterpret_cast<WebnnMLNamedResults>(results.Detach()), nullptr, userdata);
         return;
     }
 

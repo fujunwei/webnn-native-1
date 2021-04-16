@@ -26,7 +26,7 @@
 
 uint32_t product(const std::vector<int32_t>& dims);
 
-webnn::Context CreateCppContext();
+webnn::MLContext CreateCppContext();
 
 void DumpMemoryLeaks();
 
@@ -34,26 +34,26 @@ bool Expected(float output, float expected);
 
 namespace utils {
 
-    webnn::Operand BuildInput(const webnn::GraphBuilder& builder,
+    webnn::MLOperand BuildInput(const webnn::MLGraphBuilder& builder,
                               std::string name,
                               const std::vector<int32_t>& dimensions,
-                              webnn::OperandType type = webnn::OperandType::Float32);
+                              webnn::MLOperandType type = webnn::MLOperandType::Float32);
 
-    webnn::Operand BuildConstant(const webnn::GraphBuilder& builder,
+    webnn::MLOperand BuildConstant(const webnn::MLGraphBuilder& builder,
                                  const std::vector<int32_t>& dimensions,
                                  const void* value,
                                  size_t size,
-                                 webnn::OperandType type = webnn::OperandType::Float32);
+                                 webnn::MLOperandType type = webnn::MLOperandType::Float32);
 
-    struct Conv2dOptions {
+    struct MLConv2dOptions {
       public:
         std::vector<int32_t> padding;
         std::vector<int32_t> strides;
         std::vector<int32_t> dilations;
         int32_t groups = 1;
-        webnn::InputOperandLayout layout = webnn::InputOperandLayout::Nchw;
+        webnn::MLInputOperandLayout layout = webnn::MLInputOperandLayout::Nchw;
 
-        const webnn::Conv2dOptions* AsPtr() {
+        const webnn::MLConv2dOptions* AsPtr() {
             if (!padding.empty()) {
                 mOptions.paddingCount = padding.size();
                 mOptions.padding = padding.data();
@@ -72,18 +72,18 @@ namespace utils {
         }
 
       private:
-        webnn::Conv2dOptions mOptions;
+        webnn::MLConv2dOptions mOptions;
     };
 
-    struct Pool2dOptions {
+    struct MLPool2dOptions {
       public:
         std::vector<int32_t> windowDimensions;
         std::vector<int32_t> padding;
         std::vector<int32_t> strides;
         std::vector<int32_t> dilations;
-        webnn::InputOperandLayout layout = webnn::InputOperandLayout::Nchw;
+        webnn::MLInputOperandLayout layout = webnn::MLInputOperandLayout::Nchw;
 
-        const webnn::Pool2dOptions* AsPtr() {
+        const webnn::MLPool2dOptions* AsPtr() {
             if (!windowDimensions.empty()) {
                 mOptions.windowDimensionsCount = windowDimensions.size();
                 mOptions.windowDimensions = windowDimensions.data();
@@ -105,29 +105,29 @@ namespace utils {
         }
 
       private:
-        webnn::Pool2dOptions mOptions;
+        webnn::MLPool2dOptions mOptions;
     };
 
     typedef struct {
         const std::string& name;
-        const webnn::Operand& operand;
+        const webnn::MLOperand& operand;
     } NamedOutput;
 
-    webnn::Graph AwaitBuild(const webnn::GraphBuilder& builder,
+    webnn::MLGraph AwaitBuild(const webnn::MLGraphBuilder& builder,
                              const std::vector<NamedOutput>& outputs);
 
     typedef struct {
         const std::string& name;
-        const webnn::Input& input;
+        const webnn::MLInput& input;
     } NamedInput;
 
-    webnn::NamedResults AwaitCompute(const webnn::Graph& compilation,
+    webnn::MLNamedResults AwaitCompute(const webnn::MLGraph& compilation,
                                      const std::vector<NamedInput>& inputs);
 
-    bool CheckShape(const webnn::Result& result, const std::vector<int32_t>& expectedShape);
+    bool CheckShape(const webnn::MLResult& result, const std::vector<int32_t>& expectedShape);
 
     template <class T>
-    bool CheckValue(const webnn::Result& result, const std::vector<T>& expectedValue) {
+    bool CheckValue(const webnn::MLResult& result, const std::vector<T>& expectedValue) {
         size_t size = result.BufferSize() / sizeof(T);
         if (size != expectedValue.size()) {
             dawn::ErrorLog() << "The size of output data is expected as " << expectedValue.size()

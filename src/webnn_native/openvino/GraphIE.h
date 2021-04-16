@@ -19,8 +19,8 @@
 #include <set>
 
 #include "webnn_native/Error.h"
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 #include "webnn_native/openvino/ContextIE.h"
 #include "webnn_native/openvino/ienn/src/ie_nn_c_api.h"
 #include "webnn_native/ops/Binary.h"
@@ -34,14 +34,14 @@
 
 namespace webnn_native { namespace ie {
 
-    class Graph : public GraphBase {
+    class MLGraph : public MLGraphBase {
       public:
-        explicit Graph(Context* context);
-        ~Graph() override;
+        explicit MLGraph(MLContext* context);
+        ~MLGraph() override;
 
         virtual MaybeError AddConstant(const op::Constant* constant) override;
         virtual MaybeError AddInput(const op::Input* input) override;
-        virtual MaybeError AddOutput(const std::string& name, const OperandBase* ouput) override;
+        virtual MaybeError AddOutput(const std::string& name, const MLOperandBase* ouput) override;
         virtual MaybeError AddBinary(const op::Binary* binary) override;
         virtual MaybeError AddConv2d(const op::Conv2d* conv2d) override;
         virtual MaybeError AddPool2d(const op::Pool2d* pool2d) override;
@@ -51,10 +51,10 @@ namespace webnn_native { namespace ie {
         virtual MaybeError Finish() override;
 
       private:
-        void ComputeImpl(NamedInputsBase* inputs,
+        void ComputeImpl(MLNamedInputsBase* inputs,
                          WebnnComputeCallback callback,
                          void* userdata,
-                         NamedOutputsBase* outputs) override;
+                         MLNamedOutputsBase* outputs) override;
 
         ie_model_t* mIeModel;
         ie_compilation_t* mIeCompilation;
@@ -64,7 +64,7 @@ namespace webnn_native { namespace ie {
         // Map the IE internal id to output name
         std::map<std::string, std::string> mOutputNameMap;
         // Map the operand to IE internal id
-        std::map<const OperandBase*, std::string> mOperandIdMap;
+        std::map<const MLOperandBase*, std::string> mOperandIdMap;
     };
 
 }}  // namespace webnn_native::ie

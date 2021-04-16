@@ -15,26 +15,26 @@
 #ifndef WEBNN_NATIVE_OPS_CONV2D_H_
 #define WEBNN_NATIVE_OPS_CONV2D_H_
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
-    class Conv2d final : public OperandBase {
+    class Conv2d final : public MLOperandBase {
       public:
-        Conv2d(GraphBuilderBase* builder,
-               OperandBase* input,
-               OperandBase* filter,
-               Conv2dOptions const* options);
+        Conv2d(MLGraphBuilderBase* builder,
+               MLOperandBase* input,
+               MLOperandBase* filter,
+               MLConv2dOptions const* options);
         ~Conv2d() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override;
+        MaybeError AddToGraph(MLGraphBase* model) const override;
         MaybeError ValidateAndInferTypes() override;
 
-        Conv2dOptions const* GetOptions() const;
+        MLConv2dOptions const* GetOptions() const;
 
       private:
-        Conv2dOptions mOptions;
+        MLConv2dOptions mOptions;
         std::vector<int32_t> mPadding;
         std::vector<int32_t> mStride;
         std::vector<int32_t> mDilations;

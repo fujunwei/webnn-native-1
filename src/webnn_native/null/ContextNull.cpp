@@ -17,69 +17,69 @@
 
 namespace webnn_native { namespace null {
 
-    // Context
-    ContextBase* Create(WebnnContextOptions const* options) {
-        return new Context(reinterpret_cast<ContextOptions const*>(options));
+    // MLContext
+    MLContextBase* Create(WebnnMLContextOptions const* options) {
+        return new MLContext(reinterpret_cast<MLContextOptions const*>(options));
     }
 
-    Context::Context(ContextOptions const* options) {
+    MLContext::MLContext(MLContextOptions const* options) {
     }
 
-    GraphBase* Context::CreateGraphImpl() {
-        return new Graph(this);
+    MLGraphBase* MLContext::CreateGraphImpl() {
+        return new MLGraph(this);
     }
 
-    // GraphBuilder
-    GraphBuilder::GraphBuilder(ContextBase* context) : GraphBuilderBase(context) {
+    // MLGraphBuilder
+    MLGraphBuilder::MLGraphBuilder(MLContextBase* context) : MLGraphBuilderBase(context) {
     }
 
-    // Graph
-    Graph::Graph(Context* context) : GraphBase(context) {
+    // MLGraph
+    MLGraph::MLGraph(MLContext* context) : MLGraphBase(context) {
     }
 
-    void Graph::ComputeImpl(NamedInputsBase* inputs,
-                            WebnnComputeCallback callback,
-                            void* userdata,
-                            NamedOutputsBase* outputs) {
+    void MLGraph::ComputeImpl(MLNamedInputsBase* inputs,
+                              WebnnComputeCallback callback,
+                              void* userdata,
+                              MLNamedOutputsBase* outputs) {
     }
 
-    MaybeError Graph::AddConstant(const op::Constant* constant) {
+    MaybeError MLGraph::AddConstant(const op::Constant* constant) {
         return {};
     }
 
-    MaybeError Graph::AddInput(const op::Input* input) {
+    MaybeError MLGraph::AddInput(const op::Input* input) {
         return {};
     }
 
-    MaybeError Graph::AddOutput(const std::string& name, const OperandBase* output) {
+    MaybeError MLGraph::AddOutput(const std::string& name, const MLOperandBase* output) {
         return {};
     }
 
-    MaybeError Graph::AddBinary(const op::Binary* binary) {
+    MaybeError MLGraph::AddBinary(const op::Binary* binary) {
         return {};
     }
 
-    MaybeError Graph::AddConv2d(const op::Conv2d* conv2d) {
+    MaybeError MLGraph::AddConv2d(const op::Conv2d* conv2d) {
         return {};
     }
 
-    MaybeError Graph::AddPool2d(const op::Pool2d* pool2d) {
+    MaybeError MLGraph::AddPool2d(const op::Pool2d* pool2d) {
         return {};
     }
 
-    MaybeError Graph::AddReshape(const op::Reshape* relu) {
+    MaybeError MLGraph::AddReshape(const op::Reshape* relu) {
         return {};
     }
 
-    MaybeError Graph::AddTranspose(const op::Transpose* transpose) {
+    MaybeError MLGraph::AddTranspose(const op::Transpose* transpose) {
         return {};
     }
 
-    MaybeError Graph::AddUnary(const op::Unary* unary) {
+    MaybeError MLGraph::AddUnary(const op::Unary* unary) {
         return {};
     }
 
-    MaybeError Graph::Finish() {
+    MaybeError MLGraph::Finish() {
         return {};
     }
 

@@ -15,19 +15,19 @@
 #ifndef WEBNN_NATIVE_DML_CONTEXT_DML_H_
 #define WEBNN_NATIVE_DML_CONTEXT_DML_H_
 
-#include "webnn_native/Context.h"
-#include "webnn_native/Graph.h"
+#include "webnn_native/MLContext.h"
+#include "webnn_native/MLGraph.h"
 #include "webnn_native/dml/deps/src/precomp.h"
 
 namespace webnn_native { namespace dml {
 
-    class Context : public ContextBase {
+    class MLContext : public MLContextBase {
       public:
-        Context(ContextOptions const* options);
-        ~Context() override = default;
+        MLContext(MLContextOptions const* options);
+        ~MLContext() override = default;
 
         HRESULT CreateDevice();
-        GraphBase* CreateGraphImpl() override;
+        MLGraphBase* CreateGraphImpl() override;
 
         std::shared_ptr<::pydml::Device> GetDevice() {
             return mDevice;
@@ -35,7 +35,7 @@ namespace webnn_native { namespace dml {
 
       private:
         std::shared_ptr<::pydml::Device> mDevice;
-        ContextOptions mOptions;
+        MLContextOptions mOptions;
     };
 
 }}  // namespace webnn_native::dml

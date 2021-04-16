@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WEBNN_NATIVE_NAMED_OPERANDS_H_
-#define WEBNN_NATIVE_NAMED_OPERANDS_H_
+#ifndef WEBNN_NATIVE_NAMED_OUTPUTS_H_
+#define WEBNN_NATIVE_NAMED_OUTPUTS_H_
 
 #include <map>
 #include <string>
@@ -22,8 +22,8 @@
 
 namespace webnn_native {
 
-    class NamedOperandsBase : public NamedRecords<OperandBase> {};
+    class MLNamedOutputsBase : public NamedRecords<MLOutput> {};
 
 }  // namespace webnn_native
 
-#endif  // WEBNN_NATIVE_NAMED_OPERANDS_H_
+#endif  // WEBNN_NATIVE_NAMED_OUTPUTS_H_

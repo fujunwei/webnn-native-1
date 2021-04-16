@@ -15,8 +15,8 @@
 #ifndef WEBNN_NATIVE_OPS_BINARY_H_
 #define WEBNN_NATIVE_OPS_BINARY_H_
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
@@ -30,14 +30,14 @@ namespace webnn_native { namespace op {
         kMatMul,
     };
 
-    class Binary final : public OperandBase {
+    class Binary final : public MLOperandBase {
       public:
-        Binary(GraphBuilderBase* builder, BinaryOpType opType, OperandBase* a, OperandBase* b)
-            : OperandBase(builder, {a, b}), mOpType(opType) {
+        Binary(MLGraphBuilderBase* builder, BinaryOpType opType, MLOperandBase* a, MLOperandBase* b)
+            : MLOperandBase(builder, {a, b}), mOpType(opType) {
         }
         ~Binary() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override {
+        MaybeError AddToGraph(MLGraphBase* model) const override {
             return model->AddBinary(this);
         }
         BinaryOpType GetType() const {

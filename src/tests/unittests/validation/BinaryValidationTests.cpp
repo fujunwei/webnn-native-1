@@ -22,22 +22,23 @@ class BinaryValidationTest : public ValidationTest {};
 
 TEST_F(BinaryValidationTest, InputsType) {
     std::vector<int32_t> shape = {2, 2};
-    webnn::OperandDescriptor inputDesc = {webnn::OperandType::Float32, shape.data(),
-                                          (uint32_t)shape.size()};
-    webnn::Operand a = mBuilder.Input("input", &inputDesc);
+    webnn::MLOperandDescriptor inputDesc = {webnn::MLOperandType::Float32, shape.data(),
+                                            (uint32_t)shape.size()};
+    webnn::MLOperand a = mBuilder.Input("input", &inputDesc);
     // success
     {
         std::vector<float> data(4, 1);
-        webnn::Operand b = mBuilder.Constant(&inputDesc, data.data(), data.size() * sizeof(float));
-        webnn::Operand add = mBuilder.Add(a, b);
-        webnn::Operand mul = mBuilder.Mul(a, b);
-        webnn::Operand matmul = mBuilder.Matmul(a, b);
+        webnn::MLOperand b =
+            mBuilder.Constant(&inputDesc, data.data(), data.size() * sizeof(float));
+        webnn::MLOperand add = mBuilder.Add(a, b);
+        webnn::MLOperand mul = mBuilder.Mul(a, b);
+        webnn::MLOperand matmul = mBuilder.Matmul(a, b);
     }
     // inputs types are inconsistent
     {
         std::vector<int32_t> data(4, 1);
-        inputDesc = {webnn::OperandType::Int32, shape.data(), (uint32_t)shape.size()};
-        webnn::Operand b =
+        inputDesc = {webnn::MLOperandType::Int32, shape.data(), (uint32_t)shape.size()};
+        webnn::MLOperand b =
             mBuilder.Constant(&inputDesc, data.data(), data.size() * sizeof(int32_t));
         ASSERT_CONTEXT_ERROR(mBuilder.Add(a, b));
         ASSERT_CONTEXT_ERROR(mBuilder.Mul(a, b));

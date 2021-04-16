@@ -23,10 +23,10 @@
 
 namespace webnn_native {
 
-    class ResultBase : public RefCounted {
+    class MLResultBase : public RefCounted {
       public:
-        explicit ResultBase(void* buffer, uint32_t buffer_size, std::vector<int32_t>& dimensions);
-        virtual ~ResultBase() = default;
+        explicit MLResultBase(void* buffer, uint32_t buffer_size, std::vector<int32_t>& dimensions);
+        virtual ~MLResultBase() = default;
 
         // Dawn API
         const void* Buffer() const {

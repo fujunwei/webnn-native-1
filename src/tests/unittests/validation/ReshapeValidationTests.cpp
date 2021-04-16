@@ -22,18 +22,18 @@ class ReshapeValidationTest : public ValidationTest {};
 
 TEST_F(ReshapeValidationTest, InputsType) {
     std::vector<int32_t> shape = {2, 3, 4};
-    webnn::OperandDescriptor inputDesc = {webnn::OperandType::Float32, shape.data(),
-                                          (uint32_t)shape.size()};
-    webnn::Operand a = mBuilder.Input("input", &inputDesc);
+    webnn::MLOperandDescriptor inputDesc = {webnn::MLOperandType::Float32, shape.data(),
+                                            (uint32_t)shape.size()};
+    webnn::MLOperand a = mBuilder.Input("input", &inputDesc);
     // success
     {
         std::vector<int32_t> newShape = {1, 2, 3, 4};
-        webnn::Operand reshape = mBuilder.Reshape(a, newShape.data(), newShape.size());
+        webnn::MLOperand reshape = mBuilder.Reshape(a, newShape.data(), newShape.size());
     }
     // success - Only one component of newShape can be the special value of -1.
     {
         std::vector<int32_t> newShape = {-1, 2, 3, 4};
-        webnn::Operand reshape = mBuilder.Reshape(a, newShape.data(), newShape.size());
+        webnn::MLOperand reshape = mBuilder.Reshape(a, newShape.data(), newShape.size());
     }
     // two component both be -1
     {

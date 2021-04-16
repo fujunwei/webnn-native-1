@@ -19,24 +19,24 @@
 
 namespace webnn_native { namespace dml {
 
-    ContextBase* Create(WebnnContextOptions const* options) {
-        Ref<ContextBase> context =
-            AcquireRef(new Context(reinterpret_cast<ContextOptions const*>(options)));
-        if (FAILED(reinterpret_cast<Context*>(context.Get())->CreateDevice())) {
+    MLContextBase* Create(WebnnMLContextOptions const* options) {
+        Ref<MLContextBase> context =
+            AcquireRef(new MLContext(reinterpret_cast<MLContextOptions const*>(options)));
+        if (FAILED(reinterpret_cast<MLContext*>(context.Get())->CreateDevice())) {
             dawn::ErrorLog() << "Failed to create DirectML device.";
             return nullptr;
         }
         return context.Detach();
     }
 
-    Context::Context(ContextOptions const* options) {
+    MLContext::MLContext(MLContextOptions const* options) {
         if (options == nullptr) {
             return;
         }
         mOptions = *options;
     }
 
-    HRESULT Context::CreateDevice() {
+    HRESULT MLContext::CreateDevice() {
 #if defined(_DEBUG)
         mDevice.reset(new ::pydml::Device(true, true));
 #else
@@ -45,8 +45,8 @@ namespace webnn_native { namespace dml {
         return mDevice->Init();
     }
 
-    GraphBase* Context::CreateGraphImpl() {
-        return new Graph(this);
+    MLGraphBase* MLContext::CreateGraphImpl() {
+        return new MLGraph(this);
     }
 
 }}  // namespace webnn_native::dml

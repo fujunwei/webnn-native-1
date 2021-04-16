@@ -13,32 +13,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLOperand.h"
 
 #include "common/Assert.h"
 #include "common/Log.h"
-#include "webnn_native/GraphBuilder.h"
+#include "webnn_native/MLGraphBuilder.h"
 
 namespace webnn_native {
 
-    OperandBase::OperandBase(GraphBuilderBase* graphBuilder, std::vector<Ref<OperandBase>> inputs)
+    MLOperandBase::MLOperandBase(MLGraphBuilderBase* graphBuilder, std::vector<Ref<MLOperandBase>> inputs)
         : ObjectBase(graphBuilder->GetContext()), mInputs(std::move(inputs)) {
     }
 
-    OperandBase::OperandBase(GraphBuilderBase* graphBuilder, ObjectBase::ErrorTag tag)
+    MLOperandBase::MLOperandBase(MLGraphBuilderBase* graphBuilder, ObjectBase::ErrorTag tag)
         : ObjectBase(graphBuilder->GetContext(), tag) {
     }
 
     // static
-    OperandBase* OperandBase::MakeError(GraphBuilderBase* GraphBuilder) {
-        return new OperandBase(GraphBuilder, ObjectBase::kError);
+    MLOperandBase* MLOperandBase::MakeError(MLGraphBuilderBase* MLGraphBuilder) {
+        return new MLOperandBase(MLGraphBuilder, ObjectBase::kError);
     }
 
-    MaybeError OperandBase::AddToGraph(GraphBase* model) const {
+    MaybeError MLOperandBase::AddToGraph(MLGraphBase* model) const {
         DAWN_UNREACHABLE();
     }
 
-    const std::vector<Ref<OperandBase>>& OperandBase::Inputs() const {
+    const std::vector<Ref<MLOperandBase>>& MLOperandBase::Inputs() const {
         return mInputs;
     }
 

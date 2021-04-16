@@ -15,20 +15,20 @@
 #ifndef WEBNN_NATIVE_IE_CONTEXT_IE_H_
 #define WEBNN_NATIVE_IE_CONTEXT_IE_H_
 
-#include "webnn_native/Context.h"
-#include "webnn_native/Graph.h"
+#include "webnn_native/MLContext.h"
+#include "webnn_native/MLGraph.h"
 
 namespace webnn_native { namespace ie {
 
-    class Context : public ContextBase {
+    class MLContext : public MLContextBase {
       public:
-        explicit Context(ContextOptions const* options);
-        ~Context() override = default;
+        explicit MLContext(MLContextOptions const* options);
+        ~MLContext() override = default;
 
       private:
-        GraphBase* CreateGraphImpl() override;
+        MLGraphBase* CreateGraphImpl() override;
 
-        ContextOptions mOptions;
+        MLContextOptions mOptions;
     };
 
 }}  // namespace webnn_native::ie

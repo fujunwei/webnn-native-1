@@ -18,15 +18,15 @@
 #include <memory>
 #include <string>
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
-    class Input final : public OperandBase {
+    class Input final : public MLOperandBase {
       public:
-        Input(GraphBuilderBase* builder, const std::string& name, const OperandDescriptor* desc)
-            : OperandBase(builder), mName(name) {
+        Input(MLGraphBuilderBase* builder, const std::string& name, const MLOperandDescriptor* desc)
+            : MLOperandBase(builder), mName(name) {
             mDescriptor.type = desc->type;
             mType = desc->type;
             mRank = desc->dimensionsCount;
@@ -36,7 +36,7 @@ namespace webnn_native { namespace op {
         }
         ~Input() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override {
+        MaybeError AddToGraph(MLGraphBase* model) const override {
             return model->AddInput(this);
         }
         MaybeError ValidateAndInferTypes() override;
@@ -44,13 +44,13 @@ namespace webnn_native { namespace op {
         const std::string& GetName() const {
             return mName;
         }
-        const OperandDescriptor* GetOperandDescriptor() const {
+        const MLOperandDescriptor* GetOperandDescriptor() const {
             return &mDescriptor;
         }
 
       private:
         std::string mName;
-        OperandDescriptor mDescriptor;
+        MLOperandDescriptor mDescriptor;
         std::vector<int32_t> mDimensions;
     };
 

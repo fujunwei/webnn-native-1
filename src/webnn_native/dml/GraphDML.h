@@ -18,8 +18,8 @@
 #include <map>
 #include <set>
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 #include "webnn_native/dml/ContextDML.h"
 #include "webnn_native/dml/deps/src/precomp.h"
 #include "webnn_native/ops/Binary.h"
@@ -36,14 +36,14 @@ namespace webnn_native { namespace dml {
     std::string DmlTensorDimensionsToString(const ::dml::TensorDimensions&);
     std::string DmlTensorDataTypeToString(DML_TENSOR_DATA_TYPE type);
 
-    class Graph : public GraphBase {
+    class MLGraph : public MLGraphBase {
       public:
-        explicit Graph(Context* context);
-        ~Graph() override = default;
+        explicit MLGraph(MLContext* context);
+        ~MLGraph() override = default;
 
         virtual MaybeError AddConstant(const op::Constant* constant) override;
         virtual MaybeError AddInput(const op::Input* input) override;
-        virtual MaybeError AddOutput(const std::string& name, const OperandBase* output) override;
+        virtual MaybeError AddOutput(const std::string& name, const MLOperandBase* output) override;
         virtual MaybeError AddBinary(const op::Binary* binary) override;
         virtual MaybeError AddConv2d(const op::Conv2d* conv2d) override;
         virtual MaybeError AddPool2d(const op::Pool2d* pool2d) override;
@@ -55,14 +55,14 @@ namespace webnn_native { namespace dml {
         friend class Compilation;
 
       private:
-        void ComputeImpl(NamedInputsBase* inputs,
+        void ComputeImpl(MLNamedInputsBase* inputs,
                          WebnnComputeCallback callback,
                          void* userdata,
-                         NamedOutputsBase* outputs) override;
+                         MLNamedOutputsBase* outputs) override;
 
         std::shared_ptr<::pydml::Device> mDevice;
         std::unique_ptr<::dml::Graph> mGraph;
-        std::map<const OperandBase*, ::dml::Expression> mExpression;
+        std::map<const MLOperandBase*, ::dml::Expression> mExpression;
         std::vector<std::unique_ptr<::pydml::Binding>> mBindings;
         std::vector<std::unique_ptr<char>> mConstantBuffers;
         std::map<std::string, ::pydml::Binding*> mInputs;

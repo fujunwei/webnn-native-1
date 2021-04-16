@@ -42,8 +42,8 @@ class ValidationTest : public testing::Test {
     std::string GetLastErrorMessage() const;
 
   protected:
-    webnn::Context mContext;
-    webnn::GraphBuilder mBuilder;
+    webnn::MLContext mContext;
+    webnn::MLGraphBuilder mBuilder;
 
   private:
     static void ErrorCallback(WebnnErrorType type, const char* message, void* userdata);

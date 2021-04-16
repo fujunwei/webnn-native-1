@@ -157,8 +157,8 @@ NEURAL_NETWORK_C_API(void) ie_model_free(ie_model_t* model);
  * @brief Add Constant node to nGraph. Use the ie_operand_free() method to
  *  free the operand memory.
  * @ingroup model
- * @param ie_operand_descriptor_t A pointer to the Operand Descriptor.
- * @param value The value of Operand.
+ * @param ie_operand_descriptor_t A pointer to the MLOperand Descriptor.
+ * @param value The value of MLOperand.
  * @param size The size of the value.
  * @return Status code of the operation: OK(0) for success.
  */
@@ -173,8 +173,8 @@ ie_model_add_constant(ie_model_t* Compilation,
  * @brief Add Input node to nGraph. Use the ie_operand_free() method to
  *  free the operand memory.
  * @ingroup model
- * @param name The name of Input Operand to Set Value with JS.
- * @param ie_operand_descriptor_t A pointer to the Operand Descriptor.
+ * @param name The name of Input MLOperand to Set Value with JS.
+ * @param ie_operand_descriptor_t A pointer to the MLOperand Descriptor.
  * @return Status code of the operation: OK(0) for success.
  */
 NEURAL_NETWORK_C_API(IEStatusCode)
@@ -304,7 +304,7 @@ ie_model_add_transpose(ie_model_t* model,
 
 /**
  * @brief Releases memory occupied by operand.
- * @ingroup Operand
+ * @ingroup MLOperand
  * @param operand A pointer to the operand to free memory.
  */
 NEURAL_NETWORK_C_API(void) ie_operand_free(ie_operand_t* operand);

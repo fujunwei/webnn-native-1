@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "webnn_native/GraphBuilder.h"
+#include "webnn_native/MLGraphBuilder.h"
 
 #include <stack>
 #include <string>
@@ -22,9 +22,9 @@
 #include "common/Assert.h"
 #include "common/Log.h"
 #include "common/RefCounted.h"
-#include "webnn_native/Context.h"
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLContext.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 #include "webnn_native/ops/Binary.h"
 #include "webnn_native/ops/Constant.h"
 #include "webnn_native/ops/Conv2d.h"
@@ -35,9 +35,9 @@
 #include "webnn_native/ops/Unary.h"
 
 #define DAWN_VALIDATE_AND_INFER_TYPES(ptr)                          \
-    Ref<OperandBase> op = AcquireRef(ptr);                          \
+    Ref<MLOperandBase> op = AcquireRef(ptr);                          \
     if (GetContext()->ConsumedError(op->ValidateAndInferTypes())) { \
-        return OperandBase::MakeError(this);                        \
+        return MLOperandBase::MakeError(this);                        \
     }                                                               \
     return op.Detach();                                             \
     for (;;)                                                        \
@@ -51,81 +51,81 @@
 
 namespace webnn_native {
 
-    GraphBuilderBase::GraphBuilderBase(ContextBase* context) : ObjectBase(context) {
+    MLGraphBuilderBase::MLGraphBuilderBase(MLContextBase* context) : ObjectBase(context) {
     }
 
-    OperandBase* GraphBuilderBase::Constant(OperandDescriptor const* desc,
+    MLOperandBase* MLGraphBuilderBase::Constant(MLOperandDescriptor const* desc,
                                             void const* value,
                                             size_t size) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Constant(this, desc, value, size));
     }
 
-    OperandBase* GraphBuilderBase::Input(char const* name, OperandDescriptor const* desc) {
+    MLOperandBase* MLGraphBuilderBase::Input(char const* name, MLOperandDescriptor const* desc) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Input(this, std::string(name), desc));
     }
 
-    OperandBase* GraphBuilderBase::Matmul(OperandBase* a, OperandBase* b) {
+    MLOperandBase* MLGraphBuilderBase::Matmul(MLOperandBase* a, MLOperandBase* b) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Binary(this, op::BinaryOpType::kMatMul, a, b));
     }
 
-    OperandBase* GraphBuilderBase::Add(OperandBase* a, OperandBase* b) {
+    MLOperandBase* MLGraphBuilderBase::Add(MLOperandBase* a, MLOperandBase* b) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Binary(this, op::BinaryOpType::kAdd, a, b));
     }
 
-    OperandBase* GraphBuilderBase::Mul(OperandBase* a, OperandBase* b) {
+    MLOperandBase* MLGraphBuilderBase::Mul(MLOperandBase* a, MLOperandBase* b) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Binary(this, op::BinaryOpType::kMul, a, b));
     }
 
-    OperandBase* GraphBuilderBase::Conv2d(OperandBase* input,
-                                          OperandBase* filter,
-                                          Conv2dOptions const* options) {
+    MLOperandBase* MLGraphBuilderBase::Conv2d(MLOperandBase* input,
+                                          MLOperandBase* filter,
+                                          MLConv2dOptions const* options) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Conv2d(this, input, filter, options));
     }
 
-    OperandBase* GraphBuilderBase::AveragePool2d(OperandBase* input, Pool2dOptions const* options) {
+    MLOperandBase* MLGraphBuilderBase::AveragePool2d(MLOperandBase* input, MLPool2dOptions const* options) {
         DAWN_VALIDATE_AND_INFER_TYPES(
             new op::Pool2d(this, op::Pool2dType::kAveragePool2d, input, options));
     }
 
-    OperandBase* GraphBuilderBase::MaxPool2d(OperandBase* input, Pool2dOptions const* options) {
+    MLOperandBase* MLGraphBuilderBase::MaxPool2d(MLOperandBase* input, MLPool2dOptions const* options) {
         DAWN_VALIDATE_AND_INFER_TYPES(
             new op::Pool2d(this, op::Pool2dType::kMaxPool2d, input, options));
     }
 
-    OperandBase* GraphBuilderBase::Relu(OperandBase* input) {
+    MLOperandBase* MLGraphBuilderBase::Relu(MLOperandBase* input) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Unary(this, op::UnaryOpType::kRelu, input));
     }
 
-    OperandBase* GraphBuilderBase::Reshape(OperandBase* input,
+    MLOperandBase* MLGraphBuilderBase::Reshape(MLOperandBase* input,
                                            int32_t const* new_shape,
                                            size_t new_shape_count) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Reshape(this, input, new_shape, new_shape_count));
     }
 
-    OperandBase* GraphBuilderBase::Softmax(OperandBase* input) {
+    MLOperandBase* MLGraphBuilderBase::Softmax(MLOperandBase* input) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Unary(this, op::UnaryOpType::kSoftmax, input));
     }
 
-    OperandBase* GraphBuilderBase::Transpose(OperandBase* input, TransposeOptions const* options) {
+    MLOperandBase* MLGraphBuilderBase::Transpose(MLOperandBase* input, MLTransposeOptions const* options) {
         DAWN_VALIDATE_AND_INFER_TYPES(new op::Transpose(this, input, options));
     }
 
-    void GraphBuilderBase::Build(NamedOperandsBase const* namedOperands,
+    void MLGraphBuilderBase::Build(MLNamedOperandsBase const* namedOperands,
                                  WebnnBuildCallback callback,
                                  void* userdata) {
         if (DAWN_UNLIKELY(this->IsError())) {
-            BUILD_ERROR_AND_CALLBACK("This Graph object is an error");
+            BUILD_ERROR_AND_CALLBACK("This MLGraph object is an error");
         }
 
-        std::vector<const OperandBase*> outputs;
+        std::vector<const MLOperandBase*> outputs;
         if (namedOperands->GetRecords().empty()) {
             BUILD_ERROR_AND_CALLBACK("The output named operands are empty.");
         }
         for (auto& namedOutput : namedOperands->GetRecords()) {
             outputs.push_back(namedOutput.second);
         }
-        std::vector<const OperandBase*> sorted_operands = TopologicalSort(outputs);
-        Ref<GraphBase> graph = AcquireRef(GetContext()->CreateGraph());
+        std::vector<const MLOperandBase*> sorted_operands = TopologicalSort(outputs);
+        Ref<MLGraphBase> graph = AcquireRef(GetContext()->CreateGraph());
         for (auto& op : sorted_operands) {
             if (op->IsError() || GetContext()->ConsumedError(op->AddToGraph(graph.Get()))) {
                 BUILD_ERROR_AND_CALLBACK("Failed to add the operand when building graph.");
@@ -140,7 +140,7 @@ namespace webnn_native {
         if (GetContext()->ConsumedError(graph->Finish())) {
             BUILD_ERROR_AND_CALLBACK("Failed to finish building graph.");
         }
-        callback(WebnnBuildStatus_Success, reinterpret_cast<WebnnGraph>(graph.Detach()), nullptr,
+        callback(WebnnBuildStatus_Success, reinterpret_cast<WebnnMLGraph>(graph.Detach()), nullptr,
                  userdata);
     }
 
@@ -162,17 +162,17 @@ namespace webnn_native {
     // See the License for the specific language governing permissions and
     // limitations under the License.
     //*****************************************************************************
-    std::vector<const OperandBase*> GraphBuilderBase::TopologicalSort(
-        std::vector<const OperandBase*>& rootNodes) {
-        std::stack<const OperandBase*> nodesToDo;
-        std::unordered_set<const OperandBase*> nodesDone;
-        std::vector<const OperandBase*> result;
+    std::vector<const MLOperandBase*> MLGraphBuilderBase::TopologicalSort(
+        std::vector<const MLOperandBase*>& rootNodes) {
+        std::stack<const MLOperandBase*> nodesToDo;
+        std::unordered_set<const MLOperandBase*> nodesDone;
+        std::vector<const MLOperandBase*> result;
 
         for (auto& node : rootNodes) {
             nodesToDo.push(node);
         }
         while (nodesToDo.size() > 0) {
-            const OperandBase* node = nodesToDo.top();
+            const MLOperandBase* node = nodesToDo.top();
             if (nodesDone.count(node) == 0) {
                 bool can_add = true;
                 for (auto& dep : node->Inputs()) {

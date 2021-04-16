@@ -19,11 +19,11 @@
 
 namespace webnn_native { namespace op {
 
-    Pool2d::Pool2d(GraphBuilderBase* builder,
+    Pool2d::Pool2d(MLGraphBuilderBase* builder,
                    Pool2dType opType,
-                   OperandBase* input,
-                   Pool2dOptions const* options)
-        : OperandBase(builder, {input}), mOpType(opType) {
+                   MLOperandBase* input,
+                   MLPool2dOptions const* options)
+        : MLOperandBase(builder, {input}), mOpType(opType) {
         if (options != nullptr && options->windowDimensions != nullptr) {
             mWindowDimensions.assign(options->windowDimensions,
                                      options->windowDimensions + options->windowDimensionsCount);
@@ -61,17 +61,17 @@ namespace webnn_native { namespace op {
         mOptions.dilationsCount = mDilations.size();
 
         if (options == nullptr) {
-            mOptions.layout = webnn::InputOperandLayout::Nchw;
+            mOptions.layout = webnn::MLInputOperandLayout::Nchw;
         } else {
             mOptions.layout = options->layout;
         }
     }
 
-    MaybeError Pool2d::AddToGraph(GraphBase* model) const {
+    MaybeError Pool2d::AddToGraph(MLGraphBase* model) const {
         return model->AddPool2d(this);
     }
 
-    Pool2dOptions const* Pool2d::GetOptions() const {
+    MLPool2dOptions const* Pool2d::GetOptions() const {
         return &mOptions;
     }
 

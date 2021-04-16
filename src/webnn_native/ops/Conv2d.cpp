@@ -19,11 +19,11 @@
 
 namespace webnn_native { namespace op {
 
-    Conv2d::Conv2d(GraphBuilderBase* builder,
-                   OperandBase* input,
-                   OperandBase* filter,
-                   Conv2dOptions const* options)
-        : OperandBase(builder, {input, filter}) {
+    Conv2d::Conv2d(MLGraphBuilderBase* builder,
+                   MLOperandBase* input,
+                   MLOperandBase* filter,
+                   MLConv2dOptions const* options)
+        : MLOperandBase(builder, {input, filter}) {
         if (options == nullptr || options->padding == nullptr) {
             mPadding = std::vector<int32_t>(4, 0);
         } else {
@@ -55,17 +55,17 @@ namespace webnn_native { namespace op {
         }
 
         if (options == nullptr) {
-            mOptions.layout = webnn::InputOperandLayout::Nchw;
+            mOptions.layout = webnn::MLInputOperandLayout::Nchw;
         } else {
             mOptions.layout = options->layout;
         }
     }
 
-    MaybeError Conv2d::AddToGraph(GraphBase* model) const {
+    MaybeError Conv2d::AddToGraph(MLGraphBase* model) const {
         return model->AddConv2d(this);
     }
 
-    Conv2dOptions const* Conv2d::GetOptions() const {
+    MLConv2dOptions const* Conv2d::GetOptions() const {
         return &mOptions;
     }
 

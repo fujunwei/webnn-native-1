@@ -15,8 +15,8 @@
 #ifndef WEBNN_NATIVE_OPS_POOL2d_H_
 #define WEBNN_NATIVE_OPS_POOL2d_H_
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
@@ -26,22 +26,22 @@ namespace webnn_native { namespace op {
         kMaxPool2d,
     };
 
-    class Pool2d final : public OperandBase {
+    class Pool2d final : public MLOperandBase {
       public:
-        Pool2d(GraphBuilderBase* builder,
+        Pool2d(MLGraphBuilderBase* builder,
                Pool2dType type,
-               OperandBase* input,
-               Pool2dOptions const* options);
+               MLOperandBase* input,
+               MLPool2dOptions const* options);
         ~Pool2d() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override;
+        MaybeError AddToGraph(MLGraphBase* model) const override;
         MaybeError ValidateAndInferTypes() override;
 
-        Pool2dOptions const* GetOptions() const;
+        MLPool2dOptions const* GetOptions() const;
         Pool2dType GetType() const;
 
       private:
-        Pool2dOptions mOptions;
+        MLPool2dOptions mOptions;
         std::vector<int32_t> mWindowDimensions;
         std::vector<int32_t> mPadding;
         std::vector<int32_t> mStride;

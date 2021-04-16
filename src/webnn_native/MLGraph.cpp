@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "webnn_native/Graph.h"
+#include "webnn_native/MLGraph.h"
 
 #include <string>
 
@@ -21,53 +21,53 @@
 
 namespace webnn_native {
 
-    GraphBase::GraphBase(ContextBase* context) : ObjectBase(context) {
+    MLGraphBase::MLGraphBase(MLContextBase* context) : ObjectBase(context) {
     }
 
-    void GraphBase::Compute(NamedInputsBase* inputs,
+    void MLGraphBase::Compute(MLNamedInputsBase* inputs,
                             WebnnComputeCallback callback,
                             void* userdata,
-                            NamedOutputsBase* outputs) {
+                            MLNamedOutputsBase* outputs) {
         ComputeImpl(inputs, callback, userdata, outputs);
     }
 
-    MaybeError GraphBase::AddConstant(const op::Constant* constant) {
+    MaybeError MLGraphBase::AddConstant(const op::Constant* constant) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddInput(const op::Input* input) {
+    MaybeError MLGraphBase::AddInput(const op::Input* input) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddOutput(const std::string& name, const OperandBase* output) {
+    MaybeError MLGraphBase::AddOutput(const std::string& name, const MLOperandBase* output) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddBinary(const op::Binary* binary) {
+    MaybeError MLGraphBase::AddBinary(const op::Binary* binary) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddConv2d(const op::Conv2d* conv2d) {
+    MaybeError MLGraphBase::AddConv2d(const op::Conv2d* conv2d) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddPool2d(const op::Pool2d* pool2d) {
+    MaybeError MLGraphBase::AddPool2d(const op::Pool2d* pool2d) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddReshape(const op::Reshape* relu) {
+    MaybeError MLGraphBase::AddReshape(const op::Reshape* relu) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddTranspose(const op::Transpose* transpose) {
+    MaybeError MLGraphBase::AddTranspose(const op::Transpose* transpose) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::AddUnary(const op::Unary* unary) {
+    MaybeError MLGraphBase::AddUnary(const op::Unary* unary) {
         UNREACHABLE();
     }
 
-    MaybeError GraphBase::Finish() {
+    MaybeError MLGraphBase::Finish() {
         UNREACHABLE();
     }
 

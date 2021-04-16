@@ -17,19 +17,19 @@
 #include "common/Assert.h"
 #include "common/Log.h"
 #include "webnn_native/ErrorData.h"
-#include "webnn_native/NamedInputs.h"
-#include "webnn_native/NamedOutputs.h"
-#include "webnn_native/NamedResults.h"
-#include "webnn_native/Operand.h"
-#include "webnn_native/Result.h"
+#include "webnn_native/MLNamedInputs.h"
+#include "webnn_native/MLNamedOutputs.h"
+#include "webnn_native/MLNamedResults.h"
+#include "webnn_native/MLOperand.h"
+#include "webnn_native/MLResult.h"
 #include "webnn_native/dml/ContextDML.h"
 #include "webnn_native/dml/deps/src/precomp.h"
 
 namespace webnn_native { namespace dml {
-    class Result : public ResultBase {
+    class Result : public MLResultBase {
       public:
         explicit Result(void* buffer, uint32_t buffer_size, std::vector<int32_t>& dimensions)
-            : ResultBase(buffer, buffer_size, dimensions) {
+            : MLResultBase(buffer, buffer_size, dimensions) {
         }
         ~Result() {
             free(mBuffer);
@@ -37,15 +37,15 @@ namespace webnn_native { namespace dml {
     };
 
     namespace {
-        bool GetDmlTensorDataType(webnn::OperandType operandType,
+        bool GetDmlTensorDataType(webnn::MLOperandType MLoperandType,
                                   DML_TENSOR_DATA_TYPE& dmlTensorDataType) {
-            if (operandType == webnn::OperandType::Float32) {
+            if (MLoperandType == webnn::MLOperandType::Float32) {
                 dmlTensorDataType = DML_TENSOR_DATA_TYPE_FLOAT32;
-            } else if (operandType == webnn::OperandType::Float16) {
+            } else if (MLoperandType == webnn::MLOperandType::Float16) {
                 dmlTensorDataType = DML_TENSOR_DATA_TYPE_FLOAT16;
-            } else if (operandType == webnn::OperandType::Int32) {
+            } else if (MLoperandType == webnn::MLOperandType::Int32) {
                 dmlTensorDataType = DML_TENSOR_DATA_TYPE_INT32;
-            } else if (operandType == webnn::OperandType::Uint32) {
+            } else if (MLoperandType == webnn::MLOperandType::Uint32) {
                 dmlTensorDataType = DML_TENSOR_DATA_TYPE_UINT32;
             } else {
                 return false;
@@ -244,13 +244,13 @@ namespace webnn_native { namespace dml {
         return std::to_string(type);
     }
 
-    Graph::Graph(Context* context) : GraphBase(context) {
+    MLGraph::MLGraph(MLContext* context) : MLGraphBase(context) {
         mDevice = context->GetDevice();
         mGraph.reset(new ::dml::Graph(mDevice->GetDevice()));
     }
 
-    MaybeError Graph::AddConstant(const op::Constant* constant) {
-        const OperandDescriptor* desc = constant->GetOperandDescriptor();
+    MaybeError MLGraph::AddConstant(const op::Constant* constant) {
+        const MLOperandDescriptor* desc = constant->GetOperandDescriptor();
         DML_TENSOR_DATA_TYPE dmlTensorType;
         if (!GetDmlTensorDataType(desc->type, dmlTensorType)) {
             return DAWN_INTERNAL_ERROR("Failed to get DML tensor type.");
@@ -274,8 +274,8 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddInput(const op::Input* input) {
-        const OperandDescriptor* desc = input->GetOperandDescriptor();
+    MaybeError MLGraph::AddInput(const op::Input* input) {
+        const MLOperandDescriptor* desc = input->GetOperandDescriptor();
         DML_TENSOR_DATA_TYPE dmlTensorType;
         if (!GetDmlTensorDataType(desc->type, dmlTensorType)) {
             return DAWN_INTERNAL_ERROR("Failed to get DML tensor type.");
@@ -294,14 +294,14 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddOutput(const std::string& name, const OperandBase* output) {
+    MaybeError MLGraph::AddOutput(const std::string& name, const MLOperandBase* output) {
         DAWN_ASSERT(mExpression.find(output) != mExpression.end());
         ::dml::Expression dmlOutput = mExpression.at(output);
         mOutputs.insert(std::make_pair(name, dmlOutput));
         return {};
     }
 
-    MaybeError Graph::AddBinary(const op::Binary* binary) {
+    MaybeError MLGraph::AddBinary(const op::Binary* binary) {
         DAWN_ASSERT(binary->Inputs().size() == 2);
         DAWN_ASSERT(mExpression.find(binary->Inputs()[0].Get()) != mExpression.end());
         ::dml::Expression a = mExpression.at(binary->Inputs()[0].Get());
@@ -407,15 +407,15 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddConv2d(const op::Conv2d* conv2d) {
+    MaybeError MLGraph::AddConv2d(const op::Conv2d* conv2d) {
         DAWN_ASSERT(conv2d->Inputs().size() == 2);
-        const OperandBase* inputOperand = conv2d->Inputs()[0].Get();
+        const MLOperandBase* inputOperand = conv2d->Inputs()[0].Get();
         DAWN_ASSERT(mExpression.find(inputOperand) != mExpression.end());
         ::dml::Expression input = mExpression.at(inputOperand);
-        const OperandBase* filterOperand = conv2d->Inputs()[1].Get();
+        const MLOperandBase* filterOperand = conv2d->Inputs()[1].Get();
         DAWN_ASSERT(mExpression.find(filterOperand) != mExpression.end());
         ::dml::Expression filter = mExpression.at(filterOperand);
-        const Conv2dOptions* options = conv2d->GetOptions();
+        const MLConv2dOptions* options = conv2d->GetOptions();
         // FIXME(nhu): strides, dilations, padding should be uint32_t
         // need to fix the spec.
         ::dml::Span<const uint32_t> strides(reinterpret_cast<const uint32_t*>(options->strides),
@@ -442,12 +442,12 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddPool2d(const op::Pool2d* pool2d) {
+    MaybeError MLGraph::AddPool2d(const op::Pool2d* pool2d) {
         DAWN_ASSERT(pool2d->Inputs().size() == 1);
-        const OperandBase* inputOperand = pool2d->Inputs()[0].Get();
+        const MLOperandBase* inputOperand = pool2d->Inputs()[0].Get();
         DAWN_ASSERT(mExpression.find(inputOperand) != mExpression.end());
         ::dml::Expression input = mExpression.at(inputOperand);
-        const Pool2dOptions* options = pool2d->GetOptions();
+        const MLPool2dOptions* options = pool2d->GetOptions();
         ::dml::Span<const uint32_t> strides(reinterpret_cast<const uint32_t*>(options->strides),
                                             options->stridesCount);
         std::vector<std::uint32_t> windowSizesVector;
@@ -490,9 +490,9 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddReshape(const op::Reshape* reshape) {
+    MaybeError MLGraph::AddReshape(const op::Reshape* reshape) {
         DAWN_ASSERT(reshape->Inputs().size() == 1);
-        const OperandBase* inputOperand = reshape->Inputs()[0].Get();
+        const MLOperandBase* inputOperand = reshape->Inputs()[0].Get();
         DAWN_ASSERT(mExpression.find(inputOperand) != mExpression.end());
         ::dml::Expression input = mExpression.at(inputOperand);
         if (reshape->GetNewShapeCount() > DML_TENSOR_DIMENSION_COUNT_MAX) {
@@ -533,12 +533,12 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddTranspose(const op::Transpose* transpose) {
+    MaybeError MLGraph::AddTranspose(const op::Transpose* transpose) {
         DAWN_ASSERT(transpose->Inputs().size() == 1);
-        const OperandBase* inputOperand = transpose->Inputs()[0].Get();
+        const MLOperandBase* inputOperand = transpose->Inputs()[0].Get();
         DAWN_ASSERT(mExpression.find(inputOperand) != mExpression.end());
         ::dml::Expression input = mExpression.at(inputOperand);
-        const TransposeOptions* options = transpose->GetOptions();
+        const MLTransposeOptions* options = transpose->GetOptions();
         if (options->permutationCount > DML_TENSOR_DIMENSION_COUNT_MAX) {
             return DAWN_INTERNAL_ERROR("The size of permutation is not supported by DML.");
         }
@@ -591,9 +591,9 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::AddUnary(const op::Unary* unary) {
+    MaybeError MLGraph::AddUnary(const op::Unary* unary) {
         DAWN_ASSERT(unary->Inputs().size() == 1);
-        const OperandBase* inputOperand = unary->Inputs()[0].Get();
+        const MLOperandBase* inputOperand = unary->Inputs()[0].Get();
         DAWN_ASSERT(mExpression.find(inputOperand) != mExpression.end());
         ::dml::Expression input = mExpression.at(inputOperand);
         ::dml::Expression output;
@@ -611,7 +611,7 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    MaybeError Graph::Finish() {
+    MaybeError MLGraph::Finish() {
         if (mOutputs.size() == 1) {
             auto output = mOutputs.begin();
             if (output->second.Impl()->GetNode().type == ::dml::detail::NodeType::Reinterpret) {
@@ -643,10 +643,10 @@ namespace webnn_native { namespace dml {
         return {};
     }
 
-    void Graph::ComputeImpl(NamedInputsBase* inputs,
-                            WebnnComputeCallback callback,
-                            void* userdata,
-                            NamedOutputsBase* outputs) {
+    void MLGraph::ComputeImpl(MLNamedInputsBase* inputs,
+                              WebnnComputeCallback callback,
+                              void* userdata,
+                              MLNamedOutputsBase* outputs) {
         for (auto& input : inputs->GetRecords()) {
             ::pydml::Binding* inputBinding = mInputs.at(input.first);
             inputBinding->data.buffer = const_cast<void*>(input.second->buffer);
@@ -676,7 +676,7 @@ namespace webnn_native { namespace dml {
             return;
         }
 
-        Ref<NamedResultsBase> results = AcquireRef(new NamedResultsBase());
+        Ref<MLNamedResultsBase> results = AcquireRef(new MLNamedResultsBase());
         for (size_t i = 0; i < outputNames.size(); ++i) {
             std::string outputName = outputNames[i];
             pydml::TensorData* tensor = outputTensors[i];
@@ -687,18 +687,19 @@ namespace webnn_native { namespace dml {
                 // convert from uint32_t to int32_t.
                 dimensions.push_back(static_cast<int32_t>(size));
             }
-            Ref<ResultBase> result = AcquireRef(new Result(outputBuffer, bufferLength, dimensions));
+            Ref<MLResultBase> result =
+                AcquireRef(new Result(outputBuffer, bufferLength, dimensions));
             results->Set(outputName.c_str(), result.Detach());
             if (outputs != nullptr) {
-                const Output* output = outputs->GetRecords().at(outputName);
+                const MLOutput* output = outputs->GetRecords().at(outputName);
                 if (output->size >= bufferLength) {
                     memcpy(output->buffer, outputBuffer, bufferLength);
                 }
             }
             delete tensor;
         }
-        callback(WebnnComputeStatus_Success, reinterpret_cast<WebnnNamedResults>(results.Detach()),
-                 nullptr, userdata);
+        callback(WebnnComputeStatus_Success,
+                 reinterpret_cast<WebnnMLNamedResults>(results.Detach()), nullptr, userdata);
         return;
     }
 

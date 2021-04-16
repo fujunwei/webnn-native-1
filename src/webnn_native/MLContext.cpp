@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "webnn_native/Context.h"
+#include "webnn_native/MLContext.h"
 
 #include <sstream>
 
@@ -21,23 +21,23 @@
 
 namespace webnn_native {
 
-    ContextBase::ContextBase() {
+    MLContextBase::MLContextBase() {
         mRootErrorScope = AcquireRef(new ErrorScope());
         mCurrentErrorScope = mRootErrorScope.Get();
     }
 
-    GraphBase* ContextBase::CreateGraph() {
+    MLGraphBase* MLContextBase::CreateGraph() {
         return CreateGraphImpl();
     }
 
-    void ContextBase::PushErrorScope(webnn::ErrorFilter filter) {
+    void MLContextBase::PushErrorScope(webnn::ErrorFilter filter) {
         if (ConsumedError(ValidateErrorFilter(filter))) {
             return;
         }
         mCurrentErrorScope = AcquireRef(new ErrorScope(filter, mCurrentErrorScope.Get()));
     }
 
-    bool ContextBase::PopErrorScope(webnn::ErrorCallback callback, void* userdata) {
+    bool MLContextBase::PopErrorScope(webnn::ErrorCallback callback, void* userdata) {
         if (DAWN_UNLIKELY(mCurrentErrorScope.Get() == mRootErrorScope.Get())) {
             return false;
         }
@@ -47,11 +47,11 @@ namespace webnn_native {
         return true;
     }
 
-    void ContextBase::SetUncapturedErrorCallback(webnn::ErrorCallback callback, void* userdata) {
+    void MLContextBase::SetUncapturedErrorCallback(webnn::ErrorCallback callback, void* userdata) {
         mRootErrorScope->SetCallback(callback, userdata);
     }
 
-    void ContextBase::HandleError(std::unique_ptr<ErrorData> error) {
+    void MLContextBase::HandleError(std::unique_ptr<ErrorData> error) {
         ASSERT(error != nullptr);
         std::ostringstream ss;
         ss << error->GetMessage();

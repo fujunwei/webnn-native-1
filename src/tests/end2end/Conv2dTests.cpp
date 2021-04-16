@@ -17,18 +17,18 @@
 class Conv2dTests : public WebnnTest {};
 
 TEST_F(Conv2dTests, Conv2dWithPadding) {
-    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
-    const webnn::Operand input = utils::BuildInput(builder, "input", {1, 1, 5, 5});
+    const webnn::MLGraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
+    const webnn::MLOperand input = utils::BuildInput(builder, "input", {1, 1, 5, 5});
     const std::vector<float> filterData(9, 1);
-    const webnn::Operand filter = utils::BuildConstant(builder, {1, 1, 3, 3}, filterData.data(),
-                                                       filterData.size() * sizeof(float));
-    utils::Conv2dOptions options;
+    const webnn::MLOperand filter = utils::BuildConstant(builder, {1, 1, 3, 3}, filterData.data(),
+                                                         filterData.size() * sizeof(float));
+    utils::MLConv2dOptions options;
     options.padding = {1, 1, 1, 1};
-    const webnn::Operand output = builder.Conv2d(input, filter, options.AsPtr());
-    const webnn::Graph graph = utils::AwaitBuild(builder, {{"output", output}});
+    const webnn::MLOperand output = builder.Conv2d(input, filter, options.AsPtr());
+    const webnn::MLGraph graph = utils::AwaitBuild(builder, {{"output", output}});
     const std::vector<float> inputData = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-    const webnn::Result result =
+    const webnn::MLResult result =
         utils::AwaitCompute(graph,
                             {{"input", {inputData.data(), inputData.size() * sizeof(float)}}})
             .Get("output");
@@ -40,16 +40,16 @@ TEST_F(Conv2dTests, Conv2dWithPadding) {
 }
 
 TEST_F(Conv2dTests, Conv2dWithoutPadding) {
-    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
-    const webnn::Operand input = utils::BuildInput(builder, "input", {1, 1, 5, 5});
+    const webnn::MLGraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
+    const webnn::MLOperand input = utils::BuildInput(builder, "input", {1, 1, 5, 5});
     const std::vector<float> filterData(9, 1);
-    const webnn::Operand filter = utils::BuildConstant(builder, {1, 1, 3, 3}, filterData.data(),
-                                                       filterData.size() * sizeof(float));
-    const webnn::Operand output = builder.Conv2d(input, filter);
-    const webnn::Graph graph = utils::AwaitBuild(builder, {{"output", output}});
+    const webnn::MLOperand filter = utils::BuildConstant(builder, {1, 1, 3, 3}, filterData.data(),
+                                                         filterData.size() * sizeof(float));
+    const webnn::MLOperand output = builder.Conv2d(input, filter);
+    const webnn::MLGraph graph = utils::AwaitBuild(builder, {{"output", output}});
     const std::vector<float> inputData = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-    const webnn::Result result =
+    const webnn::MLResult result =
         utils::AwaitCompute(graph,
                             {{"input", {inputData.data(), inputData.size() * sizeof(float)}}})
             .Get("output");
@@ -59,20 +59,20 @@ TEST_F(Conv2dTests, Conv2dWithoutPadding) {
 }
 
 TEST_F(Conv2dTests, Conv2dWithStrides2AndPadding) {
-    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
-    const webnn::Operand input = utils::BuildInput(builder, "input", {1, 1, 7, 5});
+    const webnn::MLGraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
+    const webnn::MLOperand input = utils::BuildInput(builder, "input", {1, 1, 7, 5});
     const std::vector<float> filterData(9, 1);
-    const webnn::Operand filter = utils::BuildConstant(builder, {1, 1, 3, 3}, filterData.data(),
-                                                       filterData.size() * sizeof(float));
-    utils::Conv2dOptions options;
+    const webnn::MLOperand filter = utils::BuildConstant(builder, {1, 1, 3, 3}, filterData.data(),
+                                                         filterData.size() * sizeof(float));
+    utils::MLConv2dOptions options;
     options.padding = {1, 1, 1, 1};
     options.strides = {2, 2};
-    const webnn::Operand output = builder.Conv2d(input, filter, options.AsPtr());
-    const webnn::Graph graph = utils::AwaitBuild(builder, {{"output", output}});
+    const webnn::MLOperand output = builder.Conv2d(input, filter, options.AsPtr());
+    const webnn::MLGraph graph = utils::AwaitBuild(builder, {{"output", output}});
     const std::vector<float> inputData = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
                                           12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
                                           24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34};
-    const webnn::Result result =
+    const webnn::MLResult result =
         utils::AwaitCompute(graph,
                             {{"input", {inputData.data(), inputData.size() * sizeof(float)}}})
             .Get("output");
@@ -83,19 +83,19 @@ TEST_F(Conv2dTests, Conv2dWithStrides2AndPadding) {
 }
 
 TEST_F(Conv2dTests, Conv2dWithStrides2AndAsymetricPadding) {
-    const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
-    const webnn::Operand input = utils::BuildInput(builder, "input", {1, 1, 5, 5});
+    const webnn::MLGraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
+    const webnn::MLOperand input = utils::BuildInput(builder, "input", {1, 1, 5, 5});
     const std::vector<float> filterData(8, 1);
-    const webnn::Operand filter = utils::BuildConstant(builder, {1, 1, 4, 2}, filterData.data(),
-                                                       filterData.size() * sizeof(float));
-    utils::Conv2dOptions options;
+    const webnn::MLOperand filter = utils::BuildConstant(builder, {1, 1, 4, 2}, filterData.data(),
+                                                         filterData.size() * sizeof(float));
+    utils::MLConv2dOptions options;
     options.padding = {1, 2, 0, 1};
     options.strides = {2, 2};
-    const webnn::Operand output = builder.Conv2d(input, filter, options.AsPtr());
-    const webnn::Graph graph = utils::AwaitBuild(builder, {{"output", output}});
+    const webnn::MLOperand output = builder.Conv2d(input, filter, options.AsPtr());
+    const webnn::MLGraph graph = utils::AwaitBuild(builder, {{"output", output}});
     const std::vector<float> inputData = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                                           13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-    const webnn::Result result =
+    const webnn::MLResult result =
         utils::AwaitCompute(graph,
                             {{"input", {inputData.data(), inputData.size() * sizeof(float)}}})
             .Get("output");

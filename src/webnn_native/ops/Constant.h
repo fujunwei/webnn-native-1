@@ -15,18 +15,18 @@
 #ifndef WEBNN_NATIVE_OPS_CONSTANT_H_
 #define WEBNN_NATIVE_OPS_CONSTANT_H_
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
-    class Constant final : public OperandBase {
+    class Constant final : public MLOperandBase {
       public:
-        Constant(GraphBuilderBase* builder,
-                 const OperandDescriptor* desc,
+        Constant(MLGraphBuilderBase* builder,
+                 const MLOperandDescriptor* desc,
                  void const* value,
                  size_t size)
-            : OperandBase(builder), mValue(value), mSize(size) {
+            : MLOperandBase(builder), mValue(value), mSize(size) {
             mDescriptor.type = desc->type;
             mType = desc->type;
             mRank = desc->dimensionsCount;
@@ -36,12 +36,12 @@ namespace webnn_native { namespace op {
         }
         ~Constant() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override {
+        MaybeError AddToGraph(MLGraphBase* model) const override {
             return model->AddConstant(this);
         }
 
         MaybeError ValidateAndInferTypes() override;
-        const OperandDescriptor* GetOperandDescriptor() const {
+        const MLOperandDescriptor* GetOperandDescriptor() const {
             return &mDescriptor;
         }
         void const* GetValue() const {
@@ -52,7 +52,7 @@ namespace webnn_native { namespace op {
         }
 
       private:
-        OperandDescriptor mDescriptor;
+        MLOperandDescriptor mDescriptor;
         std::vector<int32_t> mDimensions;
         void const* mValue;
         size_t mSize;

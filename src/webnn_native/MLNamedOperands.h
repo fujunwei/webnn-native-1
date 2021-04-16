@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WEBNN_NATIVE_NAMED_INPUTS_H_
-#define WEBNN_NATIVE_NAMED_INPUTS_H_
+#ifndef WEBNN_NATIVE_NAMED_OPERANDS_H_
+#define WEBNN_NATIVE_NAMED_OPERANDS_H_
 
 #include <map>
 #include <string>
 
 #include "webnn_native/NamedRecords.h"
-#include "webnn_native/webnn_platform.h"
 
 namespace webnn_native {
 
-    class NamedInputsBase : public NamedRecords<Input> {};
+    class MLNamedOperandsBase : public NamedRecords<MLOperandBase> {};
 
 }  // namespace webnn_native
 
-#endif  // WEBNN_NATIVE_NAMED_INPUTS_H_
+#endif  // WEBNN_NATIVE_NAMED_OPERANDS_H_

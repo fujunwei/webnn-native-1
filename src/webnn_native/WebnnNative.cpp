@@ -18,7 +18,7 @@
 #include <memory>
 
 #include "common/Assert.h"
-#include "webnn_native/GraphBuilder.h"
+#include "webnn_native/MLGraphBuilder.h"
 
 // Contains the entry-points into webnn_native
 namespace webnn_native {
@@ -29,23 +29,23 @@ namespace webnn_native {
     }
 
     namespace null {
-        ContextBase* Create(WebnnContextOptions const* options);
+        MLContextBase* Create(WebnnMLContextOptions const* options);
     }
     namespace ie {
-        ContextBase* Create(WebnnContextOptions const* options);
+        MLContextBase* Create(WebnnMLContextOptions const* options);
     }
     namespace dml {
-        ContextBase* Create(WebnnContextOptions const* options);
+        MLContextBase* Create(WebnnMLContextOptions const* options);
     }
 
     // Should put the default null backend at the end.
-    WebnnContext CreateContext(WebnnContextOptions const* options) {
+    WebnnMLContext CreateContext(WebnnMLContextOptions const* options) {
 #if defined(WEBNN_ENABLE_BACKEND_OPENVINO)
-        return reinterpret_cast<WebnnContext>(ie::Create(options));
+        return reinterpret_cast<WebnnMLContext>(ie::Create(options));
 #elif defined(WEBNN_ENABLE_BACKEND_DML)
-        return reinterpret_cast<WebnnContext>(dml::Create(options));
+        return reinterpret_cast<WebnnMLContext>(dml::Create(options));
 #elif defined(WEBNN_ENABLE_BACKEND_NULL)
-        return reinterpret_cast<WebnnContext>(null::Create(options));
+        return reinterpret_cast<WebnnMLContext>(null::Create(options));
 #else
         return nullptr;
 #endif

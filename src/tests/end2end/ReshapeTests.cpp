@@ -19,14 +19,14 @@ class ReshapeTests : public WebnnTest {
     void TestReshape(const std::vector<int32_t>& oldShape,
                      const std::vector<int32_t>& newShape,
                      const std::vector<int32_t>& expectedShape) {
-        const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
-        const webnn::Operand a = utils::BuildInput(builder, "a", oldShape);
-        const webnn::Operand b = builder.Reshape(a, newShape.data(), newShape.size());
-        const webnn::Graph graph = utils::AwaitBuild(builder, {{"b", b}});
+        const webnn::MLGraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
+        const webnn::MLOperand a = utils::BuildInput(builder, "a", oldShape);
+        const webnn::MLOperand b = builder.Reshape(a, newShape.data(), newShape.size());
+        const webnn::MLGraph graph = utils::AwaitBuild(builder, {{"b", b}});
         const std::vector<float> inputData = {1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
                                               13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-        const webnn::Input input = {inputData.data(), inputData.size() * sizeof(float)};
-        const webnn::Result result = utils::AwaitCompute(graph, {{"a", input}}).Get("b");
+        const webnn::MLInput input = {inputData.data(), inputData.size() * sizeof(float)};
+        const webnn::MLResult result = utils::AwaitCompute(graph, {{"a", input}}).Get("b");
         EXPECT_TRUE(utils::CheckShape(result, expectedShape));
         EXPECT_TRUE(utils::CheckValue(result, inputData));
     }

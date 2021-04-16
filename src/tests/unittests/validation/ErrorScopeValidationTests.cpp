@@ -59,9 +59,9 @@ TEST_F(ErrorScopeValidationTest, CatchesError) {
     mContext.PushErrorScope(webnn::ErrorFilter::Validation);
 
     std::vector<int32_t> shape = {2, 2, 2};
-    webnn::OperandDescriptor inputDesc = {webnn::OperandType::Float32, shape.data(),
-                                          (uint32_t)shape.size()};
-    webnn::Operand a = mBuilder.Input("input", &inputDesc);
+    webnn::MLOperandDescriptor inputDesc = {webnn::MLOperandType::Float32, shape.data(),
+                                            (uint32_t)shape.size()};
+    webnn::MLOperand a = mBuilder.Input("input", &inputDesc);
     mBuilder.Softmax(a);
 
     EXPECT_CALL(*mockContextPopErrorScopeCallback, Call(WebnnErrorType_Validation, _, this))
@@ -74,9 +74,9 @@ TEST_F(ErrorScopeValidationTest, UnhandledErrorsMatchUncapturedErrorCallback) {
     mContext.PushErrorScope(webnn::ErrorFilter::OutOfMemory);
 
     std::vector<int32_t> shape = {2, 2, 2};
-    webnn::OperandDescriptor inputDesc = {webnn::OperandType::Float32, shape.data(),
-                                          (uint32_t)shape.size()};
-    webnn::Operand a = mBuilder.Input("input", &inputDesc);
+    webnn::MLOperandDescriptor inputDesc = {webnn::MLOperandType::Float32, shape.data(),
+                                            (uint32_t)shape.size()};
+    webnn::MLOperand a = mBuilder.Input("input", &inputDesc);
     ASSERT_CONTEXT_ERROR(mBuilder.Softmax(a));
 
     EXPECT_CALL(*mockContextPopErrorScopeCallback, Call(WebnnErrorType_NoError, _, this)).Times(1);

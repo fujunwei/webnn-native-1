@@ -15,37 +15,37 @@
 #ifndef WEBNN_NATIVE_NULL_CONTEXT_NULL_H_
 #define WEBNN_NATIVE_NULL_CONTEXT_NULL_H_
 
-#include "webnn_native/Context.h"
-#include "webnn_native/Graph.h"
-#include "webnn_native/GraphBuilder.h"
+#include "webnn_native/MLContext.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLGraphBuilder.h"
 
 namespace webnn_native { namespace null {
 
-    // Context
-    class Context : public ContextBase {
+    // MLContext
+    class MLContext : public MLContextBase {
       public:
-        explicit Context(ContextOptions const* options);
-        ~Context() override = default;
+        explicit MLContext(MLContextOptions const* options);
+        ~MLContext() override = default;
 
       private:
-        GraphBase* CreateGraphImpl() override;
+        MLGraphBase* CreateGraphImpl() override;
     };
 
-    // GraphBuilder
-    class GraphBuilder : public GraphBuilderBase {
+    // MLGraphBuilder
+    class MLGraphBuilder : public MLGraphBuilderBase {
       public:
-        explicit GraphBuilder(ContextBase* context);
-        ~GraphBuilder() override = default;
+        explicit MLGraphBuilder(MLContextBase* context);
+        ~MLGraphBuilder() override = default;
     };
 
-    // Graph
-    class Graph : public GraphBase {
+    // MLGraph
+    class MLGraph : public MLGraphBase {
       public:
-        explicit Graph(Context* context);
-        ~Graph() override = default;
+        explicit MLGraph(MLContext* context);
+        ~MLGraph() override = default;
         virtual MaybeError AddConstant(const op::Constant* constant) override;
         virtual MaybeError AddInput(const op::Input* input) override;
-        virtual MaybeError AddOutput(const std::string& name, const OperandBase* ouput) override;
+        virtual MaybeError AddOutput(const std::string& name, const MLOperandBase* ouput) override;
         virtual MaybeError AddBinary(const op::Binary* binary) override;
         virtual MaybeError AddConv2d(const op::Conv2d* conv2d) override;
         virtual MaybeError AddPool2d(const op::Pool2d* pool2d) override;
@@ -55,10 +55,10 @@ namespace webnn_native { namespace null {
         virtual MaybeError Finish() override;
 
       private:
-        void ComputeImpl(NamedInputsBase* inputs,
+        void ComputeImpl(MLNamedInputsBase* inputs,
                          WebnnComputeCallback callback,
                          void* userdata,
-                         NamedOutputsBase* outputs = nullptr) override;
+                         MLNamedOutputsBase* outputs = nullptr) override;
     };
 
 }}  // namespace webnn_native::null

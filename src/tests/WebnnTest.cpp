@@ -21,12 +21,12 @@ void InitWebnnEnd2EndTestEnvironment() {
     testing::AddGlobalTestEnvironment(gTestEnv);
 }
 
-const webnn::Context& WebnnTest::GetContext() {
+const webnn::MLContext& WebnnTest::GetContext() {
     return gTestEnv->GetContext();
 }
 
 void WebnnTest::SetUp() {
-    const webnn::Context& context = GetContext();
+    const webnn::MLContext& context = GetContext();
     context.SetUncapturedErrorCallback(ErrorCallback, this);
 }
 
@@ -65,6 +65,6 @@ void WebnnTestEnvironment::SetUp() {
     DAWN_ASSERT(mContext);
 }
 
-const webnn::Context& WebnnTestEnvironment::GetContext() {
+const webnn::MLContext& WebnnTestEnvironment::GetContext() {
     return mContext;
 }

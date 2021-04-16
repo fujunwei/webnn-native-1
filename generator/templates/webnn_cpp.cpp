@@ -130,20 +130,20 @@ namespace webnn {
         }
     {% endfor %}
 
-    GraphBuilder CreateGraphBuilder(Context context) {
-        return GraphBuilder::Acquire(webnnCreateGraphBuilder(context.GetHandle()));
+    MLGraphBuilder CreateGraphBuilder(MLContext context) {
+        return MLGraphBuilder::Acquire(webnnCreateGraphBuilder(context.GetHandle()));
     }
 
-    NamedInputs CreateNamedInputs() {
-        return NamedInputs::Acquire(webnnCreateNamedInputs());
+    MLNamedInputs CreateNamedInputs() {
+        return MLNamedInputs::Acquire(webnnCreateNamedInputs());
     }
 
-    NamedOperands CreateNamedOperands() {
-        return NamedOperands::Acquire(webnnCreateNamedOperands());
+    MLNamedOperands CreateNamedOperands() {
+        return MLNamedOperands::Acquire(webnnCreateNamedOperands());
     }
 
-    NamedOutputs CreateNamedOutputs() {
-        return NamedOutputs::Acquire(webnnCreateNamedOutputs());
+    MLNamedOutputs CreateNamedOutputs() {
+        return MLNamedOutputs::Acquire(webnnCreateNamedOutputs());
     }
 
 }

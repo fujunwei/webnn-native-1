@@ -23,15 +23,14 @@ class Ref;
 
 namespace webnn_native {
 
-    class CompilationBase;
-    class GraphBase;
-    class GraphBuilderBase;
-    class NamedInputsBase;
-    class NamedOperandsBase;
-    class NamedOutputsBase;
-    class NamedResultsBase;
-    class OperandBase;
-    class ResultBase;
+    class MLGraphBase;
+    class MLGraphBuilderBase;
+    class MLNamedInputsBase;
+    class MLNamedOperandsBase;
+    class MLNamedOutputsBase;
+    class MLNamedResultsBase;
+    class MLOperandBase;
+    class MLResultBase;
 
 }  // namespace webnn_native
 

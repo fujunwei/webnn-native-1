@@ -21,15 +21,15 @@ class TransposeTests : public WebnnTest {
                         const std::vector<int32_t>& expectedShape,
                         const std::vector<float>& expectedValue,
                         const std::vector<int32_t>& permutation = {}) {
-        const webnn::GraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
-        const webnn::Operand a = utils::BuildInput(builder, "a", inputShape);
-        webnn::TransposeOptions options;
+        const webnn::MLGraphBuilder builder = webnn::CreateGraphBuilder(GetContext());
+        const webnn::MLOperand a = utils::BuildInput(builder, "a", inputShape);
+        webnn::MLTransposeOptions options;
         options.permutation = permutation.data();
         options.permutationCount = permutation.size();
-        const webnn::Operand b = builder.Transpose(a, &options);
-        const webnn::Graph graph = utils::AwaitBuild(builder, {{"b", b}});
-        const webnn::Input input = {inputData.data(), inputData.size() * sizeof(float)};
-        const webnn::Result result = utils::AwaitCompute(graph, {{"a", input}}).Get("b");
+        const webnn::MLOperand b = builder.Transpose(a, &options);
+        const webnn::MLGraph graph = utils::AwaitBuild(builder, {{"b", b}});
+        const webnn::MLInput input = {inputData.data(), inputData.size() * sizeof(float)};
+        const webnn::MLResult result = utils::AwaitCompute(graph, {{"a", input}}).Get("b");
         EXPECT_TRUE(utils::CheckShape(result, expectedShape));
         EXPECT_TRUE(utils::CheckValue(result, expectedValue));
     }

@@ -20,13 +20,12 @@
 #include "webnn_native/ErrorScope.h"
 #include "webnn_native/webnn_platform.h"
 
-class WebGLRenderingContext;
 namespace webnn_native {
 
-    class ContextBase : public RefCounted {
+    class MLContextBase : public RefCounted {
       public:
-        ContextBase();
-        virtual ~ContextBase() = default;
+        MLContextBase();
+        virtual ~MLContextBase() = default;
 
         bool ConsumedError(MaybeError maybeError) {
             if (DAWN_UNLIKELY(maybeError.IsError())) {
@@ -36,7 +35,7 @@ namespace webnn_native {
             return false;
         }
 
-        GraphBase* CreateGraph();
+        MLGraphBase* CreateGraph();
 
         // Dawn API
         void PushErrorScope(webnn::ErrorFilter filter);
@@ -45,7 +44,7 @@ namespace webnn_native {
 
       private:
         // Create concrete model.
-        virtual GraphBase* CreateGraphImpl() = 0;
+        virtual MLGraphBase* CreateGraphImpl() = 0;
 
         void HandleError(std::unique_ptr<ErrorData> error);
 

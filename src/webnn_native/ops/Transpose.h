@@ -15,15 +15,17 @@
 #ifndef WEBNN_NATIVE_OPS_TRANSPOSE_H_
 #define WEBNN_NATIVE_OPS_TRANSPOSE_H_
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
-    class Transpose final : public OperandBase {
+    class Transpose final : public MLOperandBase {
       public:
-        Transpose(GraphBuilderBase* builder, OperandBase* input, TransposeOptions const* options)
-            : OperandBase(builder, {input}) {
+        Transpose(MLGraphBuilderBase* builder,
+                  MLOperandBase* input,
+                  MLTransposeOptions const* options)
+            : MLOperandBase(builder, {input}) {
             if (options == nullptr || options->permutation == nullptr) {
                 int32_t rank = input->Rank();
                 mPermutation.resize(rank);
@@ -39,17 +41,17 @@ namespace webnn_native { namespace op {
         }
         ~Transpose() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override {
+        MaybeError AddToGraph(MLGraphBase* model) const override {
             return model->AddTranspose(this);
         }
         MaybeError ValidateAndInferTypes() override;
 
-        TransposeOptions const* GetOptions() const {
+        MLTransposeOptions const* GetOptions() const {
             return &mOptions;
         }
 
       private:
-        TransposeOptions mOptions;
+        MLTransposeOptions mOptions;
         std::vector<int32_t> mPermutation;
     };
 

@@ -19,42 +19,42 @@
 #include <vector>
 
 #include "webnn_native/Forward.h"
-#include "webnn_native/Graph.h"
+#include "webnn_native/MLGraph.h"
 #include "webnn_native/ObjectBase.h"
 #include "webnn_native/webnn_platform.h"
 
 namespace webnn_native {
 
-    class OperandBase : public ObjectBase {
+    class MLOperandBase : public ObjectBase {
       public:
-        explicit OperandBase(GraphBuilderBase* GraphBuilder, std::vector<Ref<OperandBase>> = {});
-        virtual ~OperandBase() = default;
+        explicit MLOperandBase(MLGraphBuilderBase* MLGraphBuilder, std::vector<Ref<MLOperandBase>> = {});
+        virtual ~MLOperandBase() = default;
 
         // It's used for getting inputs when traversaling model tree.
-        const std::vector<Ref<OperandBase>>& Inputs() const;
+        const std::vector<Ref<MLOperandBase>>& Inputs() const;
         // Add the operand to model for specific backend.
-        virtual MaybeError AddToGraph(GraphBase* model) const;
+        virtual MaybeError AddToGraph(MLGraphBase* model) const;
 
-        webnn::OperandType Type() const {
+        webnn::MLOperandType Type() const {
             return mType;
         }
         int32_t Rank() const {
             return mRank;
         }
 
-        static OperandBase* MakeError(GraphBuilderBase* GraphBuilder);
+        static MLOperandBase* MakeError(MLGraphBuilderBase* MLGraphBuilder);
         virtual MaybeError ValidateAndInferTypes() {
             UNREACHABLE();
         }
 
       private:
-        OperandBase(GraphBuilderBase* GraphBuilder, ObjectBase::ErrorTag tag);
+        MLOperandBase(MLGraphBuilderBase* MLGraphBuilder, ObjectBase::ErrorTag tag);
 
       protected:
         // The inputs of operand.
-        std::vector<Ref<OperandBase>> mInputs;
+        std::vector<Ref<MLOperandBase>> mInputs;
         // The operand type.
-        webnn::OperandType mType;
+        webnn::MLOperandType mType;
         // only set rank for dimensions
         int32_t mRank;
     };

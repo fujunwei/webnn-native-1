@@ -15,8 +15,8 @@
 #ifndef WEBNN_NATIVE_OPS_UNARY_H_
 #define WEBNN_NATIVE_OPS_UNARY_H_
 
-#include "webnn_native/Graph.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLGraph.h"
+#include "webnn_native/MLOperand.h"
 
 namespace webnn_native { namespace op {
 
@@ -25,14 +25,14 @@ namespace webnn_native { namespace op {
         kSoftmax,
     };
 
-    class Unary final : public OperandBase {
+    class Unary final : public MLOperandBase {
       public:
-        Unary(GraphBuilderBase* builder, UnaryOpType opType, OperandBase* input)
-            : OperandBase(builder, {input}), mOpType(opType) {
+        Unary(MLGraphBuilderBase* builder, UnaryOpType opType, MLOperandBase* input)
+            : MLOperandBase(builder, {input}), mOpType(opType) {
         }
         ~Unary() override = default;
 
-        MaybeError AddToGraph(GraphBase* model) const override {
+        MaybeError AddToGraph(MLGraphBase* model) const override {
             return model->AddUnary(this);
         }
         MaybeError ValidateAndInferTypes() override;

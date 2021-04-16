@@ -94,20 +94,20 @@ namespace webnn_native {
         return result;
     }
 
-    WebnnGraphBuilder NativeCreateGraphBuilder(WebnnContext context) {
-        return reinterpret_cast<WebnnGraphBuilder>(new GraphBuilderBase(reinterpret_cast<ContextBase *>(context)));
+    WebnnMLGraphBuilder NativeCreateGraphBuilder(WebnnMLContext context) {
+        return reinterpret_cast<WebnnMLGraphBuilder>(new MLGraphBuilderBase(reinterpret_cast<MLContextBase *>(context)));
     }
 
-    WebnnNamedInputs NativeCreateNamedInputs() {
-        return reinterpret_cast<WebnnNamedInputs>(new NamedInputsBase());
+    WebnnMLNamedInputs NativeCreateNamedInputs() {
+        return reinterpret_cast<WebnnMLNamedInputs>(new MLNamedInputsBase());
     }
 
-    WebnnNamedOperands NativeCreateNamedOperands() {
-         return reinterpret_cast<WebnnNamedOperands>(new NamedOperandsBase());
+    WebnnMLNamedOperands NativeCreateNamedOperands() {
+         return reinterpret_cast<WebnnMLNamedOperands>(new MLNamedOperandsBase());
     }
 
-    WebnnNamedOutputs NativeCreateNamedOutputs() {
-         return reinterpret_cast<WebnnNamedOutputs>(new NamedOutputsBase());
+    WebnnMLNamedOutputs NativeCreateNamedOutputs() {
+         return reinterpret_cast<WebnnMLNamedOutputs>(new MLNamedOutputsBase());
     }
 
     static WebnnProcTable gProcTable = {

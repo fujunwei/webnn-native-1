@@ -44,7 +44,7 @@ void SelectTopKData(std::vector<float> outputData,
     }
 }
 
-void PrintResult(webnn::Result output) {
+void PrintResult(webnn::MLResult output) {
     const float* outputBuffer = static_cast<const float*>(output.Buffer());
     std::vector<float> outputData(outputBuffer, outputBuffer + output.BufferSize() / sizeof(float));
     std::vector<size_t> topKIndex(TOP_NUMBER);
@@ -117,7 +117,7 @@ int main(int argc, const char* argv[]) {
         return -1;
     }
     std::vector<float> input(reader.GetData().get(), reader.GetData().get() + reader.Size());
-    webnn::Result result = lenet.Compute(input.data(), input.size() * sizeof(float));
+    webnn::MLResult result = lenet.Compute(input.data(), input.size() * sizeof(float));
     if (!result) {
         dawn::ErrorLog() << "Failed to compute LeNet.";
         return -1;

@@ -23,10 +23,10 @@ void ValidationTest::SetUp() {
     WebnnProcTable backendProcs = webnn_native::GetProcs();
     ASSERT_NE(&backendProcs, nullptr);
     webnnProcSetProcs(&backendProcs);
-    WebnnContext context = webnn_native::CreateContext();
+    WebnnMLContext context = webnn_native::CreateContext();
     // GTest will not run test body if fail to create context.
     ASSERT_TRUE(context != nullptr);
-    mContext = webnn::Context::Acquire(context);
+    mContext = webnn::MLContext::Acquire(context);
     mContext.SetUncapturedErrorCallback(ErrorCallback, this);
     mBuilder = webnn::CreateGraphBuilder(mContext);
 }

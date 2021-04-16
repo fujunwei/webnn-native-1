@@ -216,10 +216,10 @@ namespace webnn {
 
     {% endfor %}
 
-    GraphBuilder CreateGraphBuilder(Context context);
-    NamedInputs CreateNamedInputs();
-    NamedOperands CreateNamedOperands();
-    NamedOutputs CreateNamedOutputs();
+    MLGraphBuilder CreateGraphBuilder(MLContext context);
+    MLNamedInputs CreateNamedInputs();
+    MLNamedOperands CreateNamedOperands();
+    MLNamedOutputs CreateNamedOutputs();
 
 }  // namespace webnn
 

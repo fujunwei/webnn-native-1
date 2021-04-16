@@ -21,25 +21,25 @@
 
 namespace webnn_native { namespace ie {
 
-    ContextBase* Create(WebnnContextOptions const* options) {
+    MLContextBase* Create(WebnnMLContextOptions const* options) {
         // Load ienn_c_api library.
         if (!GetIESymbolTable()->Load()) {
             dawn::ErrorLog() << "Failed to load the OpenVINO libraries, please make sure the "
                                 "OpenVINO environment variables are set.";
             return nullptr;
         }
-        return new Context(reinterpret_cast<ContextOptions const*>(options));
+        return new MLContext(reinterpret_cast<MLContextOptions const*>(options));
     }
 
-    Context::Context(ContextOptions const* options) {
+    MLContext::MLContext(MLContextOptions const* options) {
         if (options == nullptr) {
             return;
         }
         mOptions = *options;
     }
 
-    GraphBase* Context::CreateGraphImpl() {
-        return new Graph(this);
+    MLGraphBase* MLContext::CreateGraphImpl() {
+        return new MLGraph(this);
     }
 
 }}  // namespace webnn_native::ie

@@ -20,8 +20,8 @@
 namespace webnn_native { namespace op {
 
     MaybeError Binary::ValidateAndInferTypes() {
-        Ref<OperandBase> a = mInputs[0];
-        Ref<OperandBase> b = mInputs[1];
+        Ref<MLOperandBase> a = mInputs[0];
+        Ref<MLOperandBase> b = mInputs[1];
         if (a->IsError() || b->IsError()) {
             return DAWN_VALIDATION_ERROR("Argument inputs are invalid.");
         }

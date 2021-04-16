@@ -26,10 +26,10 @@ class LeNet {
     ~LeNet() = default;
 
     bool Load(const std::string& weigthsPath);
-    webnn::Result Compute(const void* inputData, size_t inputLength);
+    webnn::MLResult Compute(const void* inputData, size_t inputLength);
 
   private:
-    webnn::Context mContext;
-    webnn::Graph mGraph;
-    webnn::NamedResults mResults;
+    webnn::MLContext mContext;
+    webnn::MLGraph mGraph;
+    webnn::MLNamedResults mResults;
 };

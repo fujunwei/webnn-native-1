@@ -16,11 +16,11 @@
 #define WEBNN_NATIVE_GRAPH_H_
 
 #include "common/RefCounted.h"
-#include "webnn_native/Context.h"
+#include "webnn_native/MLContext.h"
 #include "webnn_native/Error.h"
 #include "webnn_native/Forward.h"
 #include "webnn_native/ObjectBase.h"
-#include "webnn_native/Operand.h"
+#include "webnn_native/MLOperand.h"
 #include "webnn_native/webnn_platform.h"
 
 namespace webnn_native {
@@ -36,20 +36,20 @@ namespace webnn_native {
         class Unary;
     }  // namespace op
 
-    class GraphBase : public ObjectBase {
+    class MLGraphBase : public ObjectBase {
       public:
-        explicit GraphBase(ContextBase* context);
-        virtual ~GraphBase() = default;
+        explicit MLGraphBase(MLContextBase* context);
+        virtual ~MLGraphBase() = default;
 
         // Webnn API
-        void Compute(NamedInputsBase* inputs,
+        void Compute(MLNamedInputsBase* inputs,
                      WebnnComputeCallback callback,
                      void* userdata,
-                     NamedOutputsBase* outputs = nullptr);
+                     MLNamedOutputsBase* outputs = nullptr);
 
         virtual MaybeError AddConstant(const op::Constant* constant);
         virtual MaybeError AddInput(const op::Input* input);
-        virtual MaybeError AddOutput(const std::string& name, const OperandBase* output);
+        virtual MaybeError AddOutput(const std::string& name, const MLOperandBase* output);
         virtual MaybeError AddBinary(const op::Binary* binary);
         virtual MaybeError AddConv2d(const op::Conv2d* conv2d);
         virtual MaybeError AddPool2d(const op::Pool2d* pool2d);
@@ -59,10 +59,10 @@ namespace webnn_native {
         virtual MaybeError Finish();
 
       private:
-        virtual void ComputeImpl(NamedInputsBase* inputs,
+        virtual void ComputeImpl(MLNamedInputsBase* inputs,
                                  WebnnComputeCallback callback,
                                  void* userdata,
-                                 NamedOutputsBase* outputs) = 0;
+                                 MLNamedOutputsBase* outputs) = 0;
     };
 }  // namespace webnn_native
 

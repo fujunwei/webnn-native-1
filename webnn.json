@@ -68,7 +68,7 @@
         {"name": "userdata", "type": "void", "annotation": "*"}
     ]
   },
-  "power preference": {
+  "ML power preference": {
     "category": "enum",
     "values": [
       {"value": 0, "name": "default"},
@@ -76,13 +76,13 @@
       {"value": 2, "name": "low_power"}
     ]
   },
-  "context options": {
+  "ML context options": {
     "category": "structure",
     "members": [
-      {"name": "power preference", "type": "power preference", "default": "default"}
+      {"name": "power preference", "type": "ML power preference", "default": "default"}
     ]
   },
-  "context": {
+  "ML context": {
     "category": "object",
     "methods": [
       {
@@ -108,14 +108,14 @@
       }
     ]
   },
-  "input operand layout": {
+  "ML input operand layout": {
     "category": "enum",
     "values": [
       {"value": 0, "name": "nchw"},
       {"value": 1, "name": "nhwc"}
     ]
   },
-  "operand type": {
+  "ML operand type": {
     "category": "enum",
     "values": [
       {"value": 0, "name": "float32"},
@@ -126,30 +126,30 @@
       {"value": 5, "name": "uint8"}
     ]
   },
-  "operand descriptor": {
+  "ML operand descriptor": {
     "category": "structure",
     "members": [
-      {"name": "type", "type": "operand type"},
+      {"name": "type", "type": "ML operand type"},
       {"name": "dimensions", "type": "int32_t", "annotation": "const*", "length": "dimensions count"},
       {"name": "dimensions count", "type": "uint32_t", "default": 0}
     ]
   },
-  "operand": {
+  "ML operand": {
     "category": "object"
   },
-  "named operands": {
+  "ML named operands": {
     "category": "object",
     "methods": [
       {
         "name": "set",
         "args": [
           {"name": "name", "type": "char", "annotation": "const*", "length": "strlen"},
-          {"name": "operand", "type": "operand"}
+          {"name": "operand", "type": "ML operand"}
         ]
       }
     ]
   },
-  "conv2d options": {
+  "ML conv2d options": {
     "category": "structure",
     "members": [
       {"name": "padding count", "type": "uint32_t", "default": 0},
@@ -159,10 +159,10 @@
       {"name": "dilations count", "type": "uint32_t", "default": 0},
       {"name": "dilations", "type": "int32_t", "annotation": "const*", "length": "dilations count", "optional": true},
       {"name": "groups", "type": "int32_t", "default": 1},
-      {"name": "layout", "type": "input operand layout", "default": "nchw"}
+      {"name": "layout", "type": "ML input operand layout", "default": "nchw"}
     ]
   },
-  "pool2d options": {
+  "ML pool2d options": {
     "category": "structure",
     "members": [
       {"name": "window dimensions count", "type": "uint32_t", "default": 0},
@@ -173,120 +173,120 @@
       {"name": "strides", "type": "int32_t", "annotation": "const*", "length": "strides count", "optional": true},
       {"name": "dilations count", "type": "uint32_t", "default": 0},
       {"name": "dilations", "type": "int32_t", "annotation": "const*", "length": "dilations count", "optional": true},
-      {"name": "layout", "type": "input operand layout", "default": "nchw"}
+      {"name": "layout", "type": "ML input operand layout", "default": "nchw"}
     ]
   },
-  "transpose options": {
+  "ML transpose options": {
     "category": "structure",
     "members": [
       {"name": "permutation count", "type": "uint32_t", "default": 0},
       {"name": "permutation", "type": "int32_t", "annotation": "const*", "length": "permutation count", "optional": true}
     ]
   },
-  "graph builder": {
+  "ML graph builder": {
     "category": "object",
     "methods": [
       {
         "name": "input",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
           {"name": "name", "type": "char", "annotation": "const*", "length": "strlen"},
-          {"name": "desc", "type": "operand descriptor", "annotation": "const*"}
+          {"name": "desc", "type": "ML operand descriptor", "annotation": "const*"}
         ]
       },
       {
         "name": "constant",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "desc", "type": "operand descriptor", "annotation": "const*"},
+          {"name": "desc", "type": "ML operand descriptor", "annotation": "const*"},
           {"name": "value", "type": "void", "annotation": "const*"},
           {"name": "size", "type": "size_t"}
         ]
       },
       {
         "name": "matmul",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "a", "type": "operand"},
-          {"name": "b", "type": "operand"}
+          {"name": "a", "type": "ML operand"},
+          {"name": "b", "type": "ML operand"}
         ]
       },
       {
         "name": "add",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "a", "type": "operand"},
-          {"name": "b", "type": "operand"}
+          {"name": "a", "type": "ML operand"},
+          {"name": "b", "type": "ML operand"}
         ]
       },
       {
         "name": "mul",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "a", "type": "operand"},
-          {"name": "b", "type": "operand"}
+          {"name": "a", "type": "ML operand"},
+          {"name": "b", "type": "ML operand"}
         ]
       },
       {
         "name": "conv2d",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"},
-          {"name": "filter", "type": "operand"},
-          {"name": "options", "type": "conv2d options", "annotation": "const*", "optional": true}
+          {"name": "input", "type": "ML operand"},
+          {"name": "filter", "type": "ML operand"},
+          {"name": "options", "type": "ML conv2d options", "annotation": "const*", "optional": true}
         ]
       },
       {
         "name": "average pool2d",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"},
-          {"name": "options", "type": "pool2d options", "annotation": "const*", "optional": true}
+          {"name": "input", "type": "ML operand"},
+          {"name": "options", "type": "ML pool2d options", "annotation": "const*", "optional": true}
         ]
       },
       {
         "name": "max pool2d",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"},
-          {"name": "options", "type": "pool2d options", "annotation": "const*", "optional": true}
+          {"name": "input", "type": "ML operand"},
+          {"name": "options", "type": "ML pool2d options", "annotation": "const*", "optional": true}
         ]
       },
       {
         "name": "relu",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"}
+          {"name": "input", "type": "ML operand"}
         ]
       },
       {
         "name": "reshape",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"},
+          {"name": "input", "type": "ML operand"},
           {"name": "new shape", "type": "int32_t", "annotation": "const*", "length": "new shape count"},
           {"name": "new shape count", "type": "uint32_t"}
         ]
       },
       {
         "name": "softmax",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"}
+          {"name": "input", "type": "ML operand"}
         ]
       },
       {
         "name": "transpose",
-        "returns": "operand",
+        "returns": "ML operand",
         "args": [
-          {"name": "input", "type": "operand"},
-          {"name": "options", "type": "transpose options", "annotation": "const*", "optional": true}
+          {"name": "input", "type": "ML operand"},
+          {"name": "options", "type": "ML transpose options", "annotation": "const*", "optional": true}
         ]
       },
       {
         "name": "build",
         "args": [
-          {"name": "named operands", "type": "named operands"},
+          {"name": "named operands", "type": "ML named operands"},
           {"name": "callback", "type": "build callback"},
           {"name": "userdata", "type": "void", "annotation": "*"}
         ]
@@ -297,7 +297,7 @@
     "category": "callback",
     "args": [
       {"name": "status", "type": "build status"},
-      {"name": "graph", "type": "graph"},
+      {"name": "graph", "type": "ML graph"},
       {"name": "message", "type": "char", "annotation": "const*", "length": "strlen"},
       {"name": "userdata", "type": "void", "annotation": "*"}
     ]
@@ -311,7 +311,7 @@
         {"value": 3, "name": "unknown"}
     ]
   },
-  "input": {
+  "ML input": {
     "category": "structure",
     "members": [
       {"name": "buffer", "type": "void", "annotation": "const*", "length": "size"},
@@ -320,7 +320,7 @@
       {"name": "dimensions count", "type": "uint32_t", "default": 0}
     ]
   },
-  "output": {
+  "ML output": {
     "category": "structure",
     "members": [
       {"name": "buffer", "type": "void", "annotation": "*", "length": "size", "optional": true},
@@ -329,31 +329,31 @@
       {"name": "dimensions count", "type": "uint32_t", "default": 0}
     ]
   },
-  "named inputs": {
+  "ML named inputs": {
     "category": "object",
     "methods": [
       {
         "name": "set",
         "args": [
           {"name": "name", "type": "char", "annotation": "const*", "length": "strlen"},
-          {"name": "input", "type": "input", "annotation": "const*"}
+          {"name": "input", "type": "ML input", "annotation": "const*"}
         ]
       }
     ]
   },
-  "named outputs": {
+  "ML named outputs": {
     "category": "object",
     "methods": [
       {
         "name": "set",
         "args": [
           {"name": "name", "type": "char", "annotation": "const*", "length": "strlen"},
-          {"name": "output", "type": "output", "annotation": "const*"}
+          {"name": "output", "type": "ML output", "annotation": "const*"}
         ]
       }
     ]
   },
-  "result": {
+  "ML result": {
     "category": "object",
     "methods": [
       {
@@ -374,12 +374,12 @@
       }
     ]
   },
-  "named results": {
+  "ML named results": {
     "category": "object",
     "methods": [
       {
         "name": "get",
-        "returns": "result",
+        "returns": "ML result",
         "args": [
           {"name": "name", "type": "char", "annotation": "const*", "length": "strlen"}
         ]
@@ -390,7 +390,7 @@
     "category": "callback",
     "args": [
       {"name": "status", "type": "compute status"},
-      {"name": "outputs", "type": "named results"},
+      {"name": "outputs", "type": "ML named results"},
       {"name": "message", "type": "char", "annotation": "const*", "length": "strlen"},
       {"name": "userdata", "type": "void", "annotation": "*"}
     ]
@@ -404,16 +404,16 @@
         {"value": 3, "name": "unknown"}
     ]
   },
-  "graph": {
+  "ML graph": {
     "category": "object",
     "methods": [
       {
         "name": "compute",
         "args": [
-          {"name": "inputs", "type": "named inputs"},
+          {"name": "inputs", "type": "ML named inputs"},
           {"name": "callback", "type": "compute callback"},
           {"name": "userdata", "type": "void", "annotation": "*"},
-          {"name": "outputs", "type": "named outputs", "optional": true}
+          {"name": "outputs", "type": "ML named outputs", "optional": true}
         ]
       }
     ]

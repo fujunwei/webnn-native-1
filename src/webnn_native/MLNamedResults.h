@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "webnn_native/Result.h"
+#ifndef WEBNN_NATIVE_NAMED_RESULTS_H_
+#define WEBNN_NATIVE_NAMED_RESULTS_H_
 
-#include "common/Assert.h"
-#include "common/Log.h"
+#include <map>
+#include <string>
+
+#include "webnn_native/NamedRecords.h"
+#include "webnn_native/MLResult.h"
 
 namespace webnn_native {
 
-    ResultBase::ResultBase(void* buffer, uint32_t bufferSize, std::vector<int32_t>& dimensions)
-        : mBuffer(buffer), mBufferSize(bufferSize), mDimensions(std::move(dimensions)) {
-    }
+    class MLNamedResultsBase : public NamedRecords<MLResultBase> {};
+
 }  // namespace webnn_native
+
+#endif  // WEBNN_NATIVE_NAMED_RESULTS_H_
