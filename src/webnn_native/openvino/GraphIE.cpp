@@ -15,6 +15,7 @@
 #include "webnn_native/openvino/GraphIE.h"
 
 #include <vector>
+#include <algorithm>
 
 #include "common/Assert.h"
 #include "common/Log.h"
@@ -843,11 +844,12 @@ namespace webnn_native { namespace ie {
 
     MaybeError Graph::CompileImpl() {
         ml::DevicePreference devicePreference = GetContext()->GetContextOptions().devicePreference;
+        devicePreference = ml::DevicePreference::Gpu;
         const char* deviceName = devicePreference == ml::DevicePreference::Cpu ||
                                          devicePreference == ml::DevicePreference::Default
                                      ? "CPU"
                                      : "GPU";
-
+        dawn::ErrorLog() << "==========deviceName " << deviceName;
         ie_config_t config = {NULL, NULL, NULL};
         ie_executable_network_t* executableNetwork;
         IEStatusCode status = ie_core_load_network(mInferEngineCore, mInferEngineNetwork,
@@ -921,6 +923,8 @@ namespace webnn_native { namespace ie {
             status = ie_blob_get_cbuffer(outputBlob, &outputBuffer);
             int bufferLength;
             status = ie_blob_byte_size(outputBlob, &bufferLength);
+            // Get the output data for debug.
+            bufferLength = std::min(static_cast<size_t>(bufferLength), output->byteLength);
             if (output->byteLength >= static_cast<size_t>(bufferLength)) {
                 memcpy(static_cast<int8_t*>(output->buffer) + output->byteOffset,
                        outputBuffer.cbuffer, bufferLength);

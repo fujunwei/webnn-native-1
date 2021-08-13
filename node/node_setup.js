@@ -3,10 +3,10 @@ const webnn = require('./lib/webnn');
 if (global.navigator === undefined) {
   global.navigator = {};
 }
-global.navigator.ml = webnn.ml;
-global.MLContext = webnn.MLContext
-global.MLGraphBuilder = webnn.MLGraphBuilder
-global.MLGraph = webnn.MLGraph
-global.MLOperand = webnn.MLOperand
+global.navigator.native_ml = webnn.ml;
+global.native_MLContext = webnn.MLContext
+global.native_MLGraphBuilder = webnn.MLGraphBuilder
+global.native_MLGraph = webnn.MLGraph
+global.native_MLOperand = webnn.MLOperand
 global.chai = require('chai');
 global.fs = require('fs');
