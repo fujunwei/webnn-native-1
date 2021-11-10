@@ -57,45 +57,20 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-typedef uint32_t WEBNNFlags;
+typedef uint32_t MLFlags;
 
-{% for type in by_category["object"] %}
-    typedef struct {{as_cType(type.name)}}Impl* {{as_cType(type.name)}};
-{% endfor %}
+{% extends '../../templates/utils/dawn.h' %}
 
-{% for type in by_category["enum"] + by_category["bitmask"] %}
-    typedef enum {{as_cType(type.name)}} {
-        {% for value in type.values %}
-            {{as_cEnum(type.name, value.name)}} = 0x{{format(value.value, "08X")}},
-        {% endfor %}
-        {{as_cEnum(type.name, Name("force32"))}} = 0x7FFFFFFF
-    } {{as_cType(type.name)}};
-    {% if type.category == "bitmask" %}
-        typedef WebnnFlags {{as_cType(type.name)}}Flags;
-    {% endif %}
+{% block header %}
+{{ render_c_enum_type("MLFlags") }}
 
-{% endfor %}
-
-{% for type in by_category["structure"] %}
-    typedef struct {{as_cType(type.name)}} {
-        {% for member in type.members %}
-            {{as_annotated_cType(member)}};
-        {% endfor %}
-    } {{as_cType(type.name)}};
-
-{% endfor %}
+{{ render_c_structure_type("") }}
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-{% for type in by_category["callback"] %}
-    typedef void (*{{as_cType(type.name)}})(
-        {%- for arg in type.arguments -%}
-            {% if not loop.first %}, {% endif %}{{as_annotated_cType(arg)}}
-        {%- endfor -%}
-    );
-{% endfor %}
+{{ render_c_callback_type() }}
 
 typedef void (*WebnnProc)(void);
 
@@ -107,18 +82,8 @@ typedef MLNamedOperands (*WebnnProcCreateNamedOperands)();
 typedef MLNamedOutputs (*WebnnProcCreateNamedOutputs)();
 typedef MLOperatorArray (*WebnnProcCreateOperatorArray)();
 
-{% for type in by_category["object"] if len(c_methods(type)) > 0 %}
-    // Procs of {{type.name.CamelCase()}}
-    {% for method in c_methods(type) %}
-        typedef {{as_cType(method.return_type.name)}} (*{{as_cProc(type.name, method.name)}})(
-            {{-as_cType(type.name)}} {{as_varName(type.name)}}
-            {%- for arg in method.arguments -%}
-                , {{as_annotated_cType(arg)}}
-            {%- endfor -%}
-        );
-    {% endfor %}
+{{ render_c_method_for_proc_table() }}
 
-{% endfor %}
 #endif  // !defined(WEBNN_SKIP_PROCS)
 
 #if !defined(WEBNN_SKIP_DECLARATIONS)
@@ -129,18 +94,7 @@ WEBNN_EXPORT MLNamedOperands webnnCreateNamedOperands();
 WEBNN_EXPORT MLNamedOutputs webnnCreateNamedOutputs();
 WEBNN_EXPORT MLOperatorArray webnnCreateOperatorArray();
 
-{% for type in by_category["object"] if len(c_methods(type)) > 0 %}
-    // Methods of {{type.name.CamelCase()}}
-    {% for method in c_methods(type) %}
-        WEBNN_EXPORT {{as_cType(method.return_type.name)}} {{as_cMethod(type.name, method.name)}}(
-            {{-as_cType(type.name)}} {{as_varName(type.name)}}
-            {%- for arg in method.arguments -%}
-                , {{as_annotated_cType(arg)}}
-            {%- endfor -%}
-        );
-    {% endfor %}
-
-{% endfor %}
+{{ render_c_method_for_exporting("WEBNN_EXPORT") }}
 #endif  // !defined(WEBNN_SKIP_DECLARATIONS)
 
 #ifdef __cplusplus
@@ -148,3 +102,5 @@ WEBNN_EXPORT MLOperatorArray webnnCreateOperatorArray();
 #endif
 
 #endif // WEBNN_H_
+
+{% endblock %}

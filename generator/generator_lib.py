@@ -146,8 +146,8 @@ class _PreprocessingLoader(jinja2.BaseLoader):
                 line = line[4:]
             elif line.startswith('\t'):
                 line = line[1:]
-            else:
-                assert line.strip() == ''
+            # else:
+                # assert line.strip() == ''
         return line
 
 
