@@ -87,22 +87,12 @@
 
 typedef uint32_t WGPUFlags;
 
-{% extends 'utils/dawn.h' %}
+{% extends 'base/dawn.h' %}
 
-{% block header %}
-{{ render_c_enum_type("WGPUFlags") }}
+{% block content %}
+{{ render_c_enum_type() }}
 
-typedef struct WGPUChainedStruct {
-    struct WGPUChainedStruct const * next;
-    WGPUSType sType;
-} WGPUChainedStruct;
-
-typedef struct WGPUChainedStructOut {
-    struct WGPUChainedStructOut * next;
-    WGPUSType sType;
-} WGPUChainedStructOut;
-
-{{ render_c_structure_type("WGPUChainedStruct") }}
+{{ render_c_structure_type() }}
 
 {% if 'deprecated' in enabled_tags %}
     // TODO(crbug.com/dawn/1023): Remove after the deprecation period.
@@ -134,7 +124,7 @@ typedef WGPUProc (*WGPUProcGetProcAddress)(WGPUDevice device, char const * procN
 WGPU_EXPORT WGPUInstance wgpuCreateInstance(WGPUInstanceDescriptor const * descriptor);
 WGPU_EXPORT WGPUProc wgpuGetProcAddress(WGPUDevice device, char const * procName);
 
-{{ render_c_method_for_exporting("WGPU_EXPORT") }}
+{{ render_c_method_for_exporting() }}
 
 #endif  // !defined(WGPU_SKIP_DECLARATIONS)
 

@@ -495,11 +495,11 @@ def as_varName(*names):
     return varName
 
 
-def as_cType(prefix, name):
+def as_cType(namespace, name):
     if name.native:
         return name.concatcase()
     else:
-        return prefix + name.CamelCase()
+        return namespace + name.CamelCase()
 
 
 def as_cTypeDawn(name):
@@ -509,10 +509,10 @@ def as_cTypeDawn(name):
         return 'Dawn' + name.CamelCase()
 
 
-def as_cTypeEnumSpecialCase(prefix, typ):
+def as_cTypeEnumSpecialCase(namespace, typ):
     if typ.category == 'bitmask':
-        return as_cType(prefix, typ.name) + 'Flags'
-    return as_cType(prefix, typ.name)
+        return as_cType(namespace, typ.name) + 'Flags'
+    return as_cType(namespace, typ.name)
 
 
 def as_cppType(name):
@@ -576,9 +576,9 @@ def item_is_enabled(enabled_tags, json_data):
     return any(tag in enabled_tags for tag in tags)
 
 
-def as_cEnum(prefix, type_name, value_name):
+def as_cEnum(namespace, type_name, value_name):
     assert not type_name.native and not value_name.native
-    return prefix + type_name.CamelCase() + '_' + value_name.CamelCase()
+    return namespace + type_name.CamelCase() + '_' + value_name.CamelCase()
 
 
 def as_cEnumDawn(type_name, value_name):
@@ -594,9 +594,9 @@ def as_cppEnum(value_name):
     return value_name.CamelCase()
 
 
-def as_cMethod(prefix, type_name, method_name):
+def as_cMethod(namespace, type_name, method_name):
     assert not type_name.native and not method_name.native
-    return prefix + type_name.CamelCase() + method_name.CamelCase()
+    return namespace + type_name.CamelCase() + method_name.CamelCase()
 
 
 def as_cMethodDawn(type_name, method_name):
@@ -609,9 +609,9 @@ def as_MethodSuffix(type_name, method_name):
     return type_name.CamelCase() + method_name.CamelCase()
 
 
-def as_cProc(prefix, type_name, method_name):
+def as_cProc(namespace, type_name, method_name):
     assert not type_name.native and not method_name.native
-    return prefix + 'Proc' + type_name.CamelCase() + method_name.CamelCase()
+    return namespace + 'Proc' + type_name.CamelCase() + method_name.CamelCase()
 
 
 def as_cProcDawn(type_name, method_name):
@@ -619,22 +619,22 @@ def as_cProcDawn(type_name, method_name):
     return 'Dawn' + 'Proc' + type_name.CamelCase() + method_name.CamelCase()
 
 
-def as_frontendType(prefix, typ):
+def as_frontendType(namespace, typ):
     if typ.category == 'object':
         return typ.name.CamelCase() + 'Base*'
     elif typ.category in ['bitmask', 'enum']:
-        return prefix.lower() + '::' + typ.name.CamelCase()
+        return namespace.lower() + '::' + typ.name.CamelCase()
     elif typ.category == 'structure':
         return as_cppType(typ.name)
     else:
-        return as_cType(prefix.upper(), typ.name)
+        return as_cType(namespace.upper(), typ.name)
 
 
-def as_wireType(prefix, typ):
+def as_wireType(namespace, typ):
     if typ.category == 'object':
         return typ.name.CamelCase() + '*'
     elif typ.category in ['bitmask', 'enum', 'structure']:
-        return prefix + typ.name.CamelCase()
+        return namespace + typ.name.CamelCase()
     else:
         return as_cppType(typ.name)
 
@@ -660,19 +660,21 @@ def get_c_methods_sorted_by_name(api_params):
 def has_callback_arguments(method):
     return any(arg.type.category == 'callback' for arg in method.arguments)
 
-def get_render_params(prefix):
+def get_render_params(namespace):
     def as_annotated_cType(arg):
-        return annotated(as_cTypeEnumSpecialCase(prefix.upper(), arg.type), arg)
+        return annotated(as_cTypeEnumSpecialCase(namespace.upper(), arg.type), arg)
     def as_annotated_cppType(arg):
         return annotated(as_cppType(arg.type.name), arg)
     def as_cPrefixEnum(type_name, value_name):
-        return as_cEnum(prefix.upper(), type_name, value_name)
+        return as_cEnum(namespace.upper(), type_name, value_name)
     def as_cPrefixMethod(type_name, method_name):
-        return as_cMethod(prefix.lower(), type_name, method_name)
+        return as_cMethod(namespace.lower(), type_name, method_name)
     def as_cPrefixProc(type_name, method_name):
-        return as_cProc(prefix.upper(), type_name, method_name)
+        return as_cProc(namespace.upper(), type_name, method_name)
     def as_cPrefixType(name):
-        return as_cType(prefix.upper(), name)
+        return as_cType(namespace.upper(), name)
+    def get_namespace():
+        return namespace
     return {
             'Name': lambda name: Name(name),
             'as_annotated_cType': as_annotated_cType,
@@ -692,4 +694,5 @@ def get_render_params(prefix):
             'convert_cType_to_cppType': convert_cType_to_cppType,
             'as_varName': as_varName,
             'decorate': decorate,
+            'get_namespace' : get_namespace,
         }

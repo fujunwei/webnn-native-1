@@ -38,19 +38,19 @@
 #if defined(WEBNN_SHARED_LIBRARY)
 #    if defined(_WIN32)
 #        if defined(WEBNN_IMPLEMENTATION)
-#            define WEBNN_EXPORT __declspec(dllexport)
+#            define ML_EXPORT __declspec(dllexport)
 #        else
-#            define WEBNN_EXPORT __declspec(dllimport)
+#            define ML_EXPORT __declspec(dllimport)
 #        endif
 #    else  // defined(_WIN32)
 #        if defined(WEBNN_IMPLEMENTATION)
-#            define WEBNN_EXPORT __attribute__((visibility("default")))
+#            define ML_EXPORT __attribute__((visibility("default")))
 #        else
-#            define WEBNN_EXPORT
+#            define ML_EXPORT
 #        endif
 #    endif  // defined(_WIN32)
 #else       // defined(WEBNN_SHARED_LIBRARY)
-#    define WEBNN_EXPORT
+#    define ML_EXPORT
 #endif  // defined(WEBNN_SHARED_LIBRARY)
 
 #include <stdint.h>
@@ -59,12 +59,16 @@
 
 typedef uint32_t MLFlags;
 
-{% extends '../../templates/utils/dawn.h' %}
+typedef enum MLSType {
+  MLSType_Force32 = 0x7FFFFFFF
+} MLSType;
 
-{% block header %}
-{{ render_c_enum_type("MLFlags") }}
+{% extends '../../templates/base/dawn.h' %}
 
-{{ render_c_structure_type("") }}
+{% block content %}
+{{ render_c_enum_type() }}
+
+{{ render_c_structure_type() }}
 
 #ifdef __cplusplus
 extern "C" {
@@ -88,13 +92,13 @@ typedef MLOperatorArray (*WebnnProcCreateOperatorArray)();
 
 #if !defined(WEBNN_SKIP_DECLARATIONS)
 
-WEBNN_EXPORT MLGraphBuilder webnnCreateGraphBuilder(MLContext context);
-WEBNN_EXPORT MLNamedInputs webnnCreateNamedInputs();
-WEBNN_EXPORT MLNamedOperands webnnCreateNamedOperands();
-WEBNN_EXPORT MLNamedOutputs webnnCreateNamedOutputs();
-WEBNN_EXPORT MLOperatorArray webnnCreateOperatorArray();
+ML_EXPORT MLGraphBuilder webnnCreateGraphBuilder(MLContext context);
+ML_EXPORT MLNamedInputs webnnCreateNamedInputs();
+ML_EXPORT MLNamedOperands webnnCreateNamedOperands();
+ML_EXPORT MLNamedOutputs webnnCreateNamedOutputs();
+ML_EXPORT MLOperatorArray webnnCreateOperatorArray();
 
-{{ render_c_method_for_exporting("WEBNN_EXPORT") }}
+{{ render_c_method_for_exporting() }}
 #endif  // !defined(WEBNN_SKIP_DECLARATIONS)
 
 #ifdef __cplusplus
