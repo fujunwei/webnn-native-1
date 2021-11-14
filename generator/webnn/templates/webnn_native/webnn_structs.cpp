@@ -15,24 +15,12 @@
 
 #include "dawn_native/webnn/webnn_structs_autogen.h"
 
+#include <tuple>
+
 namespace webnn_native {
 
-    {% for type in by_category["structure"] %}
-        {% set CppType = as_cppType(type.name) %}
-        {% set CType = as_cType(type.name) %}
+{% extends '../../templates/base/native/dawn_structs.cpp' %}
 
-        static_assert(sizeof({{CppType}}) == sizeof({{CType}}), "sizeof mismatch for {{CppType}}");
-        static_assert(alignof({{CppType}}) == alignof({{CType}}), "alignof mismatch for {{CppType}}");
-
-        {% if type.extensible %}
-            static_assert(offsetof({{CppType}}, nextInChain) == offsetof({{CType}}, nextInChain),
-                    "offsetof mismatch for {{CppType}}::nextInChain");
-        {% endif %}
-        {% for member in type.members %}
-            {% set memberName = member.name.camelCase() %}
-            static_assert(offsetof({{CppType}}, {{memberName}}) == offsetof({{CType}}, {{memberName}}),
-                    "offsetof mismatch for {{CppType}}::{{memberName}}");
-        {% endfor %}
-
-    {% endfor %}
+{% block content %}
 }
+{% endblock %}

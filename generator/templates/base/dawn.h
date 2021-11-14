@@ -13,8 +13,8 @@
 //* limitations under the License.
 //*
 //*
-//* This template itself is part of the Dawn source and generates export header
-//* file such as webgpu.h and webnn.h.
+//* This template itself is part of the Dawn source and generates header file
+//* for exporting such as webgpu.h and webnn.h.
 
 {% macro render_c_enum_type() %}
     {% for type in by_category["object"] %}

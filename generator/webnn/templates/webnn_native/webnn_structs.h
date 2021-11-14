@@ -21,49 +21,12 @@
 
 namespace webnn_native {
 
-{% macro render_cpp_default_value(member) -%}
-    {%- if member.annotation in ["*", "const*", "const*const*"] and member.optional -%}
-        {{" "}}= nullptr
-    {%- elif member.type.category == "object" and member.optional -%}
-        {{" "}}= nullptr
-    {%- elif member.type.category in ["enum", "bitmask"] and member.default_value != None -%}
-        {{" "}}= ml::{{as_cppType(member.type.name)}}::{{as_cppEnum(Name(member.default_value))}}
-    {%- elif member.type.category == "native" and member.default_value != None -%}
-        {{" "}}= {{member.default_value}}
-    {%- else -%}
-        {{assert(member.default_value == None)}}
-    {%- endif -%}
-{%- endmacro %}
+{% extends '../../templates/base/native/dawn_structs.h' %}
 
-    struct ChainedStruct {
-        ChainedStruct const * nextInChain = nullptr;
-    };
-
-    {% for type in by_category["structure"] %}
-        {% if type.chained %}
-            struct {{as_cppType(type.name)}} : ChainedStruct {
-                {{as_cppType(type.name)}}() {
-                    sType = ml::SType::{{type.name.CamelCase()}};
-                }
-        {% else %}
-            struct {{as_cppType(type.name)}} {
-        {% endif %}
-            {% if type.extensible %}
-                ChainedStruct const * nextInChain = nullptr;
-            {% endif %}
-            {% for member in type.members %}
-                {% set member_declaration = as_annotated_frontendType(member) + render_cpp_default_value(member) %}
-                {% if type.chained and loop.first %}
-                    //* Align the first member to ChainedStruct to match the C struct layout.
-                    alignas(ChainedStruct) {{member_declaration}};
-                {% else %}
-                    {{member_declaration}};
-                {% endif %}
-            {% endfor %}
-        };
-
-    {% endfor %}
+{% block content %}
 
 } // namespace webnn_native
 
 #endif  // WEBNN_NATIVE_WEBNN_STRUCTS_H_
+
+{% endblock %}

@@ -23,47 +23,8 @@
 
 namespace dawn_native {
 
-    static_assert(sizeof(ChainedStruct) == sizeof(WGPUChainedStruct),
-            "sizeof mismatch for ChainedStruct");
-    static_assert(alignof(ChainedStruct) == alignof(WGPUChainedStruct),
-            "alignof mismatch for ChainedStruct");
-    static_assert(offsetof(ChainedStruct, nextInChain) == offsetof(WGPUChainedStruct, next),
-            "offsetof mismatch for ChainedStruct::nextInChain");
-    static_assert(offsetof(ChainedStruct, sType) == offsetof(WGPUChainedStruct, sType),
-            "offsetof mismatch for ChainedStruct::sType");
+{% extends 'base/native/dawn_structs.cpp' %}
 
-    {% for type in by_category["structure"] %}
-        {% set CppType = as_cppType(type.name) %}
-        {% set CType = as_cType(type.name) %}
-
-        static_assert(sizeof({{CppType}}) == sizeof({{CType}}), "sizeof mismatch for {{CppType}}");
-        static_assert(alignof({{CppType}}) == alignof({{CType}}), "alignof mismatch for {{CppType}}");
-
-        {% if type.extensible %}
-            static_assert(offsetof({{CppType}}, nextInChain) == offsetof({{CType}}, nextInChain),
-                    "offsetof mismatch for {{CppType}}::nextInChain");
-        {% endif %}
-        {% for member in type.members %}
-            {% set memberName = member.name.camelCase() %}
-            static_assert(offsetof({{CppType}}, {{memberName}}) == offsetof({{CType}}, {{memberName}}),
-                    "offsetof mismatch for {{CppType}}::{{memberName}}");
-        {% endfor %}
-
-        bool {{CppType}}::operator==(const {{as_cppType(type.name)}}& rhs) const {
-            return {% if type.extensible or type.chained -%}
-                (nextInChain == rhs.nextInChain) &&
-            {%- endif %} std::tie(
-                {% for member in type.members %}
-                    {{member.name.camelCase()-}}
-                    {{ "," if not loop.last else "" }}
-                {% endfor %}
-            ) == std::tie(
-                {% for member in type.members %}
-                    rhs.{{member.name.camelCase()-}}
-                    {{ "," if not loop.last else "" }}
-                {% endfor %}
-            );
-        }
-
-    {% endfor %}
+{% block content %}
 }
+{% endblock %}

@@ -188,6 +188,10 @@ namespace ml {
 
     {% endfor %}
 
+    enum class SType : uint32_t {
+        Invalid = 0x00000000,
+    };
+
     struct ChainedStruct {
         ChainedStruct const * nextInChain = nullptr;
         // SType sType = SType::Invalid;
