@@ -134,6 +134,18 @@ class TypedefType(Type):
         self.type = None
 
 
+class FunctionType(Type):
+    def __init__(self, is_enabled, name, json_data):
+        Type.__init__(self, name, json_data)
+        self.method = 0
+
+
+class DefineType(Type):
+    def __init__(self, is_enabled, name, json_data):
+        Type.__init__(self, name, json_data)
+        self.value = 0
+
+
 class NativeType(Type):
     def __init__(self, is_enabled, name, json_data):
         Type.__init__(self, name, json_data, native=True)
@@ -278,6 +290,14 @@ def linked_record_members(json_data, types):
 ############################################################
 
 
+def link_metadata(json_data):
+    return {
+            'target_api': json_data['target_api'],
+            'c_prefix': json_data['c_prefix'],
+            'cpp_namespace': json_data['cpp_namespace']
+    }
+
+
 def link_object(obj, types):
     def make_method(json_data):
         arguments = linked_record_members(json_data.get('args', []), types)
@@ -301,6 +321,17 @@ def link_callback(callback, types):
 def link_typedef(typedef, types):
     typedef.type = types[typedef.json_data['type']]
 
+
+def link_define(define, types):
+    define.value = define.json_data['value']
+
+
+def link_function(function, types):
+    arguments = linked_record_members(function.json_data.get('args', []), types)
+    function.method = Method(function.name,
+                            types[function.json_data.get('returns', 'void')],
+                            arguments, function.json_data)
+    print(function.method.name.CamelCase())
 
 # Sort structures so that if struct A has struct B as a member, then B is
 # listed before A.
@@ -354,6 +385,8 @@ def parse_json(json, enabled_tags):
         'object': ObjectType,
         'structure': StructureType,
         'typedef': TypedefType,
+        'define': DefineType,
+        'function': FunctionType,
     }
 
     types = {}
@@ -362,7 +395,10 @@ def parse_json(json, enabled_tags):
     for name in category_to_parser.keys():
         by_category[name] = []
 
+    metadata = {}
     for (name, json_data) in json.items():
+        if name == '_metadata' :
+            metadata = link_metadata(json_data)
         if name[0] == '_' or not item_is_enabled(enabled_tags, json_data):
             continue
         category = json_data['category']
@@ -382,6 +418,12 @@ def parse_json(json, enabled_tags):
     for typedef in by_category['typedef']:
         link_typedef(typedef, types)
 
+    for function in by_category['function']:
+        link_function(function, types)
+
+    for define in by_category['define']:
+        link_define(define, types)
+
     for category in by_category.keys():
         by_category[category] = sorted(
             by_category[category], key=lambda typ: typ.name.canonical_case())
@@ -397,6 +439,7 @@ def parse_json(json, enabled_tags):
         'enabled_tags': enabled_tags,
     }
     return {
+        'metadata': metadata,
         'types': types,
         'by_category': by_category,
         'enabled_tags': enabled_tags,
@@ -426,7 +469,6 @@ def compute_wire_params(api_params, wire_json):
         for method in api_object.methods:
             command_name = concat_names(api_object.name, method.name)
             command_suffix = Name(command_name).CamelCase()
-            print(command_suffix)
 
             # Only object return values or void are supported.
             # Other methods must be handwritten.
@@ -437,7 +479,6 @@ def compute_wire_params(api_params, wire_json):
                     wire_json['special items']['client_handwritten_commands'])
                 continue
             
-            print('-------')
             if command_suffix in (
                     wire_json['special items']['client_side_commands']):
                 continue
@@ -460,7 +501,6 @@ def compute_wire_params(api_params, wire_json):
                 members.append(result)
 
             command = Command(command_name, members)
-            print(command.name.CamelCase())
             command.derived_object = api_object
             command.derived_method = method
             commands.append(command)
@@ -497,11 +537,11 @@ def as_varName(*names):
         [name.CamelCase() for name in names[1:]])
 
 
-def as_cType(name):
+def as_cType(c_prefix, name):
     if name.native:
         return name.concatcase()
     else:
-        return 'WGPU' + name.CamelCase()
+        return c_prefix + name.CamelCase()
 
 
 def as_cTypeDawn(name):
@@ -509,12 +549,6 @@ def as_cTypeDawn(name):
         return name.concatcase()
     else:
         return 'Dawn' + name.CamelCase()
-
-
-def as_cTypeEnumSpecialCase(typ):
-    if typ.category == 'bitmask':
-        return as_cType(typ.name) + 'Flags'
-    return as_cType(typ.name)
 
 
 def as_cppType(name):
@@ -578,11 +612,6 @@ def item_is_enabled(enabled_tags, json_data):
     return any(tag in enabled_tags for tag in tags)
 
 
-def as_cEnum(type_name, value_name):
-    assert not type_name.native and not value_name.native
-    return 'WGPU' + type_name.CamelCase() + '_' + value_name.CamelCase()
-
-
 def as_cEnumDawn(type_name, value_name):
     assert not type_name.native and not value_name.native
     return ('DAWN' + '_' + type_name.SNAKE_CASE() + '_' +
@@ -596,11 +625,6 @@ def as_cppEnum(value_name):
     return value_name.CamelCase()
 
 
-def as_cMethod(type_name, method_name):
-    assert not type_name.native and not method_name.native
-    return 'wgpu' + type_name.CamelCase() + method_name.CamelCase()
-
-
 def as_cMethodDawn(type_name, method_name):
     assert not type_name.native and not method_name.native
     return 'dawn' + type_name.CamelCase() + method_name.CamelCase()
@@ -611,32 +635,27 @@ def as_MethodSuffix(type_name, method_name):
     return type_name.CamelCase() + method_name.CamelCase()
 
 
-def as_cProc(type_name, method_name):
-    assert not type_name.native and not method_name.native
-    return 'WGPU' + 'Proc' + type_name.CamelCase() + method_name.CamelCase()
-
-
 def as_cProcDawn(type_name, method_name):
     assert not type_name.native and not method_name.native
     return 'Dawn' + 'Proc' + type_name.CamelCase() + method_name.CamelCase()
 
 
-def as_frontendType(typ):
+def as_frontendType(metadata, typ):
     if typ.category == 'object':
         return typ.name.CamelCase() + 'Base*'
     elif typ.category in ['bitmask', 'enum']:
-        return 'wgpu::' + typ.name.CamelCase()
+        return metadata['cpp_namespace'] + '::' + typ.name.CamelCase()
     elif typ.category == 'structure':
         return as_cppType(typ.name)
     else:
-        return as_cType(typ.name)
+        return as_cType(metadata['c_prefix'], typ.name)
 
 
-def as_wireType(typ):
+def as_wireType(metadata, typ):
     if typ.category == 'object':
         return typ.name.CamelCase() + '*'
     elif typ.category in ['bitmask', 'enum', 'structure']:
-        return 'WGPU' + typ.name.CamelCase()
+        return metadata['c_prefix'] + typ.name.CamelCase()
     else:
         return as_cppType(typ.name)
 
@@ -661,6 +680,71 @@ def get_c_methods_sorted_by_name(api_params):
 
 def has_callback_arguments(method):
     return any(arg.type.category == 'callback' for arg in method.arguments)
+
+
+def base_render_params(metadata):
+
+    def c_prefix():
+        return metadata['c_prefix']
+    
+    def namespace():
+        return metadata['cpp_namespace']
+
+    def target_api():
+        return metadata['target_api']
+
+    def as_cTypeEnumSpecialCase(typ):
+        if typ.category == 'bitmask':
+            return as_cType(c_prefix(), typ.name) + 'Flags'
+        return as_cType(c_prefix(), typ.name)
+
+    def as_cEnum(type_name, value_name):
+        assert not type_name.native and not value_name.native
+        return c_prefix() + type_name.CamelCase() + '_' + value_name.CamelCase()
+
+    def as_cMethod(type_name, method_name):
+        cMethod = c_prefix().lower()
+        if type_name != '':
+            assert not type_name.native
+            cMethod += type_name.CamelCase()
+        assert not method_name.native
+        cMethod += method_name.CamelCase()
+        return cMethod
+
+    def as_cProc(type_name, method_name):
+        cProc = c_prefix() + 'Proc'
+        if type_name != '':
+            assert not type_name.native
+            cProc += type_name.CamelCase()
+        assert not method_name.native
+        cProc += method_name.CamelCase()
+        return cProc
+    
+    return {
+            'Name': lambda name: Name(name),
+            'as_annotated_cType': \
+                lambda arg: annotated(as_cTypeEnumSpecialCase(arg.type), arg),
+            'as_annotated_cppType': \
+                lambda arg: annotated(as_cppType(arg.type.name), arg),
+            'as_cEnum': as_cEnum,
+            'as_cEnumDawn': as_cEnumDawn,
+            'as_cppEnum': as_cppEnum,
+            'as_cMethod': as_cMethod,
+            'as_cMethodDawn': as_cMethodDawn,
+            'as_MethodSuffix': as_MethodSuffix,
+            'as_cProc': as_cProc,
+            'as_cProcDawn': as_cProcDawn,
+            'as_cType': lambda name: as_cType(c_prefix(), name),
+            'as_cTypeDawn': as_cTypeDawn,
+            'as_cppType': as_cppType,
+            'as_jsEnumValue': as_jsEnumValue,
+            'convert_cType_to_cppType': convert_cType_to_cppType,
+            'as_varName': as_varName,
+            'decorate': decorate,
+            'c_prefix': c_prefix,
+            'namespace': namespace,
+            'target_api': target_api
+        }
 
 
 class MultiGeneratorFromDawnJSON(Generator):
@@ -701,35 +785,16 @@ class MultiGeneratorFromDawnJSON(Generator):
 
         renders = []
 
-        RENDER_PARAMS_BASE = {
-            'Name': lambda name: Name(name),
-            'as_annotated_cType': \
-                lambda arg: annotated(as_cTypeEnumSpecialCase(arg.type), arg),
-            'as_annotated_cppType': \
-                lambda arg: annotated(as_cppType(arg.type.name), arg),
-            'as_cEnum': as_cEnum,
-            'as_cEnumDawn': as_cEnumDawn,
-            'as_cppEnum': as_cppEnum,
-            'as_cMethod': as_cMethod,
-            'as_cMethodDawn': as_cMethodDawn,
-            'as_MethodSuffix': as_MethodSuffix,
-            'as_cProc': as_cProc,
-            'as_cProcDawn': as_cProcDawn,
-            'as_cType': as_cType,
-            'as_cTypeDawn': as_cTypeDawn,
-            'as_cppType': as_cppType,
-            'as_jsEnumValue': as_jsEnumValue,
-            'convert_cType_to_cppType': convert_cType_to_cppType,
-            'as_varName': as_varName,
-            'decorate': decorate,
-        }
-
         params_dawn = parse_json(loaded_json,
                                  enabled_tags=['dawn', 'native', 'deprecated'])
+        
+        metadata = params_dawn['metadata']
+        RENDER_PARAMS_BASE = base_render_params(metadata)
 
+        target_name = metadata['target_api']
         if 'dawn_headers' in targets:
             renders.append(
-                FileRender('webgpu.h', 'src/include/dawn/webgpu.h',
+                FileRender('target_api.h', 'src/include/dawn/' + target_name + '.h',
                            [RENDER_PARAMS_BASE, params_dawn]))
             renders.append(
                 FileRender('dawn_proc_table.h',
@@ -807,9 +872,9 @@ class MultiGeneratorFromDawnJSON(Generator):
                 params_dawn,
                 {
                     # TODO: as_frontendType and co. take a Type, not a Name :(
-                    'as_frontendType': lambda typ: as_frontendType(typ),
+                    'as_frontendType': lambda typ: as_frontendType(metadata, typ),
                     'as_annotated_frontendType': \
-                        lambda arg: annotated(as_frontendType(arg.type), arg),
+                        lambda arg: annotated(as_frontendType(metadata, arg.type), arg),
                 }
             ]
 
@@ -866,9 +931,9 @@ class MultiGeneratorFromDawnJSON(Generator):
 
             wire_params = [
                 RENDER_PARAMS_BASE, params_dawn, {
-                    'as_wireType': as_wireType,
+                    'as_wireType': lambda typ : as_wireType(metadata, typ),
                     'as_annotated_wireType': \
-                        lambda arg: annotated(as_wireType(arg.type), arg),
+                        lambda arg: annotated(as_wireType(metadata, arg.type), arg),
                 }, additional_params
             ]
             renders.append(

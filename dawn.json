@@ -17,6 +17,33 @@
 
     "_doc": "See docs/codegen.md",
 
+    "_metadata": {
+        "target_api": "webgpu",
+        "c_prefix": "WGPU",
+        "cpp_namespace": "wgpu"
+    },
+
+    "create instance": {
+        "category": "function",
+        "returns": "instance",
+        "args": [
+            {"name": "descriptor", "type": "instance descriptor", "annotation": "const*"}
+        ]
+    },
+    "proc": {
+        "category": "function",
+        "returns": "void",
+        "args": []
+    },
+    "get proc address": {
+        "category": "function",
+        "returns": "proc",
+        "args": [
+            {"name": "device", "type": "device"},
+            {"name": "proc name", "type": "char", "annotation": "const*"}
+        ]
+    },
+
     "request adapter options": {
         "category": "structure",
         "extensible": "in",
@@ -2388,6 +2415,54 @@
             {"value": 29, "name": "sint32x3"},
             {"value": 30, "name": "sint32x4"}
         ]
+    },
+    "WGPU_WHOLE_SIZE" : {
+        "category": "define",
+        "value":  "(0xffffffffffffffffULL)"
+    },
+    "WGPU_WHOLE_MAP_SIZE" : {
+        "category": "define",
+        "value":  "SIZE_MAX"
+    },
+    "WGPU_STRIDE_UNDEFINED" : {
+        "tags": ["deprecated"],
+        "category": "define",
+        "value":  "(0xffffffffUL)"
+    },
+    "WGPU_COPY_STRIDE_UNDEFINED" : {
+        "category": "define",
+        "value":  "(0xffffffffUL)"
+    },
+    "WGPU_LIMIT_U32_UNDEFINED" : {
+        "category": "define",
+        "value":  "(0xffffffffUL)"
+    },
+    "WGPU_LIMIT_U64_UNDEFINED" : {
+        "category": "define",
+        "value":  "(0xffffffffffffffffULL)"
+    },
+    "WGPU_ARRAY_LAYER_COUNT_UNDEFINED" : {
+        "category": "define",
+        "value":  "(0xffffffffUL)"
+    },
+    "WGPU_MIP_LEVEL_COUNT_UNDEFINED " : {
+        "category": "define",
+        "value":  "(0xffffffffUL)"
+    },
+    "WGPUInputStepMode_Vertex" : {
+        "tags": ["deprecated"],
+        "category": "define",
+        "value":  "WGPUVertexStepMode_Vertex"
+    },
+    "WGPUInputStepMode_Instance" : {
+        "tags": ["deprecated"],
+        "category": "define",
+        "value":  "WGPUVertexStepMode_Instance"
+    },
+    "WGPUInputStepMode_Force32" : {
+        "tags": ["deprecated"],
+        "category": "define",
+        "value":  "WGPUVertexStepMode_Force32"
     },
     "ObjectType": {
       "_comment": "Only used for the wire",
