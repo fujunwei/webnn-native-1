@@ -20,7 +20,7 @@
     "_metadata": {
         "target_api": "webgpu",
         "c_prefix": "WGPU",
-        "cpp_namespace": "wgpu"
+        "namespace": "wgpu"
     },
 
     "create instance": {

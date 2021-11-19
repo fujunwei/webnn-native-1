@@ -294,7 +294,7 @@ def link_metadata(json_data):
     return {
             'target_api': json_data['target_api'],
             'c_prefix': json_data['c_prefix'],
-            'cpp_namespace': json_data['cpp_namespace']
+            'namespace': json_data['namespace']
     }
 
 
@@ -533,9 +533,12 @@ def compute_wire_params(api_params, wire_json):
 
 
 def as_varName(*names):
-    return names[0].camelCase() + ''.join(
+    varName = names[0].camelCase() + ''.join(
         [name.CamelCase() for name in names[1:]])
-
+    # Avoid to use C++ keyword 'operator', probably check for others on demand.
+    if varName == 'operator':
+        varName = 'op'
+    return varName
 
 def as_cType(c_prefix, name):
     if name.native:
@@ -644,7 +647,7 @@ def as_frontendType(metadata, typ):
     if typ.category == 'object':
         return typ.name.CamelCase() + 'Base*'
     elif typ.category in ['bitmask', 'enum']:
-        return metadata['cpp_namespace'] + '::' + typ.name.CamelCase()
+        return metadata['namespace'] + '::' + typ.name.CamelCase()
     elif typ.category == 'structure':
         return as_cppType(typ.name)
     else:
@@ -688,7 +691,7 @@ def base_render_params(metadata):
         return metadata['c_prefix']
     
     def namespace():
-        return metadata['cpp_namespace']
+        return metadata['namespace']
 
     def target_api():
         return metadata['target_api']
