@@ -12,15 +12,17 @@
 //* See the License for the specific language governing permissions and
 //* limitations under the License.
 
-#ifndef DAWN_DAWN_PROC_TABLE_H_
-#define DAWN_DAWN_PROC_TABLE_H_
+{% set dawn_prefix = "Dawn" if target_api() == "WebGPU" else target_api() %}
+#ifndef DAWN_{{dawn_prefix.upper()}}_PROC_TABLE_H_
+#define DAWN_{{dawn_prefix.upper()}}_PROC_TABLE_H_
 
-#include "dawn/webgpu.h"
+#include "dawn/{{target_api().lower()}}.h"
 
 // Note: Often allocated as a static global. Do not add a complex constructor.
-typedef struct DawnProcTable {
-    WGPUProcGetProcAddress getProcAddress;
-    WGPUProcCreateInstance createInstance;
+typedef struct {{dawn_prefix}}ProcTable {
+    {% for type in by_category["function"] %}
+        {{as_cProc("", type.method.name)}} {{as_varName(type.method.name)}};
+    {% endfor %}
 
     {% for type in by_category["object"] %}
         {% for method in c_methods(type) %}
@@ -28,6 +30,6 @@ typedef struct DawnProcTable {
         {% endfor %}
 
     {% endfor %}
-} DawnProcTable;
+} {{dawn_prefix}}ProcTable;
 
-#endif  // DAWN_DAWN_PROC_TABLE_H_
+#endif  // DAWN_{{dawn_prefix.upper()}}_PROC_TABLE_H_

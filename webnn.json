@@ -17,7 +17,7 @@
   ],
 
   "_metadata": {
-    "target_api": "webnn",
+    "target_api": "WebNN",
     "c_prefix": "ML",
     "namespace": "ml"
   },

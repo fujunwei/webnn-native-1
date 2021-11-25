@@ -127,8 +127,9 @@ namespace dawn_native {
     }
 
     static DawnProcTable gProcTable = {
-        NativeGetProcAddress,
-        NativeCreateInstance,
+        {% for type in by_category["function"] %}
+            Native{{as_cppType(type.method.name)}},
+        {% endfor %}
         {% for type in by_category["object"] %}
             {% for method in c_methods(type) %}
                 Native{{as_MethodSuffix(type.name, method.name)}},

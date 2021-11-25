@@ -73,13 +73,16 @@ class MultiGeneratorFromWebnnJSON(Generator):
 
         renders = []
 
+        api_file_name = metadata['target_api'].lower()
+        dawn_prefix = 'Dawn' if api_file_name == 'webgpu' else api_file_name
+
         if 'webnn_headers' in targets:
             renders.append(
                 FileRender('../../templates/target_api.h', 'src/include/dawn/webnn/webnn.h',
                            [base_params, api_params]))
             renders.append(
                 FileRender('webnn_proc_table.h',
-                           'src/include/dawn/webnn/webnn_proc_table.h',
+                           'src/include/dawn/webnn/' + dawn_prefix + '_proc_table.h',
                            [base_params, api_params]))
 
         if 'webnncpp_headers' in targets:

@@ -18,7 +18,7 @@
     "_doc": "See docs/codegen.md",
 
     "_metadata": {
-        "target_api": "webgpu",
+        "target_api": "WebGPU",
         "c_prefix": "WGPU",
         "namespace": "wgpu"
     },
@@ -30,14 +30,12 @@
             {"name": "descriptor", "type": "instance descriptor", "annotation": "const*"}
         ]
     },
-    "proc": {
-        "category": "function",
-        "returns": "void",
-        "args": []
+    "WGPUProc": {
+        "category": "native"
     },
     "get proc address": {
         "category": "function",
-        "returns": "proc",
+        "returns": "WGPUProc",
         "args": [
             {"name": "device", "type": "device"},
             {"name": "proc name", "type": "char", "annotation": "const*"}

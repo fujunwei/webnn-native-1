@@ -327,7 +327,7 @@ def link_define(define, types):
 
 
 def link_function(function, types):
-    arguments = linked_record_members(function.json_data.get('args', []), types)
+    arguments = linked_record_members(function.json_data['args'], types)
     function.method = Method(function.name,
                             types[function.json_data.get('returns', 'void')],
                             arguments, function.json_data)
@@ -794,7 +794,7 @@ class MultiGeneratorFromDawnJSON(Generator):
         metadata = params_dawn['metadata']
         RENDER_PARAMS_BASE = base_render_params(metadata)
 
-        target_name = metadata['target_api']
+        target_name = metadata['target_api'].lower()
         if 'dawn_headers' in targets:
             renders.append(
                 FileRender('target_api.h', 'src/include/dawn/' + target_name + '.h',

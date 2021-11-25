@@ -41,8 +41,8 @@ static WGPUInstance ThreadDispatchCreateInstance(WGPUInstanceDescriptor const * 
 
 extern "C" {
     DawnProcTable dawnThreadDispatchProcTable = {
-        ThreadDispatchGetProcAddress,
         ThreadDispatchCreateInstance,
+        ThreadDispatchGetProcAddress,
 {% for type in by_category["object"] %}
     {% for method in c_methods(type) %}
         ThreadDispatch{{as_MethodSuffix(type.name, method.name)}},

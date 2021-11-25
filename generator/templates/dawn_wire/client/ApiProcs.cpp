@@ -160,8 +160,8 @@ namespace dawn_wire { namespace client {
     }
 
     static DawnProcTable gProcTable = {
-        ClientGetProcAddress,
         ClientCreateInstance,
+        ClientGetProcAddress,
         {% for type in by_category["object"] %}
             {% for method in c_methods(type) %}
                 Client{{as_MethodSuffix(type.name, method.name)}},
