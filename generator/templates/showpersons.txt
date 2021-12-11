@@ -1,0 +1,10 @@
+
+// The template of show persion information.
+
+{% for person in persons -%}
+    {% macro print_person_info(person) -%}
+        {{ person.name }} {{ person.age }}
+    {% endmacro %}
+
+    {{ print_person_info(person) }}
+{% endfor %}
