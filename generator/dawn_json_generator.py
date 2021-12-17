@@ -925,6 +925,14 @@ class MultiGeneratorFromDawnJSON(Generator):
                 FileRender('dawn_native/ChainUtils.cpp',
                            'src/' + native_dir + '/ChainUtils_autogen.cpp',
                            frontend_params))
+            renders.append(
+                FileRender('dawn_native/api_absl_format.h',
+                           'src/' + native_dir + '/' + api + '_absl_format_autogen.h',
+                           frontend_params))
+            renders.append(
+                FileRender('dawn_native/api_absl_format.cpp',
+                           'src/' + native_dir + '/' + api + '_absl_format_autogen.cpp',
+                           frontend_params))
 
         if 'webgpu_native_utils' in targets:
             frontend_params = [
