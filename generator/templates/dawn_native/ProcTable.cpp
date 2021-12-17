@@ -142,6 +142,7 @@ namespace {{native_namespace}} {
     }
 
     static {{Prefix}}ProcTable gProcTable = {
+        NativeGetProcAddress,
         {% for function in by_category["function"] %}
             Native{{as_cppType(function.name)}},
         {% endfor %}

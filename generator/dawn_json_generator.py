@@ -918,6 +918,9 @@ class MultiGeneratorFromDawnJSON(Generator):
                            'src/' + native_dir + '/' + namespace + '_structs_autogen.cpp',
                            frontend_params))
             renders.append(
+                FileRender('dawn_native/ProcTable.cpp',
+                           'src/' + native_dir + '/ProcTable.cpp', frontend_params))
+            renders.append(
                 FileRender('dawn_native/ChainUtils.h',
                            'src/' + native_dir + '/ChainUtils_autogen.h',
                            frontend_params))
