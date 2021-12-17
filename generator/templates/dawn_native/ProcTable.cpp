@@ -108,6 +108,7 @@ namespace {{native_namespace}} {
                     }
                 );
 
+<<<<<<< HEAD
                 if (entry != &sProcMap[sProcMapSize] && strcmp(entry->name, procName) == 0) {
                     return entry->proc;
                 }
@@ -128,6 +129,11 @@ namespace {{native_namespace}} {
                     {%- endfor -%}
                 ));
             {% endif %}
+=======
+        // Special case the free-standing functions of the API.
+        if (strcmp(procName, "{{as_cMethod(None, Name("GetProcAddress"))}}") == 0) {
+            return reinterpret_cast<{{c_prefix}}Proc>(NativeGetProcAddress);
+>>>>>>> fbb67d67 (Address the review comments)
         }
 
     {% endfor %}
