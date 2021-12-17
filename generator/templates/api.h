@@ -121,7 +121,7 @@ typedef void (*{{c_prefix}}Proc)(void);
 
 #if !defined({{c_prefix}}_SKIP_PROCS)
 
-typedef {{c_prefix}}Proc (*{{c_prefix}}ProcGetProcAddress)(char const * procName);
+typedef {{c_prefix}}Proc (*{{as_cProc(None, Name("GetProcAddress"))}})(char const * procName);
 
 {% for function in by_category["function"] %}
     typedef {{as_cType(function.return_type.name)}} (*{{as_cProc(None, function.name)}})(
@@ -147,7 +147,7 @@ typedef {{c_prefix}}Proc (*{{c_prefix}}ProcGetProcAddress)(char const * procName
 
 #if !defined({{c_prefix}}_SKIP_DECLARATIONS)
 
-{{c_prefix}}_EXPORT {{c_prefix}}Proc {{metadata.namespace}}GetProcAddress(char const * procName);
+{{c_prefix}}_EXPORT {{c_prefix}}Proc {{as_cMethod(None, Name("GetProcAddress"))}}(char const * procName);
 
 {% for function in by_category["function"] %}
     {{c_prefix}}_EXPORT {{as_cType(function.return_type.name)}} {{as_cMethod(None, function.name)}}(

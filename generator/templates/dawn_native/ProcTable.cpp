@@ -17,7 +17,6 @@
 {% set native_namespace = Name(metadata.native_namespace).snake_case() %}
 {% set impl_dir = metadata.impl_dir + "/" if metadata.impl_dir else "" %}
 {% set native_dir = impl_dir + native_namespace %}
-{% set c_prefix = metadata.c_prefix %}
 #include "{{native_dir}}/{{prefix}}_platform.h"
 #include "{{native_dir}}/{{Prefix}}Native.h"
 
@@ -78,6 +77,7 @@ namespace {{native_namespace}} {
 
     namespace {
 
+{% set c_prefix = metadata.c_prefix %}
         struct ProcEntry {
             {{c_prefix}}Proc proc;
             const char* name;
@@ -121,7 +121,7 @@ namespace {{native_namespace}} {
         }
 
         // Special case the free-standing functions of the API.
-        if (strcmp(procName, "{{metadata.namespace}}GetProcAddress") == 0) {
+        if (strcmp(procName, "{{as_cMethod(None, Name("GetProcAddress"))}}") == 0) {
             return reinterpret_cast<{{c_prefix}}Proc>(NativeGetProcAddress);
         }
 
