@@ -66,6 +66,7 @@ namespace webnn_native {
         OperandBase* APIMatmul(OperandBase* a, OperandBase* b);
         OperandBase* APIMax(OperandBase*, OperandBase*);
         OperandBase* APIMaxPool2d(OperandBase*, Pool2dOptions const* options);
+        OperandBase* APIL2Pool2d(OperandBase*, Pool2dOptions const* options);
         OperandBase* APIMin(OperandBase*, OperandBase*);
         OperandBase* APIMul(OperandBase*, OperandBase*);
         OperandBase* APINeg(OperandBase*);
@@ -80,7 +81,7 @@ namespace webnn_native {
         OperandBase* APIReduceSum(OperandBase*, ReduceOptions const* options);
         OperandBase* APIRelu(OperandBase*);
         OperatorBase* APIReluOperator();
-        OperandBase* APIResample(OperandBase*, ResampleOptions const* options);
+        OperandBase* APIResample2d(OperandBase*, Resample2dOptions const* options);
         OperandBase* APIReshape(OperandBase*, int32_t const*, size_t);
         OperandBase* APISigmoid(OperandBase*);
         OperatorBase* APISigmoidOperator();

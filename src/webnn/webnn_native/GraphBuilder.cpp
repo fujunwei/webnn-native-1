@@ -41,7 +41,7 @@
 #include "webnn/webnn_native/ops/Pad.h"
 #include "webnn/webnn_native/ops/Pool2d.h"
 #include "webnn/webnn_native/ops/Reduce.h"
-#include "webnn/webnn_native/ops/Resample.h"
+#include "webnn/webnn_native/ops/Resample2d.h"
 #include "webnn/webnn_native/ops/Reshape.h"
 #include "webnn/webnn_native/ops/Slice.h"
 #include "webnn/webnn_native/ops/Split.h"
@@ -51,7 +51,7 @@
 
 #define DAWN_VALIDATE(ptr, objectBase)                 \
     Ref<OperatorBase> op = AcquireRef(ptr);            \
-    if (GetContext()->ConsumedError(op->Validate())) { \
+    if (GetContext()->ConsumedError(op->ValidateAndInferOutputInfo())) { \
         return objectBase::MakeError(this);            \
     }                                                  \
     for (;;)                                           \
@@ -189,6 +189,10 @@ namespace webnn_native {
         VALIDATE_FOR_OPERAND(new op::Unary(this, op::UnaryOpType::kLog, input));
     }
 
+    OperandBase* GraphBuilderBase::APIL2Pool2d(OperandBase* input, Pool2dOptions const* options) {
+        VALIDATE_FOR_OPERAND(new op::Pool2d(this, op::Pool2dType::kL2Pool2d, input, options));
+    }
+
     OperandBase* GraphBuilderBase::APIMatmul(OperandBase* a, OperandBase* b) {
         VALIDATE_FOR_OPERAND(new op::Binary(this, op::BinaryOpType::kMatMul, a, b));
     }
@@ -260,8 +264,8 @@ namespace webnn_native {
         VALIDATE_FUSED_OPERATOR(new op::Unary(this, op::UnaryOpType::kRelu, FusedOperator::Relu));
     }
 
-    OperandBase* GraphBuilderBase::APIResample(OperandBase* input, ResampleOptions const* options) {
-        VALIDATE_FOR_OPERAND(new op::Resample(this, input, options));
+    OperandBase* GraphBuilderBase::APIResample2d(OperandBase* input, Resample2dOptions const* options) {
+        VALIDATE_FOR_OPERAND(new op::Resample2d(this, input, options));
     }
 
     OperandBase* GraphBuilderBase::APIReshape(OperandBase* input,

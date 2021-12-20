@@ -134,6 +134,8 @@ source_set("webnn_native_sources") {
     "Operand.h",
     "Operator.cpp",
     "Operator.h",
+    "Utils.cpp",
+    "Utils.h",
   ]
 
   sources += [
@@ -161,8 +163,8 @@ source_set("webnn_native_sources") {
     "ops/Pool2d.h",
     "ops/Reduce.cpp",
     "ops/Reduce.h",
-    "ops/Resample.cpp",
-    "ops/Resample.h",
+    "ops/Resample2d.cpp",
+    "ops/Resample2d.h",
     "ops/Reshape.cpp",
     "ops/Reshape.h",
     "ops/Transpose.cpp",

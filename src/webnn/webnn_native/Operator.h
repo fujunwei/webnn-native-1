@@ -39,12 +39,12 @@ namespace webnn_native {
         virtual ~OperatorBase() = default;
 
         const std::vector<Ref<OperandBase>>& Inputs() const;
-        const std::vector<Ref<OperandBase>>& Outputs() const;
+        const std::vector<OperandBase*>& Outputs() const;
         OperandBase* PrimaryOutput() const;
 
         // Add the operand to model for specific backend.
         virtual MaybeError AddToGraph(GraphBase* graph) const;
-        virtual MaybeError Validate();
+        virtual MaybeError ValidateAndInferOutputInfo();
         FusedOperator GetFusedOperator() const;
 
         static OperatorBase* MakeError(GraphBuilderBase* graphBuilder);
@@ -56,8 +56,10 @@ namespace webnn_native {
       protected:
         // The input operands of operator.
         std::vector<Ref<OperandBase>> mInputs;
-        // The output operands of operator.
-        std::vector<Ref<OperandBase>> mOutputs;
+        // The output operands will stronge reference with the Operator, so the
+        // Operator only need weak reference with output Operand, otherwise there
+        // are reference each other.
+        std::vector<OperandBase*> mOutputs;
     };
 
 }  // namespace webnn_native

@@ -42,23 +42,27 @@ namespace webnn_native {
         return mInputs;
     }
 
-    const std::vector<Ref<OperandBase>>& OperatorBase::Outputs() const {
+    const std::vector<OperandBase*>& OperatorBase::Outputs() const {
         return mOutputs;
     }
 
     OperandBase* OperatorBase::PrimaryOutput() const {
-        return mOutputs[0].Get();
+        return mOutputs[0];
     }
 
     MaybeError OperatorBase::AddToGraph(GraphBase* graph) const {
         DAWN_UNREACHABLE();
     }
 
-    MaybeError OperatorBase::Validate() {
+    MaybeError OperatorBase::ValidateAndInferOutputInfo() {
         for (auto& input : mInputs) {
             if (input->IsError()) {
                 return DAWN_VALIDATION_ERROR("Argument inputs are invalid.");
             }
+        }
+        // The type is the same as input[0] by default.
+        if (!mInputs.empty()) {
+            mOutputs[0]->SetType(mInputs[0]->Type());
         }
         return {};
     }
