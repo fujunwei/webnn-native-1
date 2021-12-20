@@ -18,6 +18,14 @@ import("../../scripts/dawn_overrides_with_defaults.gni")
 import("${dawn_root}/scripts/dawn_component.gni")
 import("${dawn_root}/src/webnn/webnn_generator.gni")
 
+group("all") {
+  testonly = true
+  deps = [
+    "${dawn_root}/src/webnn/webnn_native:webnn_native",
+    "${dawn_root}/src/webnn/tests:webnn_tests",
+  ]
+}
+
 ###############################################################################
 # WebNN headers
 ###############################################################################

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import("scripts/dawn_overrides_with_defaults.gni")
+import("scripts/webnn_features.gni")
 
 group("all") {
   testonly = true
@@ -24,15 +25,13 @@ group("all") {
   if (dawn_standalone) {
     deps += [ "examples:dawn_samples" ]
   }
-  if (webnn_standalone) {
-    deps += [
-      "src/webnn/tests:webnn_tests",
-    ]
-  }
 }
 
 # This target is built when no specific target is specified on the command line.
 group("default") {
   testonly = true
   deps = [ ":all" ]
+  if (dawn_enable_webnn) {
+    deps += [ "src/webnn:all" ]
+  }
 }

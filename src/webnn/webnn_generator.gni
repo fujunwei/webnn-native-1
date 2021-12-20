@@ -86,9 +86,9 @@ template("webnn_json_generator") {
     # target using templates in this directory.
     args = [
       "--dawn-json",
-      rebase_path("${dawn_root}/webnn.json", root_build_dir),
+      rebase_path("${dawn_root}/src/webnn/webnn.json", root_build_dir),
       "--wire-json",
-      rebase_path("${dawn_root}/webnn_wire.json", root_build_dir),
+      rebase_path("${dawn_root}/src/webnn/webnn_wire.json", root_build_dir),
       "--targets",
       invoker.target,
     ]
