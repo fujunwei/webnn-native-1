@@ -107,7 +107,7 @@ namespace webnn_native {
     OperandBase* GraphBuilderBase::APIConcat(uint32_t inputsCount,
                                              OperandBase* const* inputs,
                                              uint32_t axis) {
-        std::vector<Ref<OperandBase>> operandInputs;
+        std::vector<OperandBase*> operandInputs;
         operandInputs.reserve(inputsCount);
         for (uint32_t i = 0; i < inputsCount; ++i) {
             operandInputs.push_back(inputs[i]);

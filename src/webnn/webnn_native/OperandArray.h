@@ -22,7 +22,7 @@ namespace webnn_native {
 
     class OperandArrayBase : public ObjectBase {
       public:
-        OperandArrayBase(GraphBuilderBase* graphBuilder, std::vector<Ref<OperandBase>> operands)
+        OperandArrayBase(GraphBuilderBase* graphBuilder, std::vector<OperandBase*> operands)
             : ObjectBase(graphBuilder->GetContext()), mOperands(std::move(operands)) {
         }
         virtual ~OperandArrayBase() = default;
@@ -35,7 +35,7 @@ namespace webnn_native {
             return mOperands.size();
         }
         OperandBase* APIGetOperand(size_t index) {
-            return mOperands[index].Get();
+            return mOperands[index];
         }
 
       private:
@@ -43,7 +43,7 @@ namespace webnn_native {
             : ObjectBase(graphBuilder->GetContext(), tag) {
         }
 
-        std::vector<Ref<OperandBase>> mOperands;
+        std::vector<OperandBase*> mOperands;
     };
 }  // namespace webnn_native
 

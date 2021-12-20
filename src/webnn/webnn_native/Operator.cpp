@@ -21,7 +21,7 @@
 
 namespace webnn_native {
     OperatorBase::OperatorBase(GraphBuilderBase* graphBuilder,
-                               std::vector<Ref<OperandBase>> inputs,
+                               std::vector<OperandBase*> inputs,
                                size_t outputSize)
         : ObjectBase(graphBuilder->GetContext()), mInputs(std::move(inputs)) {
         mOutputs.reserve(outputSize);
@@ -38,16 +38,16 @@ namespace webnn_native {
         : ObjectBase(graphBuilder->GetContext(), tag) {
     }
 
-    const std::vector<Ref<OperandBase>>& OperatorBase::Inputs() const {
+    const std::vector<OperandBase*>& OperatorBase::Inputs() const {
         return mInputs;
     }
 
-    const std::vector<Ref<OperandBase>>& OperatorBase::Outputs() const {
+    const std::vector<OperandBase*>& OperatorBase::Outputs() const {
         return mOutputs;
     }
 
     OperandBase* OperatorBase::PrimaryOutput() const {
-        return mOutputs[0].Get();
+        return mOutputs[0];
     }
 
     MaybeError OperatorBase::AddToGraph(GraphBase* graph) const {

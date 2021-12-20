@@ -24,7 +24,7 @@ namespace webnn_native { namespace op {
 
     class Concat final : public OperatorBase {
       public:
-        Concat(GraphBuilderBase* builder, std::vector<Ref<OperandBase>> inputs, uint32_t axis)
+        Concat(GraphBuilderBase* builder, std::vector<OperandBase*> inputs, uint32_t axis)
             : OperatorBase(builder, std::move(inputs)), mAxis(axis) {
         }
         ~Concat() override = default;

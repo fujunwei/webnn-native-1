@@ -33,13 +33,13 @@ namespace webnn_native {
     class OperatorBase : public ObjectBase {
       public:
         explicit OperatorBase(GraphBuilderBase* GraphBuilder,
-                              std::vector<Ref<OperandBase>> inputs = {},
+                              std::vector<OperandBase*> inputs = {},
                               size_t outputSize = 1);
         explicit OperatorBase(GraphBuilderBase* GraphBuilder, FusedOperator fusedOperator);
         virtual ~OperatorBase() = default;
 
-        const std::vector<Ref<OperandBase>>& Inputs() const;
-        const std::vector<Ref<OperandBase>>& Outputs() const;
+        const std::vector<OperandBase*>& Inputs() const;
+        const std::vector<OperandBase*>& Outputs() const;
         OperandBase* PrimaryOutput() const;
 
         // Add the operand to model for specific backend.
@@ -55,9 +55,9 @@ namespace webnn_native {
 
       protected:
         // The input operands of operator.
-        std::vector<Ref<OperandBase>> mInputs;
+        std::vector<OperandBase*> mInputs;
         // The output operands of operator.
-        std::vector<Ref<OperandBase>> mOutputs;
+        std::vector<OperandBase*> mOutputs;
     };
 
 }  // namespace webnn_native
