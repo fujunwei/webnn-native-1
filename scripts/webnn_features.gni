@@ -1,4 +1,4 @@
-# Copyright 2021 The WebNN-native Authors
+# Copyright 2018 The Dawn Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,4 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-webnn_standalone = true
+import("//build_overrides/build.gni")
+
+declare_args() {
+  dawn_enable_webnn = false
+}
