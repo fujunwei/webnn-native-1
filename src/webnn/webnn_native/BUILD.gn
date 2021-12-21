@@ -71,6 +71,8 @@ webnn_json_generator("webnn_native_utils_gen") {
     "src/webnn/webnn_native/ChainUtils_autogen.cpp",
     "src/webnn/webnn_native/webnn_absl_format_autogen.h",
     "src/webnn/webnn_native/webnn_absl_format_autogen.cpp",
+    "src/webnn/webnn_native/ObjectType_autogen.h",
+    "src/webnn/webnn_native/ObjectType_autogen.cpp",
   ]
 }
 

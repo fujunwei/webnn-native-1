@@ -112,12 +112,6 @@ dawn_json_generator("dawn_native_utils_gen") {
     "src/dawn_native/webgpu_absl_format_autogen.h",
     "src/dawn_native/webgpu_absl_format_autogen.cpp",
     "src/dawn_native/ProcTable.cpp",
-  ]
-}
-
-dawn_json_generator("webgpu_native_utils_gen") {
-  target = "webgpu_native_utils"
-  outputs = [
     "src/dawn_native/ObjectType_autogen.h",
     "src/dawn_native/ObjectType_autogen.cpp",
   ]
@@ -166,7 +160,6 @@ source_set("dawn_native_sources") {
   deps = [
     ":dawn_native_headers",
     ":dawn_native_utils_gen",
-    ":webgpu_native_utils_gen",
     "${dawn_root}/src/common",
     "${dawn_spirv_tools_dir}:spvtools_opt",
     "${dawn_spirv_tools_dir}:spvtools_val",
@@ -190,7 +183,6 @@ source_set("dawn_native_sources") {
   ]
 
   sources = get_target_outputs(":dawn_native_utils_gen")
-  sources += get_target_outputs(":webgpu_native_utils_gen")
   sources += [
     "Adapter.cpp",
     "Adapter.h",
