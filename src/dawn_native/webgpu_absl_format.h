@@ -66,10 +66,7 @@ namespace dawn_native {
     AbslFormatConvert(const TextureViewBase* value,
                       const absl::FormatConversionSpec& spec,
                       absl::FormatSink* s);
-<<<<<<< HEAD
 
-=======
->>>>>>> cbbf95c3 (Make webgpu_absl_format flexible)
 }  // namespace dawn_native
 
 #endif  // DAWNNATIVE_WEBGPUABSLFORMAT_H_

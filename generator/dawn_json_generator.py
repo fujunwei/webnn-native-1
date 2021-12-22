@@ -937,25 +937,6 @@ class MultiGeneratorFromDawnJSON(Generator):
                            'src/' + native_dir + '/' + api + '_absl_format_autogen.cpp',
                            frontend_params))
             renders.append(
-                FileRender('dawn_native/ProcTable.cpp',
-                           'src/' + native_dir + '/ProcTable.cpp', frontend_params))
-            renders.append(
-                FileRender('dawn_native/ChainUtils.h',
-                           'src/' + native_dir + '/ChainUtils_autogen.h',
-                           frontend_params))
-            renders.append(
-                FileRender('dawn_native/ChainUtils.cpp',
-                           'src/' + native_dir + '/ChainUtils_autogen.cpp',
-                           frontend_params))
-            renders.append(
-                FileRender('dawn_native/api_absl_format.h',
-                           'src/' + native_dir + '/' + api + '_absl_format_autogen.h',
-                           frontend_params))
-            renders.append(
-                FileRender('dawn_native/api_absl_format.cpp',
-                           'src/' + native_dir + '/' + api + '_absl_format_autogen.cpp',
-                           frontend_params))
-            renders.append(
                 FileRender('dawn_native/ObjectType.h',
                            'src/' + native_dir + '/ObjectType_autogen.h',
                            frontend_params))

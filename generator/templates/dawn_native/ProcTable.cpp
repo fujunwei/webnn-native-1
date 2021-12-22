@@ -11,7 +11,6 @@
 //* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //* See the License for the specific language governing permissions and
 //* limitations under the License.
-
 {% set Prefix = metadata.proc_table_prefix %}
 {% set prefix = Prefix.lower() %}
 {% set native_namespace = Name(metadata.native_namespace).snake_case() %}
@@ -108,7 +107,6 @@ namespace {{native_namespace}} {
                     }
                 );
 
-<<<<<<< HEAD
                 if (entry != &sProcMap[sProcMapSize] && strcmp(entry->name, procName) == 0) {
                     return entry->proc;
                 }
@@ -129,11 +127,6 @@ namespace {{native_namespace}} {
                     {%- endfor -%}
                 ));
             {% endif %}
-=======
-        // Special case the free-standing functions of the API.
-        if (strcmp(procName, "{{as_cMethod(None, Name("GetProcAddress"))}}") == 0) {
-            return reinterpret_cast<{{c_prefix}}Proc>(NativeGetProcAddress);
->>>>>>> fbb67d67 (Address the review comments)
         }
 
     {% endfor %}
@@ -148,7 +141,6 @@ namespace {{native_namespace}} {
     }
 
     static {{Prefix}}ProcTable gProcTable = {
-        NativeGetProcAddress,
         {% for function in by_category["function"] %}
             Native{{as_cppType(function.name)}},
         {% endfor %}

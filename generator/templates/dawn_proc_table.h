@@ -20,8 +20,6 @@
 
 // Note: Often allocated as a static global. Do not add a complex constructor.
 typedef struct {{Prefix}}ProcTable {
-    {{metadata.c_prefix}}ProcGetProcAddress getProcAddress;
-
     {% for function in by_category["function"] %}
         {{as_cProc(None, function.name)}} {{as_varName(function.name)}};
     {% endfor %}
