@@ -25,6 +25,11 @@
     "proc_table_prefix": "Webnn"
   },
 
+  "proc": {
+    "category": "function pointer",
+    "returns": "void",
+    "args": []
+  },
   "create graph builder": {
     "category": "function",
     "returns": "graph builder",
