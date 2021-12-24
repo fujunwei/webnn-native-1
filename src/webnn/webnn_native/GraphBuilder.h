@@ -40,7 +40,7 @@ namespace webnn_native {
                                   OperandBase*,
                                   BatchNormOptions const* options);
         OperandBase* APIClamp(OperandBase*, ClampOptions const* options);
-        OperatorBase* APIClampOperator(ClampOptions const* options);
+        FusionOperatorBase* APIClampOperator(ClampOptions const* options);
         OperandBase* APICeil(OperandBase*);
         OperandBase* APIConcat(uint32_t inputsCount, OperandBase* const* inputs, uint32_t axis);
         OperandBase* APIConstant(OperandDescriptor const* desc, ArrayBufferView const* arrayBuffer);
@@ -57,11 +57,11 @@ namespace webnn_native {
                                  int32_t hiddenSize,
                                  GruOptions const* options);
         OperandBase* APIHardSwish(OperandBase*);
-        OperatorBase* APIHardSwishOperator();
+        FusionOperatorBase* APIHardSwishOperator();
         OperandBase* APIInput(char const* name, OperandDescriptor const* desc);
         OperandBase* APIInstanceNorm(OperandBase*, InstanceNormOptions const* options);
         OperandBase* APILeakyRelu(OperandBase*, LeakyReluOptions const* options);
-        OperatorBase* APILeakyReluOperator(LeakyReluOptions const* options);
+        FusionOperatorBase* APILeakyReluOperator(LeakyReluOptions const* options);
         OperandBase* APILog(OperandBase*);
         OperandBase* APIMatmul(OperandBase* a, OperandBase* b);
         OperandBase* APIMax(OperandBase*, OperandBase*);
@@ -80,11 +80,11 @@ namespace webnn_native {
         OperandBase* APIReduceProduct(OperandBase*, ReduceOptions const* options);
         OperandBase* APIReduceSum(OperandBase*, ReduceOptions const* options);
         OperandBase* APIRelu(OperandBase*);
-        OperatorBase* APIReluOperator();
+        FusionOperatorBase* APIReluOperator();
         OperandBase* APIResample2d(OperandBase*, Resample2dOptions const* options);
         OperandBase* APIReshape(OperandBase*, int32_t const*, size_t);
         OperandBase* APISigmoid(OperandBase*);
-        OperatorBase* APISigmoidOperator();
+        FusionOperatorBase* APISigmoidOperator();
         OperandBase* APISin(OperandBase*);
         OperandBase* APISlice(OperandBase*,
                               int32_t const* starts,
@@ -101,7 +101,7 @@ namespace webnn_native {
         OperandBase* APISub(OperandBase*, OperandBase*);
         OperandBase* APITan(OperandBase*);
         OperandBase* APITanh(OperandBase*);
-        OperatorBase* APITanhOperator();
+        FusionOperatorBase* APITanhOperator();
         OperandBase* APITranspose(OperandBase*, TransposeOptions const* options);
 
         GraphBase* APIBuild(NamedOperandsBase const* namedOperands);

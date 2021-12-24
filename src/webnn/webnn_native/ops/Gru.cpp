@@ -17,6 +17,7 @@
 #include <algorithm>
 
 #include "webnn/webnn_native/Error.h"
+#include "webnn/webnn_native/FusionOperator.h"
 
 namespace webnn_native { namespace op {
     Gru::Gru(GraphBuilderBase* builder,
@@ -43,8 +44,8 @@ namespace webnn_native { namespace op {
         }
         if (options == nullptr || options->activations == nullptr) {
             mActivations = AcquireRef(new OperatorArrayBase());
-            mActivations->APISet(AcquireRef(new OperatorBase(builder, FusedOperator::Sigmoid)).Get());
-            mActivations->APISet(AcquireRef(new OperatorBase(builder, FusedOperator::Tanh)).Get());
+            mActivations->APISet(AcquireRef(new FusionOperatorBase(builder, FusionType::Sigmoid)).Get());
+            mActivations->APISet(AcquireRef(new FusionOperatorBase(builder, FusionType::Tanh)).Get());
         } else {
             mActivations = Ref<OperatorArrayBase>(mOptions.activations);
         }

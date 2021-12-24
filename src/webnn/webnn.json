@@ -185,7 +185,7 @@
   "operand": {
     "category": "object"
   },
-  "operator": {
+  "fusion operator": {
     "category": "object"
   },
   "named operands": {
@@ -227,12 +227,12 @@
         "name": "set",
         "returns": "void",
         "args": [
-          {"name": "operator", "type": "operator"}
+          {"name": "operator", "type": "fusion operator"}
         ]
       },
       {
         "name": "get operator",
-        "returns": "operator",
+        "returns": "fusion operator",
         "args": [
           {"name": "index", "type": "size_t"}
         ]
@@ -320,7 +320,7 @@
       {"name": "input layout", "type": "input operand layout", "default": "nchw"},
       {"name": "filter layout", "type": "filter operand layout", "default": "oihw"},
       {"name": "bias", "type": "operand", "optional": true},
-      {"name": "activation", "type": "operator", "optional": true}
+      {"name": "activation", "type": "fusion operator", "optional": true}
     ]
   },
   "slice options": {
@@ -428,7 +428,7 @@
       {"name": "bias", "type": "operand", "optional": true},
       {"name": "axis", "type": "uint32_t", "default": 1},
       {"name": "epsilon", "type": "float", "default": 1e-5},
-      {"name": "activation", "type": "operator", "optional": true}
+      {"name": "activation", "type": "fusion operator", "optional": true}
     ]
   },
   "instanceNorm options": {
@@ -624,7 +624,7 @@
       },
       {
         "name": "hard swish operator",
-        "returns": "operator"
+        "returns": "fusion operator"
       },
       {
         "name": "gemm",
@@ -645,7 +645,7 @@
       },
       {
         "name": "leaky relu operator",
-        "returns": "operator",
+        "returns": "fusion operator",
         "args": [
           {"name": "options", "type": "leakyRelu options", "annotation": "const*", "optional": true}
         ]
@@ -748,7 +748,7 @@
       },
       {
         "name": "relu operator",
-        "returns": "operator"
+        "returns": "fusion operator"
       },
       {
         "name": "reshape",
@@ -768,7 +768,7 @@
       },
       {
         "name": "sigmoid operator",
-        "returns": "operator"
+        "returns": "fusion operator"
       },
       {
         "name": "slice",
@@ -817,7 +817,7 @@
       },
       {
         "name": "tanh operator",
-        "returns": "operator"
+        "returns": "fusion operator"
       },
       {
         "name": "transpose",
@@ -846,7 +846,7 @@
       },
       {
         "name": "clamp operator",
-        "returns": "operator",
+        "returns": "fusion operator",
         "args": [
           {"name": "options", "type": "clamp options", "annotation": "const*", "optional": true}
         ]

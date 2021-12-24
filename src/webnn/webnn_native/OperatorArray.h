@@ -29,11 +29,11 @@ namespace webnn_native {
             return mOperators.size();
         }
 
-        void APISet(OperatorBase* mlOperator) {
-            mOperators.push_back(Ref<OperatorBase>(mlOperator));
+        void APISet(FusionOperatorBase* mlOperator) {
+            mOperators.push_back(Ref<FusionOperatorBase>(mlOperator));
         }
 
-        OperatorBase* APIGetOperator(size_t index) {
+        FusionOperatorBase* APIGetOperator(size_t index) {
             return mOperators[index].Get();
         }
 
@@ -41,7 +41,7 @@ namespace webnn_native {
             return new OperatorArrayBase();
         }
 
-        std::vector<Ref<OperatorBase>> mOperators;
+        std::vector<Ref<FusionOperatorBase>> mOperators;
     };
 }  // namespace webnn_native
 
