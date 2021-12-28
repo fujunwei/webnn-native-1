@@ -1,4 +1,4 @@
-// Copyright 2019 The Dawn Authors
+// Copyright 2018 The Dawn Authors
 // Copyright 2021 The WebNN-native Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,24 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WEBNN_NATIVE_ERRORSCOPE_H_
-#define WEBNN_NATIVE_ERRORSCOPE_H_
+#ifndef WEBNN_NATIVE_ERROR_SCOPE_DAWN_H_
+#define WEBNN_NATIVE_ERROR_SCOPE_DAWN_H_
 
 #include "webnn/webnn_native/webnn_platform.h"
-#include "webnn/webnn_native/ErrorScopeDawn.h"
-#include "dawn_native/ErrorScopeCommon.h"
-#include "common/RefCounted.h"
 
 #include <string>
 
-namespace webnn_native {
+namespace wgpu {
 
-    using dawn_native::ErrorScope;
-    using dawn_native::ErrorScopeStack;
+    // The InternalErrorType will be used in dawn_native namespace.
+    enum class ErrorType : uint32_t {
+        NoError = 0x00000000,
+        Validation = 0x00000001,
+        OutOfMemory = 0x00000002,
+        Unknown = 0x00000003,
+        DeviceLost = 0x00000004,
+    };
 
-    wgpu::ErrorType ToDawnErrorType(ml::ErrorType type);
-    wgpu::ErrorFilter ToDawnErrorFilter(ml::ErrorFilter filter);
+    enum class ErrorFilter : uint32_t {
+        Validation = 0x00000000,
+        OutOfMemory = 0x00000001,
+    };
 
-}  // namespace webnn_native
+}  // namespace dawn_native
 
-#endif  // WEBNN_NATIVE_ERRORSCOPE_H_
+#endif  // WEBNN_NATIVE_ERROR_SCOPE_DAWN_H_

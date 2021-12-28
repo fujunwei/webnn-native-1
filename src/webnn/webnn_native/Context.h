@@ -21,7 +21,6 @@
 #include "webnn/webnn_native/Graph.h"
 #include "webnn/webnn_native/webnn_platform.h"
 
-class WebGLRenderingContext;
 namespace webnn_native {
 
     class ContextBase : public RefCounted {
@@ -31,7 +30,7 @@ namespace webnn_native {
 
         bool ConsumedError(MaybeError maybeError) {
             if (DAWN_UNLIKELY(maybeError.IsError())) {
-                HandleError(maybeError.AcquireError());
+                ConsumeError(maybeError.AcquireError());
                 return true;
             }
             return false;
@@ -51,10 +50,16 @@ namespace webnn_native {
         // Create concrete model.
         virtual GraphBase* CreateGraphImpl() = 0;
 
-        void HandleError(std::unique_ptr<ErrorData> error);
+        void ConsumeError(std::unique_ptr<ErrorData> error) {
+            ASSERT(error != nullptr);
+            HandleError(error->GetType(), error->GetFormattedMessage().c_str());
+        }
+        void HandleError(InternalErrorType type, const char* message);
 
-        Ref<ErrorScope> mRootErrorScope;
-        Ref<ErrorScope> mCurrentErrorScope;
+        ml::ErrorCallback mUncapturedErrorCallback = nullptr;
+        void* mUncapturedErrorUserdata = nullptr;
+
+        std::unique_ptr<ErrorScopeStack> mErrorScopeStack;
 
         ContextOptions mContextOptions;
     };

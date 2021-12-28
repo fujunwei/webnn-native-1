@@ -16,42 +16,6 @@
 #define DAWNNATIVE_ERRORSCOPE_H_
 
 #include "dawn_native/dawn_platform.h"
-
-#include <string>
-#include <vector>
-
-namespace dawn_native {
-
-    class ErrorScope {
-      public:
-        wgpu::ErrorType GetErrorType() const;
-        const char* GetErrorMessage() const;
-
-      private:
-        friend class ErrorScopeStack;
-        explicit ErrorScope(wgpu::ErrorFilter errorFilter);
-
-        wgpu::ErrorType mMatchedErrorType;
-        wgpu::ErrorType mCapturedError = wgpu::ErrorType::NoError;
-        std::string mErrorMessage = "";
-    };
-
-    class ErrorScopeStack {
-      public:
-        void Push(wgpu::ErrorFilter errorFilter);
-        ErrorScope Pop();
-
-        bool Empty() const;
-
-        // Pass an error to the scopes in the stack. Returns true if one of the scopes
-        // captured the error. Returns false if the error should be forwarded to the
-        // uncaptured error callback.
-        bool HandleError(wgpu::ErrorType type, const char* message);
-
-      private:
-        std::vector<ErrorScope> mScopes;
-    };
-
-}  // namespace dawn_native
+#include "dawn_native/ErrorScopeCommon.h"
 
 #endif  // DAWNNATIVE_ERRORSCOPE_H_

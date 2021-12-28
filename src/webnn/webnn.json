@@ -57,7 +57,13 @@
     "returns": "operator array",
     "args": []
   },
-
+  "error filter": {
+    "category": "enum",
+    "values": [
+        {"value": 0, "name": "validation"},
+        {"value": 1, "name": "out of memory"}
+    ]
+  },
   "error type": {
     "category": "enum",
     "values": [
@@ -65,7 +71,7 @@
         {"value": 1, "name": "validation"},
         {"value": 2, "name": "out of memory"},
         {"value": 3, "name": "unknown"},
-        {"value": 4, "name": "device lost"}
+        {"value": 4, "name": "context lost"}
     ]
   },
   "char": {
@@ -97,14 +103,6 @@
   },
   "bool": {
     "category": "native"
-  },
-  "error filter": {
-    "category": "enum",
-    "values": [
-        {"value": 0, "name": "none"},
-        {"value": 1, "name": "validation"},
-        {"value": 2, "name": "out of memory"}
-    ]
   },
   "error callback": {
     "category": "function pointer",

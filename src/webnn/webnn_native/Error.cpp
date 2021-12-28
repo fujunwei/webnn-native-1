@@ -30,6 +30,25 @@ namespace webnn_native {
         }
     }
 
+    wgpu::ErrorType ToDawnErrorType(InternalErrorType type) {
+        switch (type) {
+            case InternalErrorType::Validation:
+                return wgpu::ErrorType::Validation;
+            case InternalErrorType::OutOfMemory:
+                return wgpu::ErrorType::OutOfMemory;
+
+            // There is no equivalent of Internal errors in the WebGPU API. Internal
+            // errors cause the device at the API level to be lost, so treat it like a
+            // DeviceLost error.
+            case InternalErrorType::Internal:
+            case InternalErrorType::ContextLost:
+                return wgpu::ErrorType::DeviceLost;
+
+            default:
+                return wgpu::ErrorType::Unknown;
+        }
+    }
+
     ml::ErrorType ToMLErrorType(InternalErrorType type) {
         switch (type) {
             case InternalErrorType::Validation:
@@ -42,7 +61,7 @@ namespace webnn_native {
             // DeviceLost error.
             case InternalErrorType::Internal:
             case InternalErrorType::ContextLost:
-                return ml::ErrorType::DeviceLost;
+                return ml::ErrorType::ContextLost;
 
             default:
                 return ml::ErrorType::Unknown;
@@ -55,10 +74,22 @@ namespace webnn_native {
                 return InternalErrorType::Validation;
             case ml::ErrorType::OutOfMemory:
                 return InternalErrorType::OutOfMemory;
-            case ml::ErrorType::DeviceLost:
+            case ml::ErrorType::ContextLost:
                 return InternalErrorType::ContextLost;
             default:
                 return InternalErrorType::Internal;
+        }
+    }
+
+    wgpu::ErrorFilter ToDawnErrorFilter(ml::ErrorFilter filter) {
+        switch (filter) {
+            case ml::ErrorFilter::Validation:
+                return wgpu::ErrorFilter::Validation;
+            case ml::ErrorFilter::OutOfMemory:
+                return wgpu::ErrorFilter::OutOfMemory;
+            default:
+                UNREACHABLE();
+                break;
         }
     }
 

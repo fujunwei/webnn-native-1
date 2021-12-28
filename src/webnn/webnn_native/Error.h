@@ -18,6 +18,7 @@
 
 #include "common/Result.h"
 #include "webnn/webnn_native/ErrorDawn.h"
+#include "webnn/webnn_native/ErrorScopeDawn.h"
 #include "dawn_native/ErrorCommon.h"
 
 #include <string>
@@ -27,6 +28,7 @@ namespace ml {
 }
 
 namespace webnn_native {
+
     using dawn_native::MaybeError;
     using dawn_native::ErrorData;
     using dawn_native::InternalErrorType;
@@ -36,6 +38,9 @@ namespace webnn_native {
 
     ml::ErrorType ToMLErrorType(InternalErrorType type);
     InternalErrorType FromMLErrorType(ml::ErrorType type);
+    wgpu::ErrorType ToDawnErrorType(InternalErrorType type);
+    wgpu::ErrorFilter ToDawnErrorFilter(ml::ErrorFilter filter);
+
 } // namespace webnn_native
 
 #endif  // WEBNN_NATIVE_ERROR_H_

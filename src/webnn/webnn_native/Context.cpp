@@ -25,8 +25,7 @@ namespace webnn_native {
         if (options != nullptr) {
             mContextOptions = *options;
         }
-        mRootErrorScope = AcquireRef(new ErrorScope());
-        mCurrentErrorScope = mRootErrorScope.Get();
+        mErrorScopeStack = std::make_unique<ErrorScopeStack>();
     }
 
     GraphBase* ContextBase::CreateGraph() {
@@ -37,35 +36,55 @@ namespace webnn_native {
         if (ConsumedError(ValidateErrorFilter(filter))) {
             return;
         }
-        mCurrentErrorScope = AcquireRef(new ErrorScope(filter, mCurrentErrorScope.Get()));
+
+        mErrorScopeStack->Push(ToDawnErrorFilter(filter));
     }
 
     bool ContextBase::APIPopErrorScope(ml::ErrorCallback callback, void* userdata) {
-        if (DAWN_UNLIKELY(mCurrentErrorScope.Get() == mRootErrorScope.Get())) {
+        if (mErrorScopeStack->Empty()) {
             return false;
         }
-        mCurrentErrorScope->SetCallback(callback, userdata);
-        mCurrentErrorScope = Ref<ErrorScope>(mCurrentErrorScope->GetParent());
+        ErrorScope scope = mErrorScopeStack->Pop();
+        if (callback != nullptr) {
+            callback(static_cast<MLErrorType>(scope.GetErrorType()), scope.GetErrorMessage(),
+                     userdata);
+        }
 
         return true;
     }
 
     void ContextBase::APISetUncapturedErrorCallback(ml::ErrorCallback callback, void* userdata) {
-        mRootErrorScope->SetCallback(callback, userdata);
+        // TODO: Flush all deferred callback tasks to guarantee we are never going to use the
+        // previous callback after this call.
+        mUncapturedErrorCallback = callback;
+        mUncapturedErrorUserdata = userdata;
     }
 
-    void ContextBase::HandleError(std::unique_ptr<ErrorData> error) {
-        ASSERT(error != nullptr);
-        std::ostringstream ss;
-        ss << error->GetMessage();
-        for (const auto& callsite : error->GetBacktrace()) {
-            ss << "\n    at " << callsite.function << " (" << callsite.file << ":" << callsite.line
-               << ")";
+    void ContextBase::HandleError(InternalErrorType type, const char* message) {
+        if (type == InternalErrorType::ContextLost) {
+            // TODO: Set the state to disconnected as the context cannot be used.
+        } else if (type == InternalErrorType::Internal) {
+            // TODO: If we receive an internal error, assume the backend can't recover and proceed
+            // with device destruction. We first wait for all previous commands to be completed so
+            // that backend objects can be freed immediately, before handling the loss.
+            type = InternalErrorType::ContextLost;
         }
 
-        // Still forward device loss and internal errors to the error scopes so they
-        // all reject.
-        mCurrentErrorScope->HandleError(ToMLErrorType(error->GetType()), ss.str().c_str());
+        if (type == InternalErrorType::ContextLost) {
+            // TODO: The device was lost, call the application callback.
+
+            // Still forward device loss errors to the error scopes so they all reject.
+            mErrorScopeStack->HandleError(ToDawnErrorType(type), message);
+        } else {
+            // Pass the error to the error scope stack and call the uncaptured error callback
+            // if it isn't handled. ContextLost is not handled here because it should be
+            // handled by the lost callback.
+            bool captured = mErrorScopeStack->HandleError(ToDawnErrorType(type), message);
+            if (!captured && mUncapturedErrorCallback != nullptr) {
+                mUncapturedErrorCallback(static_cast<MLErrorType>(ToMLErrorType(type)), message,
+                                         mUncapturedErrorUserdata);
+            }
+        }
     }
 
 }  // namespace webnn_native
