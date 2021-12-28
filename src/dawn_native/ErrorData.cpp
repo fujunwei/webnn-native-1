@@ -16,7 +16,6 @@
 
 #include "dawn_native/Error.h"
 #include "dawn_native/ObjectBase.h"
-#include "dawn_native/dawn_platform.h"
 
 namespace dawn_native {
 

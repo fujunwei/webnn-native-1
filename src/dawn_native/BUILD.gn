@@ -241,6 +241,7 @@ source_set("dawn_native_sources") {
     "EnumMaskIterator.h",
     "Error.cpp",
     "Error.h",
+    "ErrorCommon.h",
     "ErrorData.cpp",
     "ErrorData.h",
     "ErrorInjector.cpp",

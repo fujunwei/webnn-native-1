@@ -121,7 +121,6 @@ test("webnn_unittests") {
   sources = get_target_outputs(":mock_webnn_gen")
   sources += [
     #"//third_party/dawn/src/tests/unittests/ResultTests.cpp",
-    "unittests/ErrorTests.cpp",
     "unittests/ObjectBaseTests.cpp",
     "unittests/validation/BinaryValidationTests.cpp",
     "unittests/validation/Conv2dValidationTests.cpp",

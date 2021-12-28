@@ -15,7 +15,6 @@
 
 #include "webnn/webnn_native/Error.h"
 
-#include "webnn/webnn_native/ErrorData.h"
 #include "webnn/webnn_native/webnn_platform.h"
 
 namespace webnn_native {
@@ -26,7 +25,7 @@ namespace webnn_native {
             // During shutdown and destruction, device lost errors can be ignored.
             // We can also ignore other unexpected internal errors on shut down and treat it as
             // device lost so that we can continue with destruction.
-            ASSERT(errorData->GetType() == InternalErrorType::DeviceLost ||
+            ASSERT(errorData->GetType() == InternalErrorType::ContextLost ||
                    errorData->GetType() == InternalErrorType::Internal);
         }
     }
@@ -42,7 +41,7 @@ namespace webnn_native {
             // errors cause the device at the API level to be lost, so treat it like a
             // DeviceLost error.
             case InternalErrorType::Internal:
-            case InternalErrorType::DeviceLost:
+            case InternalErrorType::ContextLost:
                 return ml::ErrorType::DeviceLost;
 
             default:
@@ -57,7 +56,7 @@ namespace webnn_native {
             case ml::ErrorType::OutOfMemory:
                 return InternalErrorType::OutOfMemory;
             case ml::ErrorType::DeviceLost:
-                return InternalErrorType::DeviceLost;
+                return InternalErrorType::ContextLost;
             default:
                 return InternalErrorType::Internal;
         }

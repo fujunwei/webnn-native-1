@@ -1,4 +1,5 @@
 // Copyright 2018 The Dawn Authors
+// Copyright 2021 The WebNN-native Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,32 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef DAWNNATIVE_ERROR_H_
-#define DAWNNATIVE_ERROR_H_
-
-#include "absl/strings/str_format.h"
-#include "common/Result.h"
-#include "dawn_native/ErrorData.h"
-#include "dawn_native/webgpu_absl_format.h"
-#include "dawn_native/ErrorCommon.h"
+#ifndef WEBNN_NATIVE_ERROR_DAWN_H_
+#define WEBNN_NATIVE_ERROR_DAWN_H_
 
 #include <string>
 
 namespace dawn_native {
 
+    // The InternalErrorType will be used in dawn_native namespace.
     enum class InternalErrorType : uint32_t {
         Validation,
-        DeviceLost,
+        ContextLost,
         Internal,
         OutOfMemory
     };
 
-    // Assert that errors are device loss so that we can continue with destruction
-    void IgnoreErrors(MaybeError maybeError);
-
-    wgpu::ErrorType ToWGPUErrorType(InternalErrorType type);
-    InternalErrorType FromWGPUErrorType(wgpu::ErrorType type);
-
 }  // namespace dawn_native
 
-#endif  // DAWNNATIVE_ERROR_H_
+#endif  // WEBNN_NATIVE_ERROR_DAWN_H_
