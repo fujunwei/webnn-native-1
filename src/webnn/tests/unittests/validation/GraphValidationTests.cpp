@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "examples/SampleUtils.h"
-#include "tests/webnn/unittests/validation/ValidationTest.h"
+#include "webnn/tests/unittests/validation/ValidationTest.h"
 #include "common/Assert.h"
 
 using namespace testing;

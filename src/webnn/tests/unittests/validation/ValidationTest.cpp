@@ -13,17 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "tests/webnn/unittests/validation/ValidationTest.h"
+#include "webnn/tests/unittests/validation/ValidationTest.h"
 
 #include "common/Assert.h"
 #include "webnn/webnn.h"
 #include "webnn/webnn_proc.h"
 
 void ValidationTest::SetUp() {
+    instance = std::make_unique<webnn_native::Instance>();
+    MLContext context = instance->CreateTestContext();
     WebnnProcTable backendProcs = webnn_native::GetProcs();
     ASSERT_NE(&backendProcs, nullptr);
     webnnProcSetProcs(&backendProcs);
-    MLContext context = webnn_native::CreateContext();
     // GTest will not run test body if fail to create context.
     ASSERT_TRUE(context != nullptr);
     mContext = ml::Context::Acquire(context);

@@ -41,7 +41,10 @@ group("dawn_abseil") {
 }
 
 config("webnn_native_internal") {
-  configs = [ "${dawn_root}/src/common:dawn_internal" ]
+  configs = [
+    "${dawn_root}/src/common:dawn_internal",
+    "${dawn_root}/src/webnn/common:webnn_internal"
+  ]
 
   # Suppress warnings that Metal isn't in the deployment target of Chrome:
   # initialization of the Metal backend is behind a IsMetalSupported check so
@@ -80,7 +83,7 @@ webnn_json_generator("webnn_native_utils_gen") {
 # dependencies of webnn_native
 source_set("webnn_native_headers") {
   public_deps = [ "${dawn_root}/src/webnn:webnncpp_headers" ]
-  all_dependent_configs = [ "${dawn_root}/src/common:dawn_public_include_dirs" ]
+  all_dependent_configs = [ "${dawn_root}/src/webnn/common:webnn_public_include_dirs" ]
   sources = [
     "${dawn_root}/src/include/dawn_native/WebnnNative.h",
     "${dawn_root}/src/include/dawn_native/webnn_native_export.h",
@@ -113,6 +116,8 @@ source_set("webnn_native_sources") {
   sources = get_target_outputs(":webnn_native_utils_gen")
 
   sources += [
+    "BackendConnection.cpp",
+    "BackendConnection.h",
     "Context.cpp",
     "Context.h",
     "Error.cpp",
@@ -127,6 +132,8 @@ source_set("webnn_native_sources") {
     "Graph.h",
     "GraphBuilder.cpp",
     "GraphBuilder.h",
+    "Instance.cpp",
+    "Instance.h",
     "NamedInputs.h",
     "NamedOutputs.h",
     "NamedRecords.h",

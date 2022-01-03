@@ -15,7 +15,7 @@
 #ifndef DAWN_WEBNN_THREAD_DISPATCH_PROC_H_
 #define DAWN_WEBNN_THREAD_DISPATCH_PROC_H_
 
-#include "webnn/webnn_proc.h"
+#include "webnn_proc.h"
 
 #ifdef __cplusplus
 extern "C" {

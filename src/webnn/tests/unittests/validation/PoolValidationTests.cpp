@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "tests/webnn/unittests/validation/ValidationTest.h"
+#include "webnn/tests/unittests/validation/ValidationTest.h"
 
 #include <memory>
 

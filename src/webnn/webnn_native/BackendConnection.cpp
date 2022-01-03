@@ -1,4 +1,4 @@
-// Copyright 2017 The Dawn Authors
+// Copyright 2021 The Dawn Authors
 // Copyright 2021 The WebNN-native Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,31 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WEBNN_NATIVE_FORWARD_H_
-#define WEBNN_NATIVE_FORWARD_H_
-
-#include <cstdint>
-
-template <typename T>
-class Ref;
+#include "webnn/webnn_native/BackendConnection.h"
 
 namespace webnn_native {
 
-    class ContextBase;
-    class GraphBase;
-    class GraphBuilderBase;
-    class InstanceBase;
-    class NamedInputsBase;
-    class NamedOperandsBase;
-    class NamedOutputsBase;
-    class NamedResultsBase;
-    class OperandArrayBase;
-    class OperatorArrayBase;
-    class OperandBase;
-    class OperatorBase;
-    class FusionOperatorBase;
-    class ResultBase;
+    BackendConnection::BackendConnection(InstanceBase* instance, ml::BackendType type)
+        : mInstance(instance), mType(type) {
+    }
+
+    ml::BackendType BackendConnection::GetType() const {
+        return mType;
+    }
+
+    InstanceBase* BackendConnection::GetInstance() const {
+        return mInstance;
+    }
 
 }  // namespace webnn_native
-
-#endif  // WEBNN_NATIVE_FORWARD_H_

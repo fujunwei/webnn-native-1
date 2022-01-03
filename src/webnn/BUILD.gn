@@ -48,7 +48,9 @@ webnn_json_generator("webnn_emscripten_bits_gen") {
 
 source_set("webnn_headers") {
   all_dependent_configs =
-      [ "${dawn_root}/src/common:dawn_public_include_dirs" ]
+      [ 
+        "${dawn_root}/src/common:dawn_public_include_dirs",
+        "${dawn_root}/src/webnn/common:webnn_public_include_dirs" ]
   public_deps = [ ":webnn_headers_gen" ]
 
   sources = get_target_outputs(":webnn_headers_gen")
