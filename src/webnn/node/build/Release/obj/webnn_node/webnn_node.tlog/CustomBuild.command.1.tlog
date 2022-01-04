@@ -1,0 +1,15 @@
+^D:\WEBNN\WEBNN-NATIVE\OUT\DML\LIBC++.DLL
+call mkdir "D:\webnn\webnn-native\node\build\Release" 2>nul & set ERRORLEVEL=0 & copy /Y "D:\webnn\webnn-native\out\dml\libc++.dll" "D:\webnn\webnn-native\node\build\Release\libc++.dll"
+if %errorlevel% neq 0 exit /b %errorlevel%
+^D:\WEBNN\WEBNN-NATIVE\OUT\DML\WEBNN_NATIVE.DLL
+call mkdir "D:\webnn\webnn-native\node\build\Release" 2>nul & set ERRORLEVEL=0 & copy /Y "D:\webnn\webnn-native\out\dml\webnn_native.dll" "D:\webnn\webnn-native\node\build\Release\webnn_native.dll"
+if %errorlevel% neq 0 exit /b %errorlevel%
+^D:\WEBNN\WEBNN-NATIVE\OUT\DML\WEBNN_PROC.DLL
+call mkdir "D:\webnn\webnn-native\node\build\Release" 2>nul & set ERRORLEVEL=0 & copy /Y "D:\webnn\webnn-native\out\dml\webnn_proc.dll" "D:\webnn\webnn-native\node\build\Release\webnn_proc.dll"
+if %errorlevel% neq 0 exit /b %errorlevel%
+^D:\WEBNN\WEBNN-NATIVE\OUT\DML\DIRECTML.DLL
+call mkdir "D:\webnn\webnn-native\node\build\Release" 2>nul & set ERRORLEVEL=0 & copy /Y "D:\webnn\webnn-native\out\dml\DirectML.dll" "D:\webnn\webnn-native\node\build\Release\DirectML.dll"
+if %errorlevel% neq 0 exit /b %errorlevel%
+^D:\WEBNN\WEBNN-NATIVE\OUT\DML\NGRAPH_C_API.DLL
+call mkdir "D:\webnn\webnn-native\node\build\Release" 2>nul & set ERRORLEVEL=0 & copy /Y "D:\webnn\webnn-native\out\dml\ngraph_c_api.dll" "D:\webnn\webnn-native\node\build\Release\ngraph_c_api.dll"
+if %errorlevel% neq 0 exit /b %errorlevel%

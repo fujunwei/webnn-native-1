@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "examples/SampleUtils.h"
+#include "webnn/examples/SampleUtils.h"
 #include "webnn/tests/unittests/validation/ValidationTest.h"
 #include "common/Assert.h"
 

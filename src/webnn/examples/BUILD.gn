@@ -1,0 +1,106 @@
+# Copyright 2020 The Dawn Authors
+# Copyright 2021 The WebNN-native Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("../../../scripts/dawn_overrides_with_defaults.gni")
+
+group("webnn_samples") {
+  deps = [
+    ":LeNet",
+    ":MobileNetV2",
+    ":SqueezeNet",
+  ]
+}
+
+# Static library to contain code and dependencies common to all samples
+static_library("webnn_sample_utils") {
+  sources = [
+    "${dawn_root}/third_party/cnpy/cnpy.cpp",
+    "${dawn_root}/third_party/cnpy/cnpy.h",
+    "${dawn_root}/third_party/stb/stb_image.h",
+    "${dawn_root}/third_party/stb/stb_image_resize.h",
+    "SampleUtils.cpp",
+    "SampleUtils.h",
+  ]
+
+  # Export all of these as public deps so that `gn check` allows includes
+  public_deps = [
+    "${dawn_root}/src/common",
+    "${dawn_root}/src/webnn:webnn_proc",
+    "${dawn_root}/src/webnn:webnncpp",
+    "${dawn_root}/src/webnn/webnn_native",
+  ]
+
+  defines = [
+    "STB_IMAGE_IMPLEMENTATION",
+    "STB_IMAGE_RESIZE_IMPLEMENTATION",
+  ]
+
+  if (is_clang) {
+    cflags_cc = [
+      "-Wno-extra-semi-stmt",
+      "-Wno-sign-compare",
+      "-Wno-implicit-fallthrough",
+      "-Wno-string-conversion",
+    ]
+  }
+
+  public_configs = [ "${dawn_root}/src/common:dawn_internal" ]
+  if (is_linux) {
+    public_configs += [ "//build/config//gcc:rpath_for_built_shared_libraries" ]
+  }
+}
+
+# Template for samples to avoid listing webnn_sample_utils as a dep every time
+template("webnn_sample") {
+  executable(target_name) {
+    deps = [ ":webnn_sample_utils" ]
+    forward_variables_from(invoker, "*", [ "deps" ])
+
+    if (defined(invoker.deps)) {
+      deps += invoker.deps
+    }
+  }
+}
+
+webnn_sample("LeNet") {
+  sources = [
+    "LeNet/LeNet.cpp",
+    "LeNet/LeNet.h",
+    "LeNet/Main.cpp",
+    "LeNet/MnistUbyte.cpp",
+    "LeNet/MnistUbyte.h",
+  ]
+}
+webnn_sample("SqueezeNet") {
+  sources = [
+    "SqueezeNet/Main.cpp",
+    "SqueezeNet/SqueezeNet.cpp",
+    "SqueezeNet/SqueezeNet.h",
+  ]
+}
+webnn_sample("MobileNetV2") {
+  sources = [
+    "MobileNetV2/Main.cpp",
+    "MobileNetV2/MobileNetV2.cpp",
+    "MobileNetV2/MobileNetV2.h",
+  ]
+}
+webnn_sample("ResNet") {
+  sources = [
+    "ResNet/Main.cpp",
+    "ResNet/ResNet.cpp",
+    "ResNet/ResNet.h",
+  ]
+}

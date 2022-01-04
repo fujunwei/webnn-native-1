@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{039905ED-4C59-678C-92F8-8E1B6B7E8C5B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>webnn_node</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\..\bin\;$(MSBuildProjectDirectory)\..\bin\</ExecutablePath>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <IntDir>$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.node</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.node</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.node</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.node</TargetExt>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetPath>$(OutDir)\$(ProjectName).node</TargetPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\include\node;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\src;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\config;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\openssl\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\uv\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\zlib;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\v8\include;D:\webnn\webnn-native\node\node_modules\node-addon-api;D:\webnn\webnn-native\node\src;D:\webnn\webnn-native\src\include;D:\webnn\webnn-native\out\dml\gen\src\include;D:\webnn\webnn-native\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4351;4355;4800;4251;4275;4244;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=webnn_node;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;BUILDING_NODE_EXTENSION;HOST_BINARY=&quot;node.exe&quot;;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/LTCG:INCREMENTAL %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\\Users\\junwei\\AppData\\Local\\node-gyp\\Cache\\16.13.1\\x64\\node.lib&quot;;webnn_native.dll.lib;webnn_proc.dll.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\webnn\webnn-native\out\dml;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(ProjectName).node</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetExt>.node</TargetExt>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\include\node;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\src;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\config;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\openssl\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\uv\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\zlib;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\v8\include;D:\webnn\webnn-native\node\node_modules\node-addon-api;D:\webnn\webnn-native\node\src;D:\webnn\webnn-native\src\include;D:\webnn\webnn-native\out\dml\gen\src\include;D:\webnn\webnn-native\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=webnn_node;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;BUILDING_NODE_EXTENSION;HOST_BINARY=&quot;node.exe&quot;;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\include\node;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\src;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\config;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\openssl\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\uv\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\zlib;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\v8\include;D:\webnn\webnn-native\node\node_modules\node-addon-api;D:\webnn\webnn-native\node\src;D:\webnn\webnn-native\src\include;D:\webnn\webnn-native\out\dml\gen\src\include;D:\webnn\webnn-native\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4351;4355;4800;4251;4275;4244;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=webnn_node;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;BUILDING_NODE_EXTENSION;HOST_BINARY=&quot;node.exe&quot;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/LTCG:INCREMENTAL %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\\Users\\junwei\\AppData\\Local\\node-gyp\\Cache\\16.13.1\\x64\\node.lib&quot;;webnn_native.dll.lib;webnn_proc.dll.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\webnn\webnn-native\out\dml;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(ProjectName).node</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetExt>.node</TargetExt>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\include\node;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\src;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\config;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\openssl\openssl\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\uv\include;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\zlib;C:\Users\junwei\AppData\Local\node-gyp\Cache\16.13.1\deps\v8\include;D:\webnn\webnn-native\node\node_modules\node-addon-api;D:\webnn\webnn-native\node\src;D:\webnn\webnn-native\src\include;D:\webnn\webnn-native\out\dml\gen\src\include;D:\webnn\webnn-native\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=webnn_node;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;BUILDING_NODE_EXTENSION;HOST_BINARY=&quot;node.exe&quot;;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\src\ops"/>
+    <None Include="..\binding.gyp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Context.h"/>
+    <ClInclude Include="..\src\Graph.h"/>
+    <ClInclude Include="..\src\GraphBuilder.h"/>
+    <ClInclude Include="..\src\Index.h"/>
+    <ClInclude Include="..\src\ML.h"/>
+    <ClInclude Include="..\src\Operand.h"/>
+    <ClInclude Include="..\src\Operator.h"/>
+    <ClInclude Include="..\src\Utils.h"/>
+    <ClInclude Include="..\src\ops\BatchNorm.h"/>
+    <ClInclude Include="..\src\ops\Clamp.h"/>
+    <ClInclude Include="..\src\ops\Concat.h"/>
+    <ClInclude Include="..\src\ops\Constant.h"/>
+    <ClInclude Include="..\src\ops\Conv2d.h"/>
+    <ClInclude Include="..\src\ops\Gemm.h"/>
+    <ClInclude Include="..\src\ops\Gru.h"/>
+    <ClInclude Include="..\src\ops\Input.h"/>
+    <ClInclude Include="..\src\ops\InstanceNorm.h"/>
+    <ClInclude Include="..\src\ops\LeakyRelu.h"/>
+    <ClInclude Include="..\src\ops\Pad.h"/>
+    <ClInclude Include="..\src\ops\Pool2d.h"/>
+    <ClInclude Include="..\src\ops\Reduce.h"/>
+    <ClInclude Include="..\src\ops\Resample2d.h"/>
+    <ClInclude Include="..\src\ops\Reshape.h"/>
+    <ClInclude Include="..\src\ops\Slice.h"/>
+    <ClInclude Include="..\src\ops\Split.h"/>
+    <ClInclude Include="..\src\ops\Squeeze.h"/>
+    <ClInclude Include="..\src\ops\Transpose.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Context.cpp">
+      <ObjectFileName>$(IntDir)\src\Context.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\Graph.cpp">
+      <ObjectFileName>$(IntDir)\src\Graph.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\GraphBuilder.cpp">
+      <ObjectFileName>$(IntDir)\src\GraphBuilder.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\Index.cpp">
+      <ObjectFileName>$(IntDir)\src\Index.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ML.cpp">
+      <ObjectFileName>$(IntDir)\src\ML.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\Operand.cpp">
+      <ObjectFileName>$(IntDir)\src\Operand.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\Operator.cpp">
+      <ObjectFileName>$(IntDir)\src\Operator.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\BatchNorm.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\BatchNorm.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Clamp.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Clamp.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Concat.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Concat.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Constant.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Constant.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Conv2d.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Conv2d.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Gemm.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Gemm.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Gru.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Gru.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Input.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Input.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\InstanceNorm.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\InstanceNorm.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\LeakyRelu.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\LeakyRelu.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Pad.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Pad.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Pool2d.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Pool2d.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Reduce.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Reduce.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Resample2d.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Resample2d.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Reshape.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Reshape.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Slice.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Slice.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Split.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Split.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Squeeze.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Squeeze.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\src\ops\Transpose.cpp">
+      <ObjectFileName>$(IntDir)\src\ops\Transpose.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\out\dml\gen\src\webnn\webnn_cpp.cpp">
+      <ObjectFileName>$(IntDir)\out\dml\gen\src\webnn\webnn_cpp.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files\nodejs\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\webnn\webnn-native\out\dml\libc++.dll">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;D:\webnn\webnn-native\node\build\$(Configuration)&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;D:\webnn\webnn-native\out\dml\libc++.dll&quot; &quot;D:\webnn\webnn-native\node\build\$(Configuration)\libc++.dll&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+      <Message>Copying D:\webnn\webnn-native\node/../out/dml/libc++.dll to D:\webnn\webnn-native\node\build\$(Configuration)</Message>
+      <Outputs>D:\webnn\webnn-native\node\build\$(Configuration)\libc++.dll</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="D:\webnn\webnn-native\out\dml\webnn_native.dll">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;D:\webnn\webnn-native\node\build\$(Configuration)&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;D:\webnn\webnn-native\out\dml\webnn_native.dll&quot; &quot;D:\webnn\webnn-native\node\build\$(Configuration)\webnn_native.dll&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+      <Message>Copying D:\webnn\webnn-native\node/../out/dml/webnn_native.dll to D:\webnn\webnn-native\node\build\$(Configuration)</Message>
+      <Outputs>D:\webnn\webnn-native\node\build\$(Configuration)\webnn_native.dll</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="D:\webnn\webnn-native\out\dml\webnn_proc.dll">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;D:\webnn\webnn-native\node\build\$(Configuration)&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;D:\webnn\webnn-native\out\dml\webnn_proc.dll&quot; &quot;D:\webnn\webnn-native\node\build\$(Configuration)\webnn_proc.dll&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+      <Message>Copying D:\webnn\webnn-native\node/../out/dml/webnn_proc.dll to D:\webnn\webnn-native\node\build\$(Configuration)</Message>
+      <Outputs>D:\webnn\webnn-native\node\build\$(Configuration)\webnn_proc.dll</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="D:\webnn\webnn-native\out\dml\DirectML.dll">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;D:\webnn\webnn-native\node\build\$(Configuration)&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;D:\webnn\webnn-native\out\dml\DirectML.dll&quot; &quot;D:\webnn\webnn-native\node\build\$(Configuration)\DirectML.dll&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+      <Message>Copying D:\webnn\webnn-native\node/../out/dml/DirectML.dll to D:\webnn\webnn-native\node\build\$(Configuration)</Message>
+      <Outputs>D:\webnn\webnn-native\node\build\$(Configuration)\DirectML.dll</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="D:\webnn\webnn-native\out\dml\ngraph_c_api.dll">
+      <FileType>Document</FileType>
+      <Command>call mkdir &quot;D:\webnn\webnn-native\node\build\$(Configuration)&quot; 2&gt;nul &amp; set ERRORLEVEL=0 &amp; copy /Y &quot;D:\webnn\webnn-native\out\dml\ngraph_c_api.dll&quot; &quot;D:\webnn\webnn-native\node\build\$(Configuration)\ngraph_c_api.dll&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+      <Message>Copying D:\webnn\webnn-native\node/../out/dml/ngraph_c_api.dll to D:\webnn\webnn-native\node\build\$(Configuration)</Message>
+      <Outputs>D:\webnn\webnn-native\node\build\$(Configuration)\ngraph_c_api.dll</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+</Project>
