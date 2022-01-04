@@ -26,6 +26,20 @@
 /third_party/zlib
 /tools
 /out
+# WebNN third party
+/third_party/dawn
+/third_party/DirectML
+/third_party/gpgmm
+/third_party/microsoft.ai.directml*
+/third_party/oneDNN
+/third_party/stb
+
+### Node ###
+/src/webnn/node/third_party/webnn-polyfill
+/src/webnn/node/node_modules
+/src/webnn/node/third_party/webnn-samples
+/src/webnn/node/examples/electron/*/node_modules
+/src/webnn/node/examples/console/*/node_modules
 
 # Modified from https://www.gitignore.io/api/vim,macos,linux,emacs,windows,sublimetext,visualstudio,visualstudiocode
 

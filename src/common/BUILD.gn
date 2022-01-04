@@ -140,6 +140,21 @@ config("dawn_internal") {
     } else {
       cflags += [ "-pedantic" ]
     }
+
+    # webnn_enable_dml
+    if (is_clang) {
+      cflags += [
+        # Allow the use of DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE); in DirectML.h
+        "-Wno-extra-semi",
+
+        # Allow the use of DMLX_THROW(_hr); in DirectMLX.h
+        "-Wno-extra-semi-stmt",
+
+        # Allow the use of DML_OPERATOR_GRAPH_NODE_DESC{ node.op.Get() } in DirectMLX.h
+        "-Wno-missing-field-initializers",
+        "-Wno-unused-but-set-variable"
+      ]
+    }
   }
 
   if (!is_clang && is_win) {

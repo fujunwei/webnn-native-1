@@ -31,5 +31,17 @@ config("webnn_public_include_dirs") {
 config("webnn_internal") {
 
   defines = []
+  
+  if (webnn_enable_openvino) {
+    defines += [ "WEBNN_ENABLE_BACKEND_OPENVINO" ]
+  }
+
+  if (webnn_enable_dml) {
+    defines += [ "WEBNN_ENABLE_BACKEND_DML" ]
+  }
+
+  if (webnn_enable_onednn) {
+    defines += [ "WEBNN_ENABLE_BACKEND_ONEDNN" ]
+  }
 
 }

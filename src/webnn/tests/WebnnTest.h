@@ -15,7 +15,7 @@
 #ifndef TESTS_WEBNN_TEST_H_
 #define TESTS_WEBNN_TEST_H_
 
-#include "examples/SampleUtils.h"
+#include "webnn/examples/SampleUtils.h"
 #include "gtest/gtest.h"
 
 class WebnnTest : public testing::Test {
