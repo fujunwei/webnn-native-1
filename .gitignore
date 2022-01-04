@@ -26,6 +26,12 @@
 /third_party/zlib
 /tools
 /out
+# WebNN third party
+/third_party/dawn
+/third_party/DirectML
+/third_party/gpgmm
+/third_party/microsoft.ai.directml*
+/third_party/oneDNN
 
 # Modified from https://www.gitignore.io/api/vim,macos,linux,emacs,windows,sublimetext,visualstudio,visualstudiocode
 

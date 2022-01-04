@@ -1,4 +1,4 @@
-# Copyright 2018 The Dawn Authors
+# Copyright 2021 The WebNN-native Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build_overrides/build.gni")
+# These are variables that are overridden by projects that include GPGMM.
+# The values in this file are the defaults for when we are building GPGMM
+# from WebNN-native's repository.
 
-declare_args() {
-  dawn_enable_webnn = false
-
-  # Enables the compilation of OpenVINO Inference Engine backend
-  webnn_enable_openvino = false
-
-  # Enables the compilation of DirectML backend
-  webnn_enable_dml = false
-
-  # Enables the compilation of oneDNN backend
-  webnn_enable_onednn = false
-}
+# The paths to GPGMM's dependencies
+#
+# This file is intentionally empty because WebNN-native uses non-standalone
+# GPGMM and non-standalone GPGMM has no dependencies to override but GN
+# must import a gpgmm.gni file to build without overrides.
