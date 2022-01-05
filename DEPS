@@ -14,6 +14,7 @@ vars = {
   'dawn_cmake_win32_sha1': 'b106d66bcdc8a71ea2cdf5446091327bfdb1bcd7',
   'dawn_gn_version': 'git_revision:fc295f3ac7ca4fe7acc6cb5fb052d22909ef3a8f',
   'dawn_go_version': 'version:1.16',
+  'webnn_test_data': False, # For webnn CI
 }
 
 deps = {
@@ -28,28 +29,24 @@ deps = {
     'url': '{github_git}/webmachinelearning/webnn-samples.git@d358fe623be5236736ebc2d896cfbba2af4fd348'
   },
   'webnn/node/third_party/webnn-samples/test-data': {
-    'url': '{github_git}/webmachinelearning/test-data.git@b6f1565fefc103705a6ff580067eae7bb9d3b351'
+    'url': '{github_git}/webmachinelearning/test-data.git@b6f1565fefc103705a6ff580067eae7bb9d3b351',
+    'condition': 'webnn_test_data',
   },
   'webnn/third_party/stb': {
     'url': '{github_git}/nothings/stb@b42009b3b9d4ca35bc703f5310eedc74f584be58'
   },
 
-  # Dependencies required for code generator and infrastructure code.
-  'third_party/dawn': {
-    'url': '{dawn_git}/dawn.git@bf1c0cf52377b4db2bf3a433dc5056620aad7cdd'
-  },
-
   # Dependencies required for backends.
-  'third_party/DirectML': {
+  'webnn/third_party/DirectML': {
     'url': '{github_git}/microsoft/DirectML.git@af53ef743559079bd2ebb1aa83d9f98e87d774e1',
     'condition': 'checkout_win',
   },
   # GPGMM support for fast DML allocation and residency management.
-  'third_party/gpgmm': {
+  'webnn/third_party/gpgmm': {
     'url': '{github_git}/intel/gpgmm.git@7c81fae56e30c60030cb0a2c53310723e5c085d6',
     'condition': 'checkout_win',
   },
-  'third_party/oneDNN': {
+  'webnn/third_party/oneDNN': {
     'url': '{github_git}/oneapi-src/oneDNN.git@4a129541fd4e67e6897072186ea2817a3154eddd',
   },
 
@@ -330,7 +327,7 @@ hooks = [
     'name': 'download_dml_unpkg',
     'pattern': '.',
     'condition': 'checkout_win',
-    'action': ['python3', 'src/webnn/webnn_native/dml/deps/script/download_dml.py'],
+    'action': ['python3', 'webnn/src/webnn_native/dml/deps/script/download_dml.py'],
   }
 ]
 

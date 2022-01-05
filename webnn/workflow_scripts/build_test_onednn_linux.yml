@@ -1,4 +1,4 @@
-name: OpenVINO backend (Linux)
+name: oneDNN backend (Linux)
 
 on: [push, pull_request]
 
@@ -19,14 +19,6 @@ jobs:
         export PATH=$PWD/../depot_tools:$PATH
         gclient
 
-    - name: Install OpenVINO Toolkit
-      run: |
-        export version="2021.4.582"
-        wget https://registrationcenter-download.intel.com/akdlm/irc_nas/17988/l_openvino_toolkit_p_${version}.tgz
-        tar -xvzf l_openvino_toolkit_p_${version}.tgz
-        cd l_openvino_toolkit_p_${version}
-        sudo ./install.sh -s --install_dir /opt/intel --accept_eula
-
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
@@ -45,11 +37,19 @@ jobs:
         cp scripts/standalone.gclient .gclient
         gclient sync
 
+    - name: Build libdnnl.so library
+      run: |
+        cd baseline/webnn/third_party/oneDNN
+        mkdir build
+        cd build
+        cmake ..
+        make -j2
+
     - name: Generate project for main branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd baseline
-        gn gen out/Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_onednn=true is_debug=false"
 
     - name: Build for main branch
       run: |
@@ -61,7 +61,6 @@ jobs:
       run: |
         cd baseline
         echo "Run End2End Tests..."
-        source /opt/intel/openvino_2021/bin/setupvars.sh
         ./out/Release/webnn_end2end_tests --gtest_output=json:${{ github.workspace }}/../baseline_end2endtests.json  || true
         cd ..
         rm -rf baseline
@@ -78,11 +77,19 @@ jobs:
         cp scripts/standalone.gclient .gclient
         gclient sync
 
+    - name: Build libdnnl.so library
+      run: |
+        cd update/webnn/third_party/oneDNN
+        mkdir build
+        cd build
+        cmake ..
+        make -j2
+
     - name: Generate project for update branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd update
-        gn gen out/Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_onednn=true is_debug=false"
 
     - name: Build for update branch
       run: |
@@ -94,10 +101,9 @@ jobs:
       run: |
         cd update
         echo "Run End2End Tests..."
-        source /opt/intel/openvino_2021/bin/setupvars.sh
         ./out/Release/webnn_end2end_tests --gtest_output=json:${{ github.workspace }}/../update_end2endtests.json || true
 
     - name: Regression check
       run: |
         echo "Regression checking..."
-        python update/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline_end2endtests.json ${{ github.workspace }}/../update_end2endtests.json
+        python update/webnn/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline_end2endtests.json ${{ github.workspace }}/../update_end2endtests.json

@@ -31,4 +31,4 @@ jobs:
     - name: Clang format check
       run: |
         export PATH=${PWD}/../depot_tools:${PATH}
-        bash workflow_scripts/clang_format_check.sh
+        bash webnn/workflow_scripts/clang_format_check.sh

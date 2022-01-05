@@ -49,7 +49,7 @@ jobs:
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd baseline
-        gn gen out/Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for main branch
       run: |
@@ -60,27 +60,27 @@ jobs:
     - name: Run 'npm install' command under node folder of main branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
-        cd baseline/node
-        npm install --webnn_native_lib_path="../out/Release"
+        cd baseline/webnn/node
+        npm install --webnn_native_lib_path="../../out/Release"
 
     - name: Run 'npm run build' command under node folder of main branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
-        cd baseline/node
-        npm run build --webnn_native_lib_path="../out/Release"
+        cd baseline/webnn/node
+        npm run build --webnn_native_lib_path="../../out/Release"
 
     - name: Run 'npm run report' command under node folder of main branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         source /opt/intel/openvino_2021/bin/setupvars.sh
-        cd baseline/node
+        cd baseline/webnn/node
         npm run report || true
 
     - name: Prepare baseline result file for regression checking
       run: |
         echo "Baseline node test result:"
-        cat baseline/node/result.xml
-        cp baseline/node/result.xml ${{ github.workspace }}/../baseline.xml
+        cat baseline/webnn/node/result.xml
+        cp baseline/webnn/node/result.xml ${{ github.workspace }}/../baseline.xml
 
     - uses: actions/checkout@v2
       with:
@@ -98,7 +98,7 @@ jobs:
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd update
-        gn gen out/Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true  webnn_enable_openvino=true is_debug=false"
 
     - name: Build for update branch
       run: |
@@ -109,29 +109,29 @@ jobs:
     - name: Run 'npm install' command under node folder of update branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
-        cd update/node
-        npm install --webnn_native_lib_path="../out/Release"
+        cd update/webnn/node
+        npm install --webnn_native_lib_path="../../out/Release"
 
     - name: Run 'npm run build' command under node folder of update branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
-        cd update/node
-        npm run build --webnn_native_lib_path="../out/Release"
+        cd update/webnn/node
+        npm run build --webnn_native_lib_path="../../out/Release"
 
     - name: Run 'npm run report' command under node folder of update branch
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         source /opt/intel/openvino_2021/bin/setupvars.sh
-        cd update/node
+        cd update/webnn/node
         npm run report || true
 
     - name: Prepare latest result file for regression checking
       run: |
         echo "Latest node test result:"
-        cat update/node/result.xml
-        cp update/node/result.xml ${{ github.workspace }}/../update.xml
+        cat update/webnn/node/result.xml
+        cp update/webnn/node/result.xml ${{ github.workspace }}/../update.xml
 
     - name: Regression check
       run: |
         echo "Regression checking..."
-        python update/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline.xml ${{ github.workspace }}/../update.xml
+        python update/webnn/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline.xml ${{ github.workspace }}/../update.xml

@@ -329,10 +329,6 @@ dawn_component("webnn_native") {
   ]
   sources = [ "WebnnNative.cpp" ]
   configs = [ ":webnn_native_internal" ]
-  defines = [
-    "WEBNN_NATIVE_SHARED_LIBRARY",
-    "WEBNN_NATIVE_IMPLEMENTATION",
-  ]
 }
 
 

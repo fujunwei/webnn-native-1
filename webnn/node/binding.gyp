@@ -10,7 +10,7 @@
         "<!@(node -p \"require('fs').readdirSync('./src').map(f=>'src/'+f).join(' ')\")",
         "<!@(node -p \"require('fs').readdirSync('./src/ops').map(f=>'src/ops/'+f).join(' ')\")",
         # webnn_cpp.cpp must be relative path.
-        '../<(webnn_native_lib_path)/gen/src/webnn/webnn_cpp.cpp',
+        '../<(webnn_native_lib_path)/gen/src/dawn/webnn_cpp.cpp',
       ],
       'cflags!': [ '-fno-exceptions', '-fno-rtti'],
       'cflags_cc!': [ '-fno-exceptions', '-fno-rtti'],

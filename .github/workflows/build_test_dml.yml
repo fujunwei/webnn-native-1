@@ -106,4 +106,4 @@ jobs:
     - name: Regression check
       run: |
         echo "Regression checking..."
-        python update\workflow_scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2endtests.json ${{ github.workspace }}\..\update_end2endtests.json
+        python update\webnn\workflow_scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2endtests.json ${{ github.workspace }}\..\update_end2endtests.json
