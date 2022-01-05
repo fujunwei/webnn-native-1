@@ -49,7 +49,7 @@ jobs:
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd baseline
-        gn gen out/Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for main branch
       run: |
@@ -82,7 +82,7 @@ jobs:
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd update
-        gn gen out/Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for update branch
       run: |
@@ -100,4 +100,4 @@ jobs:
     - name: Regression check
       run: |
         echo "Regression checking..."
-        python update/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline_end2endtests.json ${{ github.workspace }}/../update_end2endtests.json
+        python update/webnn/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline_end2endtests.json ${{ github.workspace }}/../update_end2endtests.json

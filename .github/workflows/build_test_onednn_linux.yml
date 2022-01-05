@@ -39,7 +39,7 @@ jobs:
 
     - name: Build libdnnl.so library
       run: |
-        cd baseline/third_party/oneDNN
+        cd baseline/webnn/third_party/oneDNN
         mkdir build
         cd build
         cmake ..
@@ -49,7 +49,7 @@ jobs:
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd baseline
-        gn gen out/Release --args="webnn_enable_onednn=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_onednn=true is_debug=false"
 
     - name: Build for main branch
       run: |
@@ -79,7 +79,7 @@ jobs:
 
     - name: Build libdnnl.so library
       run: |
-        cd update/third_party/oneDNN
+        cd update/webnn/third_party/oneDNN
         mkdir build
         cd build
         cmake ..
@@ -89,7 +89,7 @@ jobs:
       run: |
         export PATH=$PWD/../depot_tools:$PATH
         cd update
-        gn gen out/Release --args="webnn_enable_onednn=true is_debug=false"
+        gn gen out/Release --args="dawn_enable_webnn=true webnn_enable_onednn=true is_debug=false"
 
     - name: Build for update branch
       run: |
@@ -106,4 +106,4 @@ jobs:
     - name: Regression check
       run: |
         echo "Regression checking..."
-        python update/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline_end2endtests.json ${{ github.workspace }}/../update_end2endtests.json
+        python update/webnn/workflow_scripts/regression_check.py ${{ github.workspace }}/../baseline_end2endtests.json ${{ github.workspace }}/../update_end2endtests.json

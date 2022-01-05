@@ -33,6 +33,7 @@
 /webnn/third_party/microsoft.ai.directml*
 /webnn/third_party/oneDNN
 /webnn/third_party/stb
+/webnn/third_party/openvino/ngraph_c_api/build
 ### WebNN Node ###
 /webnn/node/third_party/webnn-polyfill
 /webnn/node/node_modules

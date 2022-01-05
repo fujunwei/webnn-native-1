@@ -35,21 +35,21 @@ deps = {
   },
 
   # Dependencies required for code generator and infrastructure code.
-  'third_party/dawn': {
+  'webnn/third_party/dawn': {
     'url': '{dawn_git}/dawn.git@bf1c0cf52377b4db2bf3a433dc5056620aad7cdd'
   },
 
   # Dependencies required for backends.
-  'third_party/DirectML': {
+  'webnn/third_party/DirectML': {
     'url': '{github_git}/microsoft/DirectML.git@af53ef743559079bd2ebb1aa83d9f98e87d774e1',
     'condition': 'checkout_win',
   },
   # GPGMM support for fast DML allocation and residency management.
-  'third_party/gpgmm': {
+  'webnn/third_party/gpgmm': {
     'url': '{github_git}/intel/gpgmm.git@7c81fae56e30c60030cb0a2c53310723e5c085d6',
     'condition': 'checkout_win',
   },
-  'third_party/oneDNN': {
+  'webnn/third_party/oneDNN': {
     'url': '{github_git}/oneapi-src/oneDNN.git@4a129541fd4e67e6897072186ea2817a3154eddd',
   },
 
@@ -330,7 +330,7 @@ hooks = [
     'name': 'download_dml_unpkg',
     'pattern': '.',
     'condition': 'checkout_win',
-    'action': ['python3', 'src/webnn/webnn_native/dml/deps/script/download_dml.py'],
+    'action': ['python3', 'webnn/src/webnn_native/dml/deps/script/download_dml.py'],
   }
 ]
 

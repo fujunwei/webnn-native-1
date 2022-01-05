@@ -60,7 +60,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd baseline
-        gn gen out\Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out\Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for main branch
       shell: cmd
@@ -73,7 +73,7 @@ jobs:
     - name: Test for main branch
       shell: cmd
       run: |
-        baseline\workflow_scripts\test_by_openvino_windows.bat baseline || true
+        baseline\webnn\workflow_scripts\test_by_openvino_windows.bat baseline || true
         rmdir /s /q baseline
 
     - uses: actions/checkout@v2
@@ -96,7 +96,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd update
-        gn gen out\Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out\Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for update branch
       shell: cmd
@@ -109,9 +109,9 @@ jobs:
     - name: Test for update branch
       shell: cmd
       run: |
-        update\workflow_scripts\test_by_openvino_windows.bat update || true
+        update\webnn\workflow_scripts\test_by_openvino_windows.bat update || true
 
     - name: Regression check
       run: |
         echo "Regression checking..."
-        python update\workflow_scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2endtests.json ${{ github.workspace }}\..\update_end2endtests.json
+        python update\webnn\workflow_scripts\regression_check.py ${{ github.workspace }}\..\baseline_end2endtests.json ${{ github.workspace }}\..\update_end2endtests.json

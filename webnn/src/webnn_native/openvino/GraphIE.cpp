@@ -183,10 +183,10 @@ namespace webnn_native { namespace ie {
 
         std::vector<const char*> GetGruActivations(Ref<OperatorArrayBase> activationArray) {
             std::vector<const char*> activations;
-            activations.reserve(activationArray->Size());
-            for (size_t i = 0; i < activationArray->Size(); i++) {
+            activations.reserve(activationArray->APISize());
+            for (size_t i = 0; i < activationArray->APISize(); i++) {
                 const char* operatorName = nullptr;
-                switch (activationArray->Get(i)->GetFusionType()) {
+                switch (activationArray->APIGetOperator(i)->GetFusionType()) {
                     case FusionType::Relu:
                         operatorName = "relu";
                         break;
@@ -820,7 +820,7 @@ namespace webnn_native { namespace ie {
             DAWN_TRY(CheckStatusCode(status, "ngraph get output 0"));
             status = ngraph_transpose(outputNode, order4DNode, &outputTransposeNode);
             DAWN_TRY(CheckStatusCode(status, "transpose gru output 0 layout"));
-            mGraphNodeMap[gru->Outputs()[1].Get()] = outputTransposeNode;
+            mGraphNodeMap[gru->Outputs()[1]] = outputTransposeNode;
 
             ngraph_get_shape(outputTransposeNode, &ieShape);
             auto outputShape = gru->Outputs()[1]->Shape();
@@ -830,7 +830,7 @@ namespace webnn_native { namespace ie {
         DAWN_TRY(CheckStatusCode(status, "ngraph get output 1"));
         status = ngraph_transpose(outputNode, order3DNode, &outputTransposeNode);
         DAWN_TRY(CheckStatusCode(status, "transpose gru output 1 layout"));
-        mGraphNodeMap[gru->Outputs()[0].Get()] = outputTransposeNode;
+        mGraphNodeMap[gru->Outputs()[0]] = outputTransposeNode;
 
         ngraph_get_shape(outputTransposeNode, &ieShape);
         auto outputShape = gru->Outputs()[0]->Shape();
@@ -1117,7 +1117,7 @@ namespace webnn_native { namespace ie {
             ngraph_node_t* outputNode;
             status = ngraph_get_output(outputNodes, i, &outputNode);
             DAWN_TRY(CheckStatusCode(status, "ngraph get output with index"));
-            mGraphNodeMap[split->Outputs()[i].Get()] = outputNode;
+            mGraphNodeMap[split->Outputs()[i]] = outputNode;
         }
         DAWN_ASSERT(CheckShape(outputNodes, split));
         ngraph_node_free(&outputNodes);
