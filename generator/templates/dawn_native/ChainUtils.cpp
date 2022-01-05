@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-{% set impl_dir = metadata.impl_dir + "/" if metadata.impl_dir else "" %}
+
 {% set native_namespace = Name(metadata.native_namespace).snake_case() %}
-{% set native_dir = impl_dir + native_namespace %}
+{% set native_dir = native_namespace %}
 #include "{{native_dir}}/ChainUtils_autogen.h"
 
 #include <unordered_set>

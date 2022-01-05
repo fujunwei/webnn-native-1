@@ -20,9 +20,9 @@
 
 {% set api = metadata.api.lower() %}
 #include "dawn/{{api}}_cpp.h"
-{% set impl_dir = metadata.impl_dir + "/" if metadata.impl_dir else "" %}
+
 {% set native_namespace = namespace_name.snake_case() %}
-{% set native_dir = impl_dir + native_namespace %}
+{% set native_dir = native_namespace %}
 #include "{{native_dir}}/Forward.h"
 
 {% set namespace = metadata.namespace %}

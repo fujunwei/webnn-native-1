@@ -16,7 +16,7 @@
 #define WEBNN_NATIVE_WEBNN_PLATFORM_AUTOGEN_H_
 
 #include "webnn/webnn_cpp.h"
-#include "webnn/webnn_native/Forward.h"
+#include "webnn_native/Forward.h"
 
 namespace webnn_native {
 
