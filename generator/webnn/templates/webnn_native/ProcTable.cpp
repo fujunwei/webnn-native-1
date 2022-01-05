@@ -13,15 +13,15 @@
 //* See the License for the specific language governing permissions and
 //* limitations under the License.
 
-#include "webnn/webnn_native/webnn_platform.h"
-#include "webnn/webnn_native/WebnnNative.h"
+#include "webnn_native/webnn_platform.h"
+#include "webnn_native/WebnnNative.h"
 
 #include <algorithm>
 #include <vector>
 
 {% for type in by_category["object"] %}
     {% if type.name.canonical_case() not in ["texture view"] %}
-        #include "webnn/webnn_native/{{type.name.CamelCase()}}.h"
+        #include "webnn_native/{{type.name.CamelCase()}}.h"
     {% endif %}
 {% endfor %}
 

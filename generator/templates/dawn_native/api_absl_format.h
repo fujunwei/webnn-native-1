@@ -16,9 +16,9 @@
 #ifndef {{API}}_ABSL_FORMAT_H_
 #define {{API}}_ABSL_FORMAT_H_
 
-{% set impl_dir = metadata.impl_dir + "/" if metadata.impl_dir else "" %}
+
 {% set native_namespace = Name(metadata.native_namespace).snake_case() %}
-{% set native_dir = impl_dir + native_namespace %}
+{% set native_dir = native_namespace %}
 {% set prefix = metadata.proc_table_prefix.lower() %}
 #include "{{native_dir}}/{{prefix}}_platform.h"
 

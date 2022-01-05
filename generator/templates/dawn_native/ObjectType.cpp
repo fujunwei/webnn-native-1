@@ -13,8 +13,8 @@
 //* limitations under the License.
 
 {% set native_namespace = Name(metadata.native_namespace).snake_case() %}
-{% set impl_dir = metadata.impl_dir + "/" if metadata.impl_dir else "" %}
-{% set native_dir = impl_dir + native_namespace %}
+
+{% set native_dir = native_namespace %}
 #include "{{native_dir}}/ObjectType_autogen.h"
 
 namespace {{native_namespace}} {

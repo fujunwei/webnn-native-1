@@ -60,7 +60,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd baseline
-        gn gen out\Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out\Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for main branch
       shell: cmd
@@ -96,7 +96,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd update
-        gn gen out\Release --args="webnn_enable_openvino=true is_debug=false"
+        gn gen out\Release --args="dawn_enable_webnn=true webnn_enable_openvino=true is_debug=false"
 
     - name: Build for update branch
       shell: cmd

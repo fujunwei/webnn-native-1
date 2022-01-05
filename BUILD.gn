@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import("scripts/dawn_overrides_with_defaults.gni")
-import("scripts/webnn_features.gni")
+import("webnn/scripts/webnn_features.gni")
 
 group("all") {
   testonly = true
@@ -32,6 +32,6 @@ group("default") {
   testonly = true
   deps = [ ":all" ]
   if (dawn_enable_webnn) {
-    deps += [ "src/webnn:all" ]
+    deps += [ "webnn:all" ]
   }
 }
