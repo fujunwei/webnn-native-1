@@ -42,7 +42,7 @@ jobs:
 
     - name: Build dnnl.dll library
       run: |
-        cd baseline\third_party\oneDNN
+        cd baseline\webnn\third_party\oneDNN
         mkdir build
         cd build
         cmake ..
@@ -54,7 +54,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd baseline
-        gn gen out\Release --args="webnn_enable_onednn=true is_debug=false"
+        gn gen out\Release --args="dawn_enable_webnn=true webnn_enable_onednn=true is_debug=false"
 
     - name: Build for main branch
       shell: cmd
@@ -89,7 +89,7 @@ jobs:
 
     - name: Build dnnl.dll library
       run: |
-        cd update\third_party\oneDNN
+        cd update\webnn\third_party\oneDNN
         mkdir build
         cd build
         cmake ..
@@ -101,7 +101,7 @@ jobs:
         set "PATH=%CD%\..\depot_tools;%PATH%"
         set "DEPOT_TOOLS_WIN_TOOLCHAIN=0"
         cd update
-        gn gen out\Release --args="webnn_enable_onednn=true is_debug=false"
+        gn gen out\Release --args="dawn_enable_webnn=true webnn_enable_onednn=true is_debug=false"
 
     - name: Build for update branch
       shell: cmd
