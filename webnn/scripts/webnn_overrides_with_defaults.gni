@@ -17,4 +17,3 @@ import("../../scripts/dawn_overrides_with_defaults.gni")
 if (!defined(webnn_root)) {
   webnn_root = "${dawn_root}/webnn"
 }
-webnn_gen_root = "${dawn_gen_root}"
