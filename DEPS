@@ -14,7 +14,7 @@ vars = {
   'dawn_cmake_win32_sha1': 'b106d66bcdc8a71ea2cdf5446091327bfdb1bcd7',
   'dawn_gn_version': 'git_revision:fc295f3ac7ca4fe7acc6cb5fb052d22909ef3a8f',
   'dawn_go_version': 'version:1.16',
-  'webnn_test_data': False, # For webnn CI
+  'webnn_enable_onednn': False, # For webnn CI
 }
 
 deps = {
@@ -30,7 +30,6 @@ deps = {
   },
   'webnn/node/third_party/webnn-samples/test-data': {
     'url': '{github_git}/webmachinelearning/test-data.git@b6f1565fefc103705a6ff580067eae7bb9d3b351',
-    'condition': 'webnn_test_data',
   },
   'webnn/third_party/stb': {
     'url': '{github_git}/nothings/stb@b42009b3b9d4ca35bc703f5310eedc74f584be58'
@@ -48,6 +47,7 @@ deps = {
   },
   'webnn/third_party/oneDNN': {
     'url': '{github_git}/oneapi-src/oneDNN.git@4a129541fd4e67e6897072186ea2817a3154eddd',
+    'condition': 'webnn_enable_onednn',
   },
 
   # Dependencies required to use GN/Clang in standalone
