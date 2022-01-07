@@ -95,6 +95,7 @@ jobs:
         echo "Baseline node test result:"
         type baseline\webnn\node\result.xml
         copy baseline\webnn\node\result.xml ${{ github.workspace }}\..\baseline.xml
+        rmdir /s /q baseline
 
     - uses: actions/checkout@v2
       with:
