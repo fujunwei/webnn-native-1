@@ -14,12 +14,12 @@
 
 #include "webnn_wire/client/NamedOutputs.h"
 
-#include "webnn_wire/client/Client.h"
 #include "webnn_wire/WireCmd_autogen.h"
+#include "webnn_wire/client/Client.h"
 
 namespace webnn_wire { namespace client {
 
-    void NamedOutputs::Set(char const * name, MLArrayBufferView const * resource) {
+    void NamedOutputs::Set(char const* name, MLArrayBufferView const* resource) {
         NamedOutputsSetCmd cmd;
         cmd.namedOutputsId = this->id;
         cmd.name = name;

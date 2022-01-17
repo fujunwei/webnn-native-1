@@ -18,8 +18,18 @@
 
 namespace webnn_wire { namespace server {
 
-    Server::Server(const WebnnProcTable& procs, CommandSerializer* serializer)
-        : mSerializer(serializer), mProcs(procs), mIsAlive(std::make_shared<bool>(true)) {
+    Server::Server(const WebnnProcTable& procs,
+                   CommandSerializer* serializer,
+                   MemoryTransferService* memoryTransferService)
+        : mSerializer(serializer),
+          mProcs(procs),
+          mMemoryTransferService(memoryTransferService),
+          mIsAlive(std::make_shared<bool>(true)) {
+        if (mMemoryTransferService == nullptr) {
+            // If a MemoryTransferService is not provided, fallback to inline memory.
+            mOwnedMemoryTransferService = CreateInlineMemoryTransferService();
+            mMemoryTransferService = mOwnedMemoryTransferService.get();
+        }
     }
 
     Server::~Server() {

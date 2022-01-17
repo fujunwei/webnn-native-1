@@ -18,7 +18,7 @@
 namespace webnn_wire {
 
     WireClient::WireClient(const WireClientDescriptor& descriptor)
-        : mImpl(new client::Client(descriptor.serializer)) {
+        : mImpl(new client::Client(descriptor.serializer, descriptor.memoryTransferService)) {
     }
 
     WireClient::~WireClient() {
@@ -48,5 +48,19 @@ namespace webnn_wire {
     void WireClient::Disconnect() {
         mImpl->Disconnect();
     }
+
+    namespace client {
+        MemoryTransferService::MemoryTransferService() = default;
+
+        MemoryTransferService::~MemoryTransferService() = default;
+
+        MemoryTransferService::ReadHandle::ReadHandle() = default;
+
+        MemoryTransferService::ReadHandle::~ReadHandle() = default;
+
+        MemoryTransferService::WriteHandle::WriteHandle() = default;
+
+        MemoryTransferService::WriteHandle::~WriteHandle() = default;
+    }  // namespace client
 
 }  // namespace webnn_wire

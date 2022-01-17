@@ -28,7 +28,7 @@ namespace webnn_wire { namespace client {
       public:
         using ObjectBase::ObjectBase;
 
-        void Set(char const * name, MLArrayBufferView const * resource);
+        void Set(char const* name, MLArrayBufferView const* resource);
     };
 
 }}  // namespace webnn_wire::client

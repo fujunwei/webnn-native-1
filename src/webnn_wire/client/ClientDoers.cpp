@@ -37,11 +37,11 @@ namespace webnn_wire { namespace client {
     //     device->HandleError(errorType, message);
     //     return true;
     // }
-    
+
     bool Client::DoContextPopErrorScopeCallback(Context* context,
-                                               uint64_t requestSerial,
-                                               MLErrorType errorType,
-                                               const char* message) {
+                                                uint64_t requestSerial,
+                                                MLErrorType errorType,
+                                                const char* message) {
         if (context == nullptr) {
             // The device might have been deleted or recreated so this isn't an error.
             return true;

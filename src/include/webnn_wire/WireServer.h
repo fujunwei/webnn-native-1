@@ -32,6 +32,7 @@ namespace webnn_wire {
     struct WEBNN_WIRE_EXPORT WireServerDescriptor {
         const WebnnProcTable* procs;
         CommandSerializer* serializer;
+        server::MemoryTransferService* memoryTransferService = nullptr;
     };
 
     class WEBNN_WIRE_EXPORT WireServer : public CommandHandler {
@@ -54,6 +55,81 @@ namespace webnn_wire {
       private:
         std::unique_ptr<server::Server> mImpl;
     };
+
+    namespace server {
+        class WEBNN_WIRE_EXPORT MemoryTransferService {
+          public:
+            MemoryTransferService();
+            virtual ~MemoryTransferService();
+
+            class ReadHandle;
+            class WriteHandle;
+
+            // Deserialize data to create Read/Write handles. These handles are for the client
+            // to Read/Write data.
+            virtual bool DeserializeReadHandle(const void* deserializePointer,
+                                               size_t deserializeSize,
+                                               ReadHandle** readHandle) = 0;
+            virtual bool DeserializeWriteHandle(const void* deserializePointer,
+                                                size_t deserializeSize,
+                                                WriteHandle** writeHandle) = 0;
+
+            class WEBNN_WIRE_EXPORT ReadHandle {
+              public:
+                ReadHandle();
+                virtual ~ReadHandle();
+
+                // Return the size of the command serialized if
+                // SerializeDataUpdate is called with the same offset/size args
+                virtual size_t SizeOfSerializeDataUpdate(size_t offset, size_t size) = 0;
+
+                // Gets called when a MapReadCallback resolves.
+                // Serialize the data update for the range (offset, offset + size) into
+                // |serializePointer| to the client There could be nothing to be serialized (if
+                // using shared memory)
+                virtual void SerializeDataUpdate(const void* data,
+                                                 size_t offset,
+                                                 size_t size,
+                                                 void* serializePointer) = 0;
+
+              private:
+                ReadHandle(const ReadHandle&) = delete;
+                ReadHandle& operator=(const ReadHandle&) = delete;
+            };
+
+            class WEBNN_WIRE_EXPORT WriteHandle {
+              public:
+                WriteHandle();
+                virtual ~WriteHandle();
+
+                // Set the target for writes from the client. DeserializeFlush should copy data
+                // into the target.
+                void SetTarget(void* data);
+                // Set Staging data length for OOB check
+                void SetDataLength(size_t dataLength);
+
+                // This function takes in the serialized result of
+                // client::MemoryTransferService::WriteHandle::SerializeDataUpdate.
+                // Needs to check potential offset/size OOB and overflow
+                virtual bool DeserializeDataUpdate(const void* deserializePointer,
+                                                   size_t deserializeSize,
+                                                   size_t offset,
+                                                   size_t size) = 0;
+
+              protected:
+                void* mTargetData = nullptr;
+                size_t mDataLength = 0;
+
+              private:
+                WriteHandle(const WriteHandle&) = delete;
+                WriteHandle& operator=(const WriteHandle&) = delete;
+            };
+
+          private:
+            MemoryTransferService(const MemoryTransferService&) = delete;
+            MemoryTransferService& operator=(const MemoryTransferService&) = delete;
+        };
+    }  // namespace server
 
 }  // namespace webnn_wire
 

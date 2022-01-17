@@ -21,6 +21,7 @@
 
 namespace webnn_wire { namespace server {
 
+    class MemoryTransferService;
     // CallbackUserdata and its derived classes are intended to be created by
     // Server::MakeUserdata<T> and then passed as the userdata argument for Dawn
     // callbacks.
@@ -64,9 +65,8 @@ namespace webnn_wire { namespace server {
     class ForwardToServer<R (Server::*)(Args...)> {
       private:
         // Get the type T of the last argument. It has CallbackUserdata as its base.
-        using UserdataT =
-            typename std::remove_pointer<typename std::decay<decltype(std::get<sizeof...(Args) - 1>(
-                std::declval<std::tuple<Args...>>()))>::type>::type;
+        using UserdataT = typename std::remove_pointer<typename std::decay<decltype(
+            std::get<sizeof...(Args) - 1>(std::declval<std::tuple<Args...>>()))>::type>::type;
 
         static_assert(std::is_base_of<CallbackUserdata, UserdataT>::value,
                       "Last argument of callback handler should derive from CallbackUserdata.");
@@ -114,7 +114,9 @@ namespace webnn_wire { namespace server {
 
     class Server : public ServerBase {
       public:
-        Server(const WebnnProcTable& procs, CommandSerializer* serializer);
+        Server(const WebnnProcTable& procs,
+               CommandSerializer* serializer,
+               MemoryTransferService* memoryTransferService);
         ~Server() override;
 
         // ChunkedCommandHandler implementation
@@ -163,12 +165,16 @@ namespace webnn_wire { namespace server {
         WireDeserializeAllocator mAllocator;
         ChunkedCommandSerializer mSerializer;
         WebnnProcTable mProcs;
+        std::unique_ptr<MemoryTransferService> mOwnedMemoryTransferService = nullptr;
+        MemoryTransferService* mMemoryTransferService = nullptr;
 
         std::shared_ptr<bool> mIsAlive;
     };
 
     bool TrackContextChild(ContextInfo* context, ObjectType type, ObjectId id);
     bool UntrackContextChild(ContextInfo* context, ObjectType type, ObjectId id);
+
+    std::unique_ptr<MemoryTransferService> CreateInlineMemoryTransferService();
 
 }}  // namespace webnn_wire::server
 

@@ -43,8 +43,13 @@ namespace webnn_wire { namespace client {
 
     }  // anonymous namespace
 
-    Client::Client(CommandSerializer* serializer)
-        : ClientBase(), mSerializer(serializer) {
+    Client::Client(CommandSerializer* serializer, MemoryTransferService* memoryTransferService)
+        : ClientBase(), mSerializer(serializer), mMemoryTransferService(memoryTransferService) {
+        if (mMemoryTransferService == nullptr) {
+            // If a MemoryTransferService is not provided, fall back to inline memory.
+            mOwnedMemoryTransferService = CreateInlineMemoryTransferService();
+            mMemoryTransferService = mOwnedMemoryTransferService.get();
+        }
     }
 
     Client::~Client() {

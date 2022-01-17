@@ -30,12 +30,16 @@ namespace webnn_wire { namespace client {
 
     class Client : public ClientBase {
       public:
-        Client(CommandSerializer* serializer);
+        Client(CommandSerializer* serializer, MemoryTransferService* memoryTransferService);
         ~Client() override;
 
         // ChunkedCommandHandler implementation
         const volatile char* HandleCommandsImpl(const volatile char* commands,
                                                 size_t size) override;
+
+        MemoryTransferService* GetMemoryTransferService() const {
+            return mMemoryTransferService;
+        }
 
         ReservedContext ReserveContext();
         ReservedNamedInputs ReserveNamedInputs(MLContext context);
@@ -69,10 +73,14 @@ namespace webnn_wire { namespace client {
 
         ChunkedCommandSerializer mSerializer;
         WireDeserializeAllocator mAllocator;
+        MemoryTransferService* mMemoryTransferService = nullptr;
+        std::unique_ptr<MemoryTransferService> mOwnedMemoryTransferService = nullptr;
 
         PerObjectType<LinkedList<ObjectBase>> mObjects;
         bool mDisconnected = false;
     };
+
+    std::unique_ptr<MemoryTransferService> CreateInlineMemoryTransferService();
 
 }}  // namespace webnn_wire::client
 

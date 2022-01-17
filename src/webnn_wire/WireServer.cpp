@@ -18,7 +18,9 @@
 namespace webnn_wire {
 
     WireServer::WireServer(const WireServerDescriptor& descriptor)
-        : mImpl(new server::Server(*descriptor.procs, descriptor.serializer)) {
+        : mImpl(new server::Server(*descriptor.procs,
+                                   descriptor.serializer,
+                                   descriptor.memoryTransferService)) {
     }
 
     WireServer::~WireServer() {
@@ -42,19 +44,40 @@ namespace webnn_wire {
     }
 
     bool WireServer::InjectNamedOperands(MLNamedOperands namedOperands,
-                                       uint32_t id,
-                                       uint32_t generation) {
+                                         uint32_t id,
+                                         uint32_t generation) {
         return mImpl->InjectNamedOperands(namedOperands, id, generation);
     }
 
     bool WireServer::InjectNamedOutputs(MLNamedOutputs namedOutputs,
-                                       uint32_t id,
-                                       uint32_t generation) {
+                                        uint32_t id,
+                                        uint32_t generation) {
         return mImpl->InjectNamedOutputs(namedOutputs, id, generation);
     }
 
     // WGPUContext WireServer::GetContext(uint32_t id, uint32_t generation) {
     //     return mImpl->GetContext(id, generation);
     // }
+
+    namespace server {
+        MemoryTransferService::MemoryTransferService() = default;
+
+        MemoryTransferService::~MemoryTransferService() = default;
+
+        MemoryTransferService::ReadHandle::ReadHandle() = default;
+
+        MemoryTransferService::ReadHandle::~ReadHandle() = default;
+
+        MemoryTransferService::WriteHandle::WriteHandle() = default;
+
+        MemoryTransferService::WriteHandle::~WriteHandle() = default;
+
+        void MemoryTransferService::WriteHandle::SetTarget(void* data) {
+            mTargetData = data;
+        }
+        void MemoryTransferService::WriteHandle::SetDataLength(size_t dataLength) {
+            mDataLength = dataLength;
+        }
+    }  // namespace server
 
 }  // namespace webnn_wire
