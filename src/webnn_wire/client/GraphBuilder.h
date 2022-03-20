@@ -29,6 +29,8 @@ namespace webnn_wire { namespace client {
         using ObjectBase::ObjectBase;
 
         WNNOperand Constant(WNNOperandDescriptor const* desc, WNNArrayBufferView const* value);
+        WNNOperand ConstantWithGpuBuffer(WNNOperandDescriptor const* desc,
+                                         WNNGpuBufferView const* value);
     };
 
 }}  // namespace webnn_wire::client

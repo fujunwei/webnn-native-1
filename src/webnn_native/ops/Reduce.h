@@ -29,6 +29,8 @@ namespace webnn_native { namespace op {
         kReduceMin,
         kReduceProduct,
         kReduceSum,
+        kReduceArgMax,
+        kReduceArgMin
     };
 
     class Reduce : public OperatorBase {

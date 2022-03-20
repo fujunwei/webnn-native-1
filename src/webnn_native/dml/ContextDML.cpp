@@ -22,6 +22,9 @@ namespace webnn_native { namespace dml {
     Context::Context(ContextOptions const* options) : ContextBase(options) {
     }
 
+    Context::Context(WGPUDevice device) : ContextBase(device) {
+    }
+
     GraphBase* Context::CreateGraphImpl() {
         return new Graph(this);
     }

@@ -19,6 +19,11 @@
 #include "webnn_wire/ChunkedCommandSerializer.h"
 #include "webnn_wire/server/ServerBase_autogen.h"
 
+#if defined(WEBNN_ENABLE_GPU_BUFFER)
+#include <webgpu/webgpu.h>
+#include <dawn/wire/WireServer.h>
+#endif
+
 namespace webnn_wire { namespace server {
 
     // CallbackUserdata and its derived classes are intended to be created by
@@ -129,6 +134,9 @@ namespace webnn_wire { namespace server {
                                                 size_t size) override;
 
         bool InjectInstance(WNNInstance instance, uint32_t id, uint32_t generation);
+#if defined(WEBNN_ENABLE_GPU_BUFFER)
+        bool InjectDawnWireServer(dawn_wire::WireServer* dawn_wire_server);
+#endif
         bool InjectContext(WNNContext context, uint32_t id, uint32_t generation);
         bool InjectNamedInputs(WNNNamedInputs namedInputs,
                                uint32_t id,
@@ -159,6 +167,10 @@ namespace webnn_wire { namespace server {
 
         void ClearContextCallbacks(WNNContext context);
 
+        WGPUDevice GetWGPUDevice(uint32_t id, uint32_t generation);
+
+        WGPUBuffer GetWGPUBuffer(uint32_t id, uint32_t generation);
+
         // Error callbacks
         void OnUncapturedError(WNNErrorType type, const char* message);
         void OnContextLost(const char* message);
@@ -173,6 +185,10 @@ namespace webnn_wire { namespace server {
         WireDeserializeAllocator mAllocator;
         ChunkedCommandSerializer mSerializer;
         WebnnProcTable mProcs;
+
+#if defined(WEBNN_ENABLE_GPU_BUFFER)
+        dawn::wire::WireServer* mDawnWireServer;
+#endif
 
         std::shared_ptr<bool> mIsAlive;
     };
