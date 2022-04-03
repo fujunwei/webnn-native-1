@@ -993,11 +993,9 @@ namespace webnn_native { namespace onednn {
     WNNComputeGraphStatus Graph::ComputeImpl(NamedInputsBase* inputs, NamedOutputsBase* outputs) {
         for (auto& input : inputs->GetRecords()) {
             dnnl_memory_t inputMemory = mInputMemoryMap.at(input.first);
-            COMPUTE_TRY(
-                dnnl_memory_set_data_handle_v2(inputMemory,
-                                               static_cast<int8_t*>(input.second.resource.buffer) +
-                                                   input.second.resource.byteOffset,
-                                               mStream));
+            auto& resource = input.second.resource.arrayBufferView;
+            COMPUTE_TRY(dnnl_memory_set_data_handle_v2(
+                inputMemory, static_cast<int8_t*>(resource.buffer) + resource.byteOffset, mStream));
         }
 
         for (auto op : mOperations) {
@@ -1020,7 +1018,7 @@ namespace webnn_native { namespace onednn {
             size_t bufferLength = dnnl_memory_desc_get_size(outputMemoryDesc);
             void* outputBuffer = malloc(bufferLength);
             COMPUTE_TRY(ReadFromMemory(outputBuffer, bufferLength, outputMemory));
-            ArrayBufferView output = outputs->GetRecords().at(outputName);
+            ArrayBufferView output = outputs->GetRecords().at(outputName).arrayBufferView;
             if (output.byteLength >= bufferLength) {
                 memcpy(static_cast<int8_t*>(output.buffer) + output.byteOffset, outputBuffer,
                        bufferLength);

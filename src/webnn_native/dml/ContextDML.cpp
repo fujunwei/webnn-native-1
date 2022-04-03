@@ -22,8 +22,10 @@ namespace webnn_native { namespace dml {
     Context::Context(ContextOptions const* options) : ContextBase(options) {
     }
 
+#if defined(WEBNN_ENABLE_GPU_BUFFER)
     Context::Context(WGPUDevice device) : ContextBase(device) {
     }
+#endif
 
     GraphBase* Context::CreateGraphImpl() {
         return new Graph(this);

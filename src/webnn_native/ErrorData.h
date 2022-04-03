@@ -34,11 +34,13 @@ namespace dawn {
 namespace webnn_native {
     enum class InternalErrorType : uint32_t;
 
-    class [[nodiscard]] ErrorData {
+    class ErrorData {
       public:
-        [[nodiscard]] static std::unique_ptr<ErrorData> Create(
-            InternalErrorType type, std::string message, const char* file, const char* function,
-            int line);
+        static std::unique_ptr<ErrorData> Create(InternalErrorType type,
+                                                 std::string message,
+                                                 const char* file,
+                                                 const char* function,
+                                                 int line);
         ErrorData(InternalErrorType type, std::string message);
 
         struct BacktraceRecord {
